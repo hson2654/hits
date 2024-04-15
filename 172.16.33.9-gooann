@@ -1,1 +1,90 @@
 
+
+└─$ nmap -p- 172.16.33.9 --reason --open
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-15 22:35 HKT
+Nmap scan report for 172.16.33.9 (172.16.33.9)
+Host is up, received syn-ack (0.035s latency).
+Not shown: 65530 closed tcp ports (conn-refused)
+PORT    STATE SERVICE      REASON
+22/tcp  open  ssh          syn-ack
+80/tcp  open  http         syn-ack
+88/tcp  open  kerberos-sec syn-ack
+110/tcp open  pop3         syn-ack
+995/tcp open  pop3s        syn-ack
+
+
+└─$ nmap -sV -A 172.16.33.9                                                                               
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-15 22:38 HKT
+Nmap scan report for 172.16.33.9 (172.16.33.9)
+Host is up (0.042s latency).
+Not shown: 995 closed tcp ports (conn-refused)
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 04:d0:6e:c4:ba:4a:31:5a:6f:b3:ee:b8:1b:ed:5a:b7 (RSA)
+|   256 24:b3:df:01:0b:ca:c2:ab:2e:e9:49:b0:58:08:6a:fa (ECDSA)
+|_  256 6a:c4:35:6a:7a:1e:7e:51:85:5b:81:5c:7c:74:49:84 (ED25519)
+80/tcp  open  http     Apache httpd 2.4.38 ((Debian))
+|_http-title: Apache2 Debian Default Page: It works
+|_http-server-header: Apache/2.4.38 (Debian)
+88/tcp  open  http     nginx 1.14.2
+|_http-server-header: nginx/1.14.2
+|_http-title: 404 Not Found
+110/tcp open  pop3     Courier pop3d
+|_pop3-capabilities: TOP LOGIN-DELAY(10) STLS USER IMPLEMENTATION(Courier Mail Server) UTF8(USER) UIDL PIPELINING
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Courier Mail Server/stateOrProvinceName=NY/countryName=US
+| Subject Alternative Name: email:postmaster@example.com
+| Not valid before: 2020-09-17T16:28:06
+|_Not valid after:  2021-09-17T16:28:06
+995/tcp open  ssl/pop3 Courier pop3d
+|_pop3-capabilities: TOP LOGIN-DELAY(10) UTF8(USER) USER IMPLEMENTATION(Courier Mail Server) UIDL PIPELINING
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Courier Mail Server/stateOrProvinceName=NY/countryName=US
+| Subject Alternative Name: email:postmaster@example.com
+| Not valid before: 2020-09-17T16:28:06
+|_Not valid after:  2021-09-17T16:28:06
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+└─$ dirsearch -u 172.16.33.9  
+Target: http://172.16.33.9/
+
+[22:41:49] Starting:                                                                                      
+[22:41:52] 403 -  276B  - /.ht_wsr.txt                                      
+[22:41:52] 403 -  276B  - /.htaccess.bak1                                   
+[22:41:52] 403 -  276B  - /.htaccess.orig                                   
+[22:41:52] 403 -  276B  - /.htaccess.sample
+[22:41:52] 403 -  276B  - /.htaccess.save
+[22:41:52] 403 -  276B  - /.htaccess_extra                                  
+[22:41:52] 403 -  276B  - /.htaccess_orig
+[22:41:52] 403 -  276B  - /.htaccess_sc
+[22:41:52] 403 -  276B  - /.htaccessBAK
+[22:41:52] 403 -  276B  - /.htaccessOLD2
+[22:41:52] 403 -  276B  - /.htaccessOLD
+[22:41:52] 403 -  276B  - /.htm                                             
+[22:41:52] 403 -  276B  - /.html
+[22:41:52] 403 -  276B  - /.htpasswd_test                                   
+[22:41:52] 403 -  276B  - /.htpasswds
+[22:41:52] 403 -  276B  - /.httr-oauth                                      
+[22:41:53] 403 -  276B  - /.php                                             
+[22:42:05] 301 -  309B  - /core  ->  http://172.16.33.9/core/               
+[22:42:06] 200 -    0B  - /docs/                                                                                        
+[22:42:06] 301 -  309B  - /docs  ->  http://172.16.33.9/docs/                                                           
+[22:42:07] 200 -    3KB - /example.php                                                                                  
+[22:42:07] 200 -    1KB - /favicon.ico                                                                                  
+[22:42:10] 200 -    2KB - /index.php                                                                                    
+[22:42:10] 200 -    2KB - /index.php/login/                                                                             
+[22:42:11] 200 -    1KB - /LICENSE.txt                                                                                  
+[22:42:11] 301 -  309B  - /libs  ->  http://172.16.33.9/libs/               
+[22:42:13] 200 -  201B  - /manual/index.html                                
+[22:42:13] 301 -  311B  - /manual  ->  http://172.16.33.9/manual/           
+[22:42:18] 200 -   28B  - /print.php                                        
+[22:42:19] 200 -    2KB - /README.md                                        
+[22:42:20] 200 -  118B  - /rss.php                                          
+[22:42:20] 200 -  745B  - /search.php                                       
+[22:42:20] 403 -  276B  - /server-status/                                   
+[22:42:20] 403 -  276B  - /server-status                                    
+[22:42:22] 301 -  310B  - /skins  ->  http://172.16.33.9/skins/             
+[22:42:25] 200 -    0B  - /uploads/                                         
+[22:42:25] 301 -  312B  - /uploads  ->  http://172.16.33.9/uploads/  
