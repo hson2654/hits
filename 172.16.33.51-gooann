@@ -1,1 +1,200 @@
 
+
+└─$ nmap -p- 172.16.33.51 --open --reason
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-18 22:22 HKT
+Nmap scan report for 172.16.33.51
+Host is up, received syn-ack (0.033s latency).
+Not shown: 65384 closed tcp ports (conn-refused), 148 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE REASON
+21/tcp open  ftp     syn-ack
+22/tcp open  ssh     syn-ack
+80/tcp open  http    syn-ack
+
+
+
+└─$ nmap -sV -A 172.16.33.51 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-18 22:24 HKT
+Nmap scan report for 172.16.33.51
+Host is up (0.034s latency).
+Not shown: 997 closed tcp ports (conn-refused)
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:172.16.33.1
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 4
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 08:ee:e3:ff:31:20:87:6c:12:e7:1c:aa:c4:e7:54:f2 (RSA)
+|   256 ad:e1:1c:7d:e7:86:76:be:9a:a8:bd:b9:68:92:77:87 (ECDSA)
+|_  256 0c:e1:eb:06:0c:5c:b5:cc:1b:d1:fa:56:06:22:31:67 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+| http-robots.txt: 1 disallowed entry 
+|_Hackers
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 9.19 seconds
+
+
+└─$ dirsearch -u 172.16.33.51
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/_172.16.33.51/_24-04-18_22-30-20.txt
+
+Target: http://172.16.33.51/
+
+[22:30:20] Starting: 
+[22:30:24] 403 -  298B  - /.ht_wsr.txt
+[22:30:24] 403 -  301B  - /.htaccess.bak1
+[22:30:24] 403 -  303B  - /.htaccess.sample
+[22:30:24] 403 -  301B  - /.htaccess.save
+[22:30:24] 403 -  301B  - /.htaccess.orig
+[22:30:24] 403 -  302B  - /.htaccess_extra
+[22:30:24] 403 -  301B  - /.htaccess_orig
+[22:30:24] 403 -  299B  - /.htaccess_sc
+[22:30:24] 403 -  299B  - /.htaccessBAK
+[22:30:24] 403 -  299B  - /.htaccessOLD
+[22:30:24] 403 -  300B  - /.htaccessOLD2
+[22:30:24] 403 -  291B  - /.htm
+[22:30:24] 403 -  292B  - /.html
+[22:30:24] 403 -  301B  - /.htpasswd_test
+[22:30:24] 403 -  297B  - /.htpasswds
+[22:30:24] 403 -  298B  - /.httr-oauth
+[22:30:25] 403 -  291B  - /.php
+[22:30:25] 403 -  292B  - /.php3
+[22:30:37] 200 -  224B  - /CHANGELOG
+[22:30:39] 200 -   34KB - /COPYING
+[22:30:46] 200 -    1KB - /INSTALL
+[22:30:46] 301 -  317B  - /javascript  ->  http://172.16.33.51/javascript/
+[22:30:48] 200 -    2KB - /LICENSE
+[22:30:59] 200 -  954B  - /README.md
+[22:31:00] 200 -  315B  - /robots.txt
+[22:31:01] 403 -  300B  - /server-status
+[22:31:01] 403 -  301B  - /server-status/
+[22:31:07] 301 -  313B  - /upload  ->  http://172.16.33.51/upload/
+[22:31:07] 500 -   67B  - /upload/
+[22:31:11] 200 -    1KB - /wordpress/wp-login.php
+[22:31:11] 200 -    2KB - /wordpress/
+
+Task Completed
+
+
+WordPress Core < 4.7.1 - Username Enumeration                               | php/webapps/41497.php
+WordPress Core < 4.7.4 - Unauthorized Password Reset                        | linux/webapps/41963.txt
+
+
+http://172.16.33.51/wordpress/wp-admin/theme-editor.php?file=content-link.php&theme=twentyfourteen
+
+http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/content-link.php
+
+
+─$ wpscan --url http://172.16.33.51/wordpress/ --enumerate u   
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.25
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[+] URL: http://172.16.33.51/wordpress/ [172.16.33.51]
+[+] Started: Thu Apr 18 23:55:44 2024
+
+Interesting Finding(s):
+
+[+] Headers
+ | Interesting Entry: Server: Apache/2.4.18 (Ubuntu)
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[+] XML-RPC seems to be enabled: http://172.16.33.51/wordpress/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner/
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access/
+
+[+] WordPress readme found: http://172.16.33.51/wordpress/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] Upload directory has listing enabled: http://172.16.33.51/wordpress/wp-content/uploads/
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] The external WP-Cron seems to be enabled: http://172.16.33.51/wordpress/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[+] WordPress version 3.9.14 identified (Insecure, released on 2016-09-07).
+ | Found By: Rss Generator (Passive Detection)
+ |  - http://172.16.33.51/wordpress/?feed=rss2, <generator>http://wordpress.org/?v=3.9.14</generator>
+ |  - http://172.16.33.51/wordpress/?feed=comments-rss2, <generator>http://wordpress.org/?v=3.9.14</generator>
+
+[+] WordPress theme in use: twentyfourteen
+ | Location: http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/
+ | Latest Version: 3.9
+ | Last Updated: 2024-04-02T00:00:00.000Z
+ | Style URL: http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/style.css?ver=3.9.14
+ |
+ | Found By: Css Style In Homepage (Passive Detection)
+ |
+ | The version could not be determined.
+
+[+] Enumerating Users (via Passive and Aggressive Methods)
+ Brute Forcing Author IDs - Time: 00:00:00 <================================> (10 / 10) 100.00% Time: 00:00:00
+
+[i] User(s) Identified:
+
+[+] btrisk
+ | Found By: Author Posts - Display Name (Passive Detection)
+ | Confirmed By:
+ |  Rss Generator (Passive Detection)
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+
+[+] admin
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[!] No WPScan API Token given, as a result vulnerability data has not been output.
+[!] You can get a free API token with 25 daily requests by registering at https://wpscan.com/register
+
+[+] Finished: Thu Apr 18 23:55:48 2024
+[+] Requests Done: 59
+[+] Cached Requests: 6
+[+] Data Sent: 16.534 KB
+[+] Data Received: 87.458 KB
+[+] Memory used: 198.133 MB
+[+] Elapsed time: 00:00:04
