@@ -1,0 +1,48 @@
+└─$ sudo nmap -p 21,22,80 -sV -A 172.16.33.55
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-04-29 17:10 HKT
+Nmap scan report for 172.16.33.55
+Host is up (0.032s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.2
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_Can't get directory listing: ERROR
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:172.16.33.1
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 1
+|      vsFTPd 3.0.2 - secure, fast, stable
+|_End of status
+22/tcp open  ssh     OpenSSH 7.4 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 85:46:41:06:da:83:04:01:b0:e4:1f:9b:7e:8b:31:9f (RSA)
+|   256 e4:9c:b1:f2:44:f1:f0:4b:c3:80:93:a9:5d:96:98:d3 (ECDSA)
+|_  256 65:cf:b4:af:ad:86:56:ef:ae:8b:bf:f2:f0:d9:be:10 (ED25519)
+80/tcp open  http    Apache httpd 2.4.6 ((CentOS) PHP/7.2.33)
+|_http-title: Insanity - UK and European Servers
+|_http-server-header: Apache/2.4.6 (CentOS) PHP/7.2.33
+| http-methods: 
+|_  Potentially risky methods: TRACE
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose|specialized|storage-misc
+Running (JUST GUESSING): Linux 3.X|4.X|5.X (90%), Crestron 2-Series (86%), HP embedded (85%)
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5.1 cpe:/o:crestron:2_series cpe:/h:hp:p2000_g3
+Aggressive OS guesses: Linux 3.10 - 4.11 (90%), Linux 3.2 - 4.9 (90%), Linux 3.18 (88%), Linux 5.1 (87%), Crestron XPanel control system (86%), Linux 3.16 (86%), HP P2000 G3 NAS device (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: OS: Unix
+
+TRACEROUTE (using port 80/tcp)
+HOP RTT      ADDRESS
+1   33.07 ms 10.8.0.1
+2   33.17 ms 172.16.33.55
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 12.76 seconds
