@@ -1,0 +1,306 @@
+└─$ nmap -p 20,21,22,53,80,123,137,138,139,666,3306,12380 -sV -A 172.16.226.129
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-05 21:21 HKT
+Nmap scan report for 172.16.226.129
+Host is up (0.00058s latency).
+
+PORT      STATE  SERVICE     VERSION
+20/tcp    closed ftp-data
+21/tcp    open   ftp         vsftpd 2.0.8 or later
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_Can't get directory listing: PASV failed: 550 Permission denied.
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to 172.16.226.130
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 2
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+22/tcp    open   ssh         OpenSSH 7.2p2 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 81:21:ce:a1:1a:05:b1:69:4f:4d:ed:80:28:e8:99:05 (RSA)
+|   256 5b:a5:bb:67:91:1a:51:c2:d3:21:da:c0:ca:f0:db:9e (ECDSA)
+|_  256 6d:01:b7:73:ac:b0:93:6f:fa:b9:89:e6:ae:3c:ab:d3 (ED25519)
+53/tcp    open   domain      dnsmasq 2.75
+| dns-nsid: 
+|_  bind.version: dnsmasq-2.75
+80/tcp    open   http        PHP cli server 5.5 or later
+|_http-title: Site doesn't have a title (text/html; charset=UTF-8).
+123/tcp   closed ntp
+137/tcp   closed netbios-ns
+138/tcp   closed netbios-dgm
+139/tcp   open   netbios-ssn Samba smbd 4.3.9-Ubuntu (workgroup: WORKGROUP)
+666/tcp   open   tcpwrapped
+3306/tcp  open   mysql       MySQL 5.7.12-0ubuntu1
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.7.12-0ubuntu1
+|   Thread ID: 10
+|   Capabilities flags: 63487
+|   Some Capabilities: InteractiveClient, DontAllowDatabaseTableColumn, Speaks41ProtocolNew, Support41Auth, ODBCClient, LongPassword, Speaks41ProtocolOld, SupportsTransactions, LongColumnFlag, FoundRows, SupportsLoadDataLocal, IgnoreSigpipes, IgnoreSpaceBeforeParenthesis, ConnectWithDatabase, SupportsCompression, SupportsMultipleStatments, SupportsMultipleResults, SupportsAuthPlugins
+|   Status: Autocommit
+|   Salt: x#O\x03D<\x0D\x14?\x18S\x17\x12
+| (C\x17,"C
+|_  Auth Plugin Name: mysql_native_password
+12380/tcp open   http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Tim, we need to-do better next year for Initech
+Service Info: Host: RED; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled but not required
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.3.9-Ubuntu)
+|   Computer name: red
+|   NetBIOS computer name: RED\x00
+|   Domain name: \x00
+|   FQDN: red
+|_  System time: 2024-05-05T22:22:17+01:00
+| smb2-time: 
+|   date: 2024-05-05T21:22:16
+|_  start_date: N/A
+|_clock-skew: mean: 7h39m58s, deviation: 34m37s, median: 7h59m57s
+|_nbstat: NetBIOS name: RED, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 83.95 seconds
+
+
+#for ftp, get a file named note, cannot upload
+
+Connected to 172.16.226.129.
+220-
+220-|-----------------------------------------------------------------------------------------|
+220-| Harry, make sure to update the banner when you get a chance to show who has access here |
+220-|-----------------------------------------------------------------------------------------|
+220-
+220 
+Name (172.16.226.129:kali): Anonymous
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+550 Permission denied.
+200 PORT command successful. Consider using PASV.
+150 Here comes the directory listing.
+-rw-r--r--    1 0        0             107 Jun 03  2016 note
+226 Directory send OK.
+
+└─$ cat note                                                                                                     
+Elly, make sure you update the payload information. Leave it in your FTP account once your are done, John.
+
+ftp> put hash.txt
+local: hash.txt remote: hash.txt
+200 PORT command successful. Consider using PASV.
+550 Permission denied.
+
+
+#for 80. nothing suspicious 
+└─$ dirsearch -u http://172.16.226.129/ -f php html                                           
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                 
+ (_||| _) (/_(_|| (_| )                                                                          
+                                                                                                 
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 26763
+
+Output File: /home/kali/reports/http_172.16.226.129/__24-05-05_21-45-17.txt
+
+Target: http://172.16.226.129/
+
+[21:45:18] Starting:                                                                             
+[21:45:18] 200 -  220B  - /.bash_logout                                     
+[21:45:18] 200 -    4KB - /.bashrc                                          
+[21:45:20] 200 -  675B  - /.profile  
+
+
+└─$ dirsearch -u http://172.16.226.129:12380 -f php html                                         
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                 
+ (_||| _) (/_(_|| (_| )                                                                          
+                                                                                                 
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 26763
+
+Output File: /home/kali/reports/http_172.16.226.129_12380/_24-05-05_21-54-10.txt
+
+Target: http://172.16.226.129:12380/
+
+[21:54:10] Starting:                                                                             
+                                                                             
+Task Completed                                                                                   
+
+
+enum4linux IP
+//172.16.226.129/kathy  Mapping: OK Listing: OK Writing: N/A
+//172.16.226.129/tmp    Mapping: OK Listing: OK Writing: N/A
+
+S-1-22-1-1000 Unix User\peter (Local User)                                                       
+S-1-22-1-1001 Unix User\RNunemaker (Local User)
+S-1-22-1-1002 Unix User\ETollefson (Local User)
+S-1-22-1-1003 Unix User\DSwanger (Local User)
+S-1-22-1-1004 Unix User\AParnell (Local User)
+S-1-22-1-1005 Unix User\SHayslett (Local User)
+S-1-22-1-1006 Unix User\MBassin (Local User)
+S-1-22-1-1007 Unix User\JBare (Local User)
+S-1-22-1-1008 Unix User\LSolum (Local User)
+S-1-22-1-1009 Unix User\IChadwick (Local User)
+S-1-22-1-1010 Unix User\MFrei (Local User)
+S-1-22-1-1011 Unix User\SStroud (Local User)
+S-1-22-1-1012 Unix User\CCeaser (Local User)
+S-1-22-1-1013 Unix User\JKanode (Local User)
+S-1-22-1-1014 Unix User\CJoo (Local User)
+S-1-22-1-1015 Unix User\Eeth (Local User)
+S-1-22-1-1016 Unix User\LSolum2 (Local User)
+S-1-22-1-1017 Unix User\JLipps (Local User)
+S-1-22-1-1018 Unix User\jamie (Local User)
+S-1-22-1-1019 Unix User\Sam (Local User)
+S-1-22-1-1020 Unix User\Drew (Local User)
+S-1-22-1-1021 Unix User\jess (Local User)
+S-1-22-1-1022 Unix User\SHAY (Local User)
+S-1-22-1-1023 Unix User\Taylor (Local User)
+S-1-22-1-1024 Unix User\mel (Local User)
+S-1-22-1-1025 Unix User\kai (Local User)
+S-1-22-1-1026 Unix User\zoe (Local User)
+S-1-22-1-1027 Unix User\NATHAN (Local User)
+S-1-22-1-1028 Unix User\www (Local User)
+S-1-22-1-1029 Unix User\elly (Local User)
+
+
+smb: \> cd kathy_stuff\
+smb: \kathy_stuff\> ls
+  .                                   D        0  Sun Jun  5 23:02:27 2016
+  ..                                  D        0  Sat Jun  4 00:52:52 2016
+  todo-list.txt                       N       64  Sun Jun  5 23:02:27 2016
+
+                19478204 blocks of size 1024. 16393820 blocks available
+smb: \kathy_stuff\> get todo-list.txt 
+getting file \kathy_stuff\todo-list.txt of size 64 as todo-list.txt (5.2 KiloBytes/sec) (average 5.2 KiloBytes/sec)
+smb: \kathy_stuff\> cd ..
+smb: \> ls
+  .                                   D        0  Sat Jun  4 00:52:52 2016
+  ..                                  D        0  Tue Jun  7 05:39:56 2016
+  kathy_stuff                         D        0  Sun Jun  5 23:02:27 2016
+  backup                              D        0  Sun Jun  5 23:04:14 2016
+
+                19478204 blocks of size 1024. 16393816 blocks available
+smb: \> cd backup\
+smb: \backup\> ls
+  .                                   D        0  Sun Jun  5 23:04:14 2016
+  ..                                  D        0  Sat Jun  4 00:52:52 2016
+  vsftpd.conf                         N     5961  Sun Jun  5 23:03:45 2016
+  wordpress-4.tar.gz                  N  6321767  Tue Apr 28 01:14:46 2015
+
+└─$ cat todo-list.txt                                                                            
+I'm making sure to backup anything important for Initech, Kathy
+
+
+
+nc -nv IP 666 > message2
+
+└─$ file message2                                                                                
+message2: Zip archive data, at least v2.0 to extract, compression method=deflate
+
+┌──(kali㉿kali)-[~]
+└─$ unzip message2
+Archive:  message2
+  inflating: message2.jpg            
+
+
+└─$ strings message2.jpg                                                                         
+JFIF
+vPhotoshop 3.0
+8BIM
+1If you are reading this, you should get a cookie!
+8BIM
+$3br
+%&'()*456789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz
+        #3R
+&'()*56789:CDEFGHIJSTUVWXYZcdefghijstuvwxyz
+/<}m
+>,xr?
+u-o[
+Sxw]
+v;]>
+|_m7
+l~!|0
+<Elu
+I[[k:>
+>5[^k
+;o{o
+>xgH
+mCXi
+PE<R"
+umcV
+g[Y@=
+[\Y_
+\Oku
+'X|(
+?=?i
+//Do
+1okb
+,>,&
+n<;oc
+*?      xC
+~ |y
+6{M6
+
+
+#12380
+https://172.16.226.129:12380/
+
+Target: https://172.16.226.129:12380/
+
+[22:36:54] Starting:                                                                             
+[22:36:56] 403 -  303B  - /.ht_wsr.txt                                      
+[22:36:56] 403 -  306B  - /.htaccess.bak1                                   
+[22:36:56] 403 -  306B  - /.htaccess.save
+[22:36:56] 403 -  306B  - /.htaccess.orig
+[22:36:56] 403 -  307B  - /.htaccess_extra                                  
+[22:36:56] 403 -  304B  - /.htaccess_sc
+[22:36:56] 403 -  304B  - /.htaccessOLD
+[22:36:56] 403 -  304B  - /.htaccessBAK
+[22:36:56] 403 -  308B  - /.htaccess.sample                                 
+[22:36:56] 403 -  297B  - /.html                                            
+[22:36:56] 403 -  306B  - /.htaccess_orig
+[22:36:56] 403 -  305B  - /.htaccessOLD2                                    
+[22:36:56] 403 -  306B  - /.htpasswd_test                                   
+[22:36:56] 403 -  302B  - /.htpasswds
+[22:36:56] 403 -  296B  - /.htm                                             
+[22:36:56] 403 -  303B  - /.httr-oauth                                      
+[22:36:56] 403 -  296B  - /.php                                             
+[22:36:56] 403 -  297B  - /.php3                                              
+[22:37:16] 301 -  331B  - /javascript  ->  https://172.16.226.129:12380/javascript/
+[22:37:22] 301 -  331B  - /phpmyadmin  ->  https://172.16.226.129:12380/phpmyadmin/
+[22:37:23] 200 -    3KB - /phpmyadmin/doc/html/index.html                   
+[22:37:23] 200 -    3KB - /phpmyadmin/                                      
+[22:37:23] 200 -    3KB - /phpmyadmin/index.php                             
+[22:37:26] 200 -   59B  - /robots.txt                                       
+[22:37:27] 403 -  305B  - /server-status                                    
+[22:37:27] 403 -  306B  - /server-status/   
+
+https://172.16.226.129:12380/robots.txt
+
+User-agent: *
+Disallow: /admin112233/  # http://ww1.xss-payloads.com/?usid=18&utid=25723778798
+Disallow: /blogblog/   # a wordpress pgge
+    wp-content
+    wp-admin
+
+
