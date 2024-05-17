@@ -1,1 +1,27 @@
 
+└─$ nmap -sV -A -p 80,88,110,995 172.16.33.9  
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-17 06:03 EDT
+Nmap scan report for 172.16.33.9
+Host is up (0.039s latency).
+
+PORT    STATE SERVICE  VERSION
+80/tcp  open  http     Apache httpd 2.4.38 ((Debian))
+|_http-title: Apache2 Debian Default Page: It works
+|_http-server-header: Apache/2.4.38 (Debian)
+88/tcp  open  http     nginx 1.14.2
+|_http-title: 404 Not Found
+|_http-server-header: nginx/1.14.2
+110/tcp open  pop3     Courier pop3d
+|_pop3-capabilities: TOP LOGIN-DELAY(10) IMPLEMENTATION(Courier Mail Server) PIPELINING STLS UTF8(USER) UIDL USER
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Courier Mail Server/stateOrProvinceName=NY/countryName=US
+| Subject Alternative Name: email:postmaster@example.com
+| Not valid before: 2020-09-17T16:28:06
+|_Not valid after:  2021-09-17T16:28:06
+995/tcp open  ssl/pop3 Courier pop3d
+|_pop3-capabilities: TOP LOGIN-DELAY(10) PIPELINING IMPLEMENTATION(Courier Mail Server) UTF8(USER) UIDL USER
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Courier Mail Server/stateOrProvinceName=NY/countryName=US
+| Subject Alternative Name: email:postmaster@example.com
+| Not valid before: 2020-09-17T16:28:06
+|_Not valid after:  2021-09-17T16:28:06
