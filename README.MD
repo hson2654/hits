@@ -9,4 +9,4 @@ The roadmaps of pretty girls..
 80 88 89 92 95 96
 
 sar2html 13
-suid, bash shell
+suid, short bash shell
