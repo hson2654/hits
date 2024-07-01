@@ -1,0 +1,19 @@
+└─$ sudo dirsearch -u http://172.16.33.25/
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                        
+ (_||| _) (/_(_|| (_| )                                                                                 
+                                                                                                        
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/http_172.16.33.25/__24-07-01_00-11-06.txt
+
+Target: http://172.16.33.25/
+
+[00:11:06] Starting:                                                                                    
+[00:11:34] 200 -   28KB - /wordpress/                                       
+[00:11:34] 200 -    7KB - /wordpress/wp-login.php                           
+                                                                             
+Task Completed  
+
