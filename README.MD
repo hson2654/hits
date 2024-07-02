@@ -15,3 +15,5 @@ Natrj/18
 file inclusion
 
 sunset: dawn2/21
+
+loly 25: wordpress, reverse shell, kernel exp
