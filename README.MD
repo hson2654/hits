@@ -1,12 +1,7 @@
 The roadmaps of pretty girls..
 
-#172.16.33.35 30 55 49 78 79 98 99 103 108 201(AD)#
-
-#172.16.33.9 13 18 21 25 29  #
-2/ 78 49 55
-#172.16.33.40 43 47 51 53 58#
-
-80 88 89 92 95 96
+#172.16.33.35 30 40 43 47 55 49 51 55 58 62 66 69 71 74 78 79 80 88 89 92 95 96 98 99
+103 108 184 187 189 192 192 201(AD)#
 
 sar2html 13
 suid, short bash shell
@@ -17,3 +12,5 @@ file inclusion
 sunset: dawn2/21
 
 loly 25: wordpress, reverse shell, kernel exp
+
+djinn3 29: 
