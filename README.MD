@@ -11,9 +11,11 @@ file inclusion
 
 sunset: dawn2/21
 
-loly 25: wordpress, reverse shell, kernel exp
+loly 25: wordpress, reverse shell; kernel exp
 
 djinn3 29: 
 
-funbox2 30: ftp, ssh id_rsa, sudo -s
+funbox2 30: ftp, ssh id_rsa; sudo -s
 
+solid 35: 25smtp, 110pop3; search suid file 
+ 
