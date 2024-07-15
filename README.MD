@@ -18,4 +18,6 @@ djinn3 29:
 funbox2 30: ftp, ssh id_rsa; sudo -s
 
 solid 35: 25smtp, 110pop3; search suid file 
+
+sunset:decoy:40: linux shadow decrypt, pspy
  
