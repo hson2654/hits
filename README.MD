@@ -20,4 +20,12 @@ funbox2 30: ftp, ssh id_rsa; sudo -s
 solid 35: 25smtp, 110pop3; search suid file 
 
 sunset:decoy:40: linux shadow decrypt, pspy
- 
+
+potato1:43  ftp, strcmp(php)-auth bypass,file inclusion. os, dirction tracepath
+
+sunset dawn3: 47 buffer overflow
+
+ insanity55: sqli
+
+glosgow smile 58: cewl(create passwd list), burp to brute force, joomla dev tool(joomscan), php reverse shell, su users, privi of file.
+
