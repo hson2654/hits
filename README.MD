@@ -26,3 +26,6 @@ potato1:43  ftp, strcmp(php)-auth bypass,file inclusion. os, dirction tracepath
 sunset dawn3: 47 buffer overflow
 
  insanity55: sqli
+
+glosgow smile 58: cewl(create passwd list), burp to brute force, joomla dev tool(joomscan), php reverse shell, su users, privi of file.
+
