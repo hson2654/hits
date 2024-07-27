@@ -23,3 +23,5 @@ solid 35: 25smtp, 110pop3; search suid file
 sunset:decoy:40: linux shadow decrypt, pspy
 
 seppuku 62: ftp,139,445 smb, enum4linux(smb scanner), hydra ssh, ssh -i private key, sudo -l, bash -c -i
+
+gaara 69: gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find / -type f -perm -u=s), pyhton os.execl
