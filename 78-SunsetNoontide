@@ -1,0 +1,41 @@
+└─$ nmap -p- 172.16.33.78
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-30 16:26 CST
+Nmap scan report for 172.16.33.78
+Host is up (0.030s latency).
+Not shown: 65532 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+6667/tcp open  irc
+6697/tcp open  ircs-u
+8067/tcp open  infi-async
+
+
+
+
+#use irssi to access the irc server, got the version is 3.2.8.1
+
+
+ Irssi v1.4.5 - https://irssi.org                                                                                           
+19:25 -!- Irssi: Looking up 172.16.33.78
+19:25 -!- Irssi: Connecting to 172.16.33.78 [172.16.33.78] port 6667
+19:25 Waiting for CAP LS response...
+19:25 -!- Irssi: Connection to 172.16.33.78 established
+19:25 !irc.foonet.com *** Looking up your hostname...
+19:26 !irc.foonet.com *** Couldn't resolve your hostname; using your IP address instead
+19:26 -!- Welcome to the ROXnet IRC Network edk!edk@172.16.33.1
+19:26 -!- Your host is irc.foonet.com, running version Unreal3.2.8.1
+19:26 -!- This server was created Sat 08 Aug EDT at 2020 07:03:52 PM
+19:26 -!- irc.foonet.com Unreal3.2.8.1 iowghraAsORTVSxNCWqBzvdHtGp lvhopsmntikrRcaqOALQbSeIKVfMCuzNTGj
+19:26 -!- UHNAMES NAMESX SAFELIST HCN MAXCHANNELS=10 CHANLIMIT=#:10 MAXLIST=b:60,e:60,I:60 NICKLEN=30 CHANNELLEN=32 
+          TOPICLEN=307 KICKLEN=307 AWAYLEN=307 MAXTARGETS=20 are supported by this server
+19:26 -!- WALLCHOPS WATCH=128 WATCHOPTS=A SILENCE=15 MODES=12 CHANTYPES=# PREFIX=(qaohv)~&@%+ 
+          CHANMODES=beI,kfL,lj,psmntirRcOAQKVCuzNSMTG NETWORK=ROXnet CASEMAPPING=ascii EXTBAN=~,cqnr ELIST=MNUCT 
+          STATUSMSG=~&@%+ are supported by this server
+19:26 -!- EXCEPTS INVEX CMDS=KNOCK,MAP,DCCALLOW,USERIP are supported by this server
+19:26 -!- There are 1 users and 0 invisible on 1 servers
+19:26 -!- I have 1 clients and 0 servers
+19:26 -!- Current Local Users: 1  Max: 1
+19:26 -!- Current Global Users: 1  Max: 1
+19:26 -!- MOTD File is missing
+19:26 -!- Mode change [+iwx] for user edk
+19:26 -!- You may not reregister
+
