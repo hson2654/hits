@@ -1,0 +1,95 @@
+└─$ nmap -p- 172.16.33.58         
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-26 19:21 CST
+
+                                                                                                                            
+┌──(edk㉿kali)-[~]
+└─$ nmap -p- 172.16.33.66
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-26 19:22 CST
+Nmap scan report for 172.16.33.66
+Host is up (0.031s latency).
+Not shown: 65533 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+8000/tcp open  http-alt
+
+Nmap done: 1 IP address (1 host up) scanned in 16.69 seconds
+                                                                                                                            
+┌──(edk㉿kali)-[~]
+└─$ nmap -sV -A 172.16.33.66 8000 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-26 19:22 CST
+Nmap scan report for 172.16.33.66
+Host is up (0.031s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu2.7 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 d9:c1:5c:20:9a:77:54:f8:a3:41:18:92:1b:1e:e5:35 (RSA)
+|   256 df:d4:f2:61:89:61:ac:e0:ee:3b:5d:07:0d:3f:0c:87 (ECDSA)
+|_  256 8b:e4:45:ab:af:c8:0e:7e:2a:e4:47:e7:52:f9:bc:71 (ED25519)
+8000/tcp open  http    Apache httpd 2.4.25 ((Debian))
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Blog &#8211; Just another WordPress site
+|_http-server-header: Apache/2.4.25 (Debian)
+|_http-generator: WordPress 5.0.3
+| http-robots.txt: 2 disallowed entries 
+|_/upload.php /uploads
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+└─$ sudo dirsearch -u http://172.16.33.66:8000
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3                                                                                            
+ (_||| _) (/_(_|| (_| )                                                                                                     
+                                                                                                                            
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/edk/reports/http_172.16.33.66_8000/_24-07-26_19-24-10.txt
+
+Target: http://172.16.33.66:8000/
+
+[19:24:10] Starting:                                                                                                        
+[19:24:13] 403 -  300B  - /.ht_wsr.txt                                      
+[19:24:13] 403 -  303B  - /.htaccess.bak1                                   
+[19:24:13] 403 -  305B  - /.htaccess.sample                                 
+[19:24:13] 403 -  303B  - /.htaccess.orig
+[19:24:13] 403 -  303B  - /.htaccess.save
+[19:24:13] 403 -  304B  - /.htaccess_extra                                  
+[19:24:13] 403 -  303B  - /.htaccess_orig                                   
+[19:24:13] 403 -  301B  - /.htaccess_sc
+[19:24:13] 403 -  301B  - /.htaccessBAK
+[19:24:13] 403 -  302B  - /.htaccessOLD2
+[19:24:13] 403 -  301B  - /.htaccessOLD
+[19:24:13] 403 -  293B  - /.htm                                             
+[19:24:13] 403 -  294B  - /.html                                            
+[19:24:13] 403 -  303B  - /.htpasswd_test                                   
+[19:24:13] 403 -  300B  - /.httr-oauth
+[19:24:13] 403 -  299B  - /.htpasswds
+[19:24:30] 301 -    0B  - /index.php  ->  http://172.16.33.66:8000/         
+[19:24:30] 301 -    0B  - /index.php/login/  ->  http://172.16.33.66:8000/login/
+[19:24:32] 200 -    7KB - /license.txt                                      
+[19:24:40] 200 -    3KB - /readme.html                                      
+[19:24:41] 200 -   52B  - /robots.txt                                       
+[19:24:41] 403 -  303B  - /server-status/                                   
+[19:24:41] 403 -  302B  - /server-status                                    
+[19:24:46] 200 -  260B  - /upload.php                                       
+[19:24:46] 301 -  321B  - /uploads  ->  http://172.16.33.66:8000/uploads/   
+[19:24:46] 403 -  297B  - /uploads/                                         
+[19:24:49] 301 -  322B  - /wp-admin  ->  http://172.16.33.66:8000/wp-admin/ 
+[19:24:49] 400 -    1B  - /wp-admin/admin-ajax.php                          
+[19:24:49] 200 -    0B  - /wp-config.php                                    
+[19:24:49] 200 -    0B  - /wp-content/                                      
+[19:24:49] 301 -  324B  - /wp-content  ->  http://172.16.33.66:8000/wp-content/
+[19:24:49] 302 -    0B  - /wp-admin/  ->  http://localhost:8000/wp-login.php?redirect_to=http%3A%2F%2F172.16.33.66%3A8000%2Fwp-admin%2F&reauth=1
+[19:24:49] 500 -    3KB - /wp-admin/setup-config.php
+[19:24:49] 200 -  537B  - /wp-admin/install.php
+[19:24:49] 403 -  327B  - /wp-content/plugins/akismet/akismet.php
+[19:24:49] 403 -  325B  - /wp-content/plugins/akismet/admin.php
+[19:24:49] 200 -  184B  - /wp-content/plugins/hello.php                     
+[19:24:49] 200 -  187B  - /wp-includes/rss-functions.php                    
+[19:24:49] 403 -  301B  - /wp-includes/                                     
+[19:24:49] 302 -    0B  - /wp-signup.php  ->  http://localhost:8000/wp-login.php?action=register
+[19:24:49] 301 -  325B  - /wp-includes  ->  http://172.16.33.66:8000/wp-includes/
+[19:24:49] 200 -    0B  - /wp-cron.php
+[19:24:49] 200 -    1KB - /wp-login.php                                     
+[19:24:49] 405 -   42B  - /xmlrpc.php    
