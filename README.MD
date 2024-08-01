@@ -27,3 +27,5 @@ seppuku 62: ftp,139,445 smb, enum4linux(smb scanner), hydra ssh, ssh -i private 
 gaara 69: gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find / -type f -perm -u=s), pyhton os.execl
 
 sosimple 71: wpscan --enumlate , and -u bruteforce, plugin “social warfare.” rce to get shell, sudo -l, service sudoer.
+
+Y0usef 74: site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
