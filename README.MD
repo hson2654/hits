@@ -29,3 +29,5 @@ gaara 69: gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find 
 sosimple 71: wpscan --enumlate , and -u bruteforce, plugin “social warfare.” rce to get shell, sudo -l, service sudoer.
 
 Y0usef 74: site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
+
+doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is running on root privi; sudo -l, tcpdump to escalate privi.
