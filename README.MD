@@ -31,3 +31,5 @@ sosimple 71: wpscan --enumlate , and -u bruteforce, plugin “social warfare.”
 Y0usef 74: site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
 
 doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is running on root privi; sudo -l, tcpdump to escalate privi.
+
+evil:one: fuff-find parameter of web::cat the .ssh-id_rsa::generate linux passwd file content::
