@@ -1,0 +1,41 @@
+└─$ nmap -sV -sC -p 80,139,445,8000 172.16.33.88 --min-rate 900 -Pn
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-13 19:20 PST
+Nmap scan report for 172.16.33.88
+Host is up (0.27s latency).
+
+PORT     STATE    SERVICE     VERSION
+80/tcp   open     http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-title: Photographer by v1n1v131r4
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+139/tcp  filtered netbios-ssn
+445/tcp  open     netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+8000/tcp open     http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-generator: Koken 0.22.24
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: daisa ahomi
+Service Info: Host: PHOTOGRAPHER
+
+Host script results:
+|_clock-skew: mean: -789d15h02m55s, deviation: 2h53m14s, median: -789d16h42m56s
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled but not required
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: photographer
+|   NetBIOS computer name: PHOTOGRAPHER\x00
+|   Domain name: \x00
+|   FQDN: photographer
+|_  System time: 2022-11-16T05:38:21-05:00
+| smb2-time: 
+|   date: 2022-11-16T10:38:22
+|_  start_date: N/A
+|_nbstat: NetBIOS name: PHOTOGRAPHER, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 70.95 seconds
