@@ -1,0 +1,7 @@
+└─$ nmap -sV -sC -p 80 172.16.33.88 --min-rate 900 -Pn 
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-13 19:33 PST
+Nmap scan report for 172.16.33.88
+Host is up.
+
+PORT   STATE    SERVICE VERSION
+80/tcp filtered http
