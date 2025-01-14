@@ -1,0 +1,6 @@
+Not shown: 60369 closed tcp ports (conn-refused), 5162 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+111/tcp   open  rpcbind
+38734/tcp open  unknown
