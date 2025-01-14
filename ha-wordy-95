@@ -1,0 +1,62 @@
+└─$ nmap -sV -sC 80 172.16.33.95 --min-rate 900 -Pn
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-13 23:23 PST
+Warning: 172.16.33.95 giving up on port because retransmission cap hit (10).
+Nmap scan report for 80 (0.0.0.80)
+Host is up.
+All 1000 scanned ports on 80 (0.0.0.80) are in ignored states.
+Not shown: 1000 filtered tcp ports (no-response)
+
+Nmap scan report for 172.16.33.95
+Host is up (0.22s latency).
+Not shown: 974 closed tcp ports (conn-refused)
+PORT      STATE    SERVICE           VERSION
+22/tcp    open     ssh               OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 9d:d0:98:da:0d:32:3d:0b:3f:42:4d:d7:93:4f:fd:60 (RSA)
+|   256 4c:f4:2e:24:82:cf:9c:8d:e2:0c:52:4b:2e:a5:12:d9 (ECDSA)
+|_  256 a9:fb:e3:f4:ba:d6:1e:72:e7:97:25:82:87:6e:ea:01 (ED25519)
+80/tcp    open     http              Apache httpd 2.4.29
+
+
+
+
+└─$ dirsearch -u http://172.16.33.95
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/reports/http_172.16.33.95/_25-01-13_23-27-58.txt
+
+Target: http://172.16.33.95/
+
+[23:27:58] Starting: 
+[23:29:21] 403 -  277B  - /.ht_wsr.txt
+[23:29:21] 403 -  277B  - /.htaccess.save
+[23:29:21] 403 -  277B  - /.htaccess_extra
+[23:29:21] 403 -  277B  - /.htaccess_sc
+[23:29:21] 403 -  277B  - /.htaccessBAK
+[23:29:22] 403 -  277B  - /.htaccessOLD2
+[23:29:22] 403 -  277B  - /.htpasswds
+[23:29:22] 403 -  277B  - /.htpasswd_test
+[23:29:22] 403 -  277B  - /.htaccess_orig
+[23:29:22] 403 -  277B  - /.html
+[23:29:22] 403 -  277B  - /.htaccess.sample
+[23:29:23] 403 -  277B  - /.htaccess.orig
+[23:29:23] 403 -  277B  - /.httr-oauth
+[23:29:24] 403 -  277B  - /.htm
+[23:29:27] 403 -  277B  - /.htaccess.bak1
+[23:29:28] 403 -  277B  - /.htaccessOLD
+[23:29:50] 403 -  277B  - /.php
+[23:38:24] 301 -  317B  - /javascript  ->  http://172.16.33.95/javascript/
+[23:40:29] 301 -  317B  - /phpmyadmin  ->  http://172.16.33.95/phpmyadmin/
+[23:40:43] 200 -    3KB - /phpmyadmin/doc/html/index.html
+[23:40:43] 200 -    3KB - /phpmyadmin/
+[23:40:43] 200 -    3KB - /phpmyadmin/index.php
+[23:41:57] 403 -  277B  - /server-status/
+[23:42:01] 403 -  277B  - /server-status
+[23:44:27] 200 -    7KB - /wordpress/
+[23:44:30] 200 -    2KB - /wordpress/wp-login.php
