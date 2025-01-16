@@ -36,3 +36,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   fuff-find parameter of web::cat the .ssh-id_rsa from web url::find p@asswd editable：：generate linux passwd file content::
 #### dc-9
   sqli, LFI, port knock 22, sudo -l, add suer with root privi to passwd
+#### pwned1
+  dirsearch with medium dirc|| ssh -i || es: group, docker -v /:/media  chroot
