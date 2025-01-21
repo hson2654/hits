@@ -38,3 +38,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   sqli, LFI, port knock 22, sudo -l, add suer with root privi to passwd
 #### pwned1
   dirsearch with medium dirc|| ssh -i || es: group, docker -v /:/media  chroot
+#### tr0ll
+  dirsearch with medium dirc, .pacp searching, hidden direc and again and ag, get id and passwd list, hydra ssh, ubuntu kernel vuln
