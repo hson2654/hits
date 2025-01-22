@@ -14,7 +14,7 @@ sunset: dawn2/21
 
 loly 25: wordpress, reverse shell; kernel exp
 
-djinn3 29:
+djinn3 29: SSTI get reverse shell, pspy to find cron job, use cron job to create credential to .ssh/authorized_keys, sudoers file for es
 
 funbox2 30: ftp, ssh id_rsa; sudo -s
 
