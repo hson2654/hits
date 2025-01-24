@@ -40,3 +40,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   dirsearch with medium dirc|| ssh -i || es: group, docker -v /:/media  chroot
 #### tr0ll
   dirsearch with medium dirc, .pacp searching, hidden direc and again and ag, get id and passwd list, hydra ssh, ubuntu kernel vuln
+#### photographer
+  139/445 smb, php reverse shell, file upload(modify suffix to by pass front end format check), esclate privi suid  php7.2
