@@ -1,4 +1,0 @@
-Not shown: 57461 closed tcp ports (conn-refused), 8072 filtered tcp ports (no-response)
-PORT   STATE SERVICE
-22/tcp open  ssh
-80/tcp open  http
