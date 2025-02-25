@@ -49,3 +49,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   wordpress, git folder(GitTools- dumper,finder), suid git
 #### born2root1
   privatekey not accept(PubkeyAcceptedKeyTypes=ssh-rsa), cat /crontab
+#### raven 1
+  wpscan --username to brute f the passwd, showmount for rpc, sudo -l- python to es
