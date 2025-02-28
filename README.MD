@@ -51,3 +51,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   privatekey not accept(PubkeyAcceptedKeyTypes=ssh-rsa), cat /crontab
 #### raven 1
   wpscan --username to brute f the passwd, showmount for rpc, sudo -l- python to es
+#### ha-waordy
+  wpcan --username bruteforce to identify plusgins, use vuln to esclate scrf as aarti, get the useful infor of admin passwd, modify template page as reverse shell page, es: suid cp, create new user with 0:0 root, cp to overwrite passwd, su newuser.
