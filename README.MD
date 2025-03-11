@@ -3,7 +3,6 @@ The roadmaps of pretty girls..
 #### #172.16.33.35 30 40 43 47 55 49 51 55 58 62 66 69 71 74 78 79 80 88 89 92 95 96 98 99
 
 103 108 184 187 189 192 192 201(AD)#
-https://github.com/hson2654/hits/blob/main/README.MD
 sar2html 13
 suid, short bash shell
 
@@ -55,3 +54,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   wpcan --username bruteforce to identify plusgins, use vuln to esclate scrf as aarti, get the useful infor of admin passwd, modify template page as reverse shell page, es: suid cp, create new user with 0:0 root, cp to overwrite passwd, su newuser.
 #### raven-2
   phpmailer vuln remote code ex, if mysql is used, check wp-config for root passwd. fail to es
+#### bottleneck
+  dir big dirc,php reverseshell uploaded to get shell, sudo -l to su a nromal user shell, 
