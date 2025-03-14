@@ -56,3 +56,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   phpmailer vuln remote code ex, if mysql is used, check wp-config for root passwd. fail to es
 #### bottleneck
   dir big dirc,php reverseshell uploaded to get shell, sudo -l to su a nromal user shell, 
+#### sunset1
+  ftp, john the reeper to crack shadow passwd, sudo -l, ed
