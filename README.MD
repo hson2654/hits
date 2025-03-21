@@ -58,3 +58,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   dir big dirc,php reverseshell uploaded to get shell, sudo -l to su a nromal user shell, 
 #### sunset1
   ftp, john the reeper to crack shadow passwd, sudo -l, ed
+#### sunset-midnight
+  3306 mysql hydra root/passwd; update passwd value in mysql; upload on line php reverseshell in wp, by adding upload plugins; check wp-content wp-config.php to get localhost passwd; fing -perm -u=s; export $PATH;
