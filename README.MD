@@ -81,3 +81,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   wp user brute force; photo exiftool to veiw info; hidden port , not always open; fuff to find hidden file on web; crunch to generate word list;fcrackzip to crack zip passwd;wp apperance template fule php reverse shell; find dirc with writable privi;
 #### RickSanchezEasy
   web ping page 127.0.0.1|id ; crunch to create wordlist; hydra ssh://xxxxx:port; sudo -l
+#### tiki
+  139 port, --shares; 80, tiki vuln auth bypass; get ssh crendential; sudo -l;
