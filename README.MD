@@ -83,3 +83,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   web ping page 127.0.0.1|id ; crunch to create wordlist; hydra ssh://xxxxx:port; sudo -l
 #### tiki
   139 port, --shares; 80, tiki vuln auth bypass; get ssh crendential; sudo -l;
+#### breach1
+  use .keystore to decrypt wireshark file, types of keystore file; burpsuite tomcat management page, deploy war reverse shell; sudo -l
