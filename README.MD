@@ -85,3 +85,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   139 port, --shares; 80, tiki vuln auth bypass; get ssh crendential; sudo -l;
 #### breach1
   use .keystore to decrypt wireshark file, types of keystore file; burpsuite tomcat management page, deploy war reverse shell; sudo -l
+#### healthcare
+  seclist-big wordlist to search dirc; vuln of openemr, or use sqlmap to inject db; php page reverse shell; u=s file, is executable, with a command, user PATH to trick teh command to run local PATH with '/bin/bash' in it get the ES
