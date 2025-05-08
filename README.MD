@@ -1,35 +1,43 @@
 The roadmaps of pretty girls..
 
-#### #172.16.33.35 30 40 43 47 55 49 51 55 58 62 66 69 71 74 78 79 80 88 89 92 95 96 98 99
-
-103 108 184 187 189 192 192 201(AD)#
-sar2html 13
+#### sar2html 13
 suid, short bash shell
 
-Natrj/18
+#### Natrj/18
 file inclusion
 
-sunset: dawn2/21
+#### sunset: dawn2/21
 
-loly 25: wordpress, reverse shell; kernel exp
+#### loly 25: 
+wordpress, reverse shell; kernel exp
 
-djinn3 29: SSTI get reverse shell, pspy to find cron job, use cron job to create credential to .ssh/authorized_keys, sudoers file for es
+#### djinn3 29: 
+SSTI get reverse shell, pspy to find cron job, use cron job to create credential to .ssh/authorized_keys, sudoers file for es
 
-funbox2 30: ftp, ssh id_rsa; sudo -s
+#### funbox2 30: 
+ftp, ssh id_rsa; sudo -s
 
-solid 35: 25smtp, 110pop3; search suid file
+#### solid 35: 
+25smtp, 110pop3; search suid file
 
-sunset:decoy:40: linux shadow decrypt, pspy
+#### sunset:
+#### decoy:40: 
+linux shadow decrypt, pspy
 
-seppuku 62: ftp,139,445 smb, enum4linux(smb scanner), hydra ssh, ssh -i private key, sudo -l, bash -c -i
+####seppuku 62: 
+ftp,139,445 smb, enum4linux(smb scanner), hydra ssh, ssh -i private key, sudo -l, bash -c -i
 
-gaara 69: gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find / -type f -perm -u=s), pyhton os.execl
+####gaara 69: 
+gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find / -type f -perm -u=s), pyhton os.execl
 
-sosimple 71: wpscan --enumlate , and -u bruteforce, plugin “social warfare.” rce to get shell, sudo -l, service sudoer.
+####sosimple 71: 
+wpscan --enumlate , and -u bruteforce, plugin “social warfare.” rce to get shell, sudo -l, service sudoer.
 
-Y0usef 74: site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
+####Y0usef 74: 
+site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
 
-doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is running on root privi; sudo -l, tcpdump to escalate privi.
+####doom: 
+json unsearialize vuln of webapplication, rce; ps -aux to find process is running on root privi; sudo -l, tcpdump to escalate privi.
 
 
 #### evil:one: 
@@ -91,3 +99,5 @@ doom: json unsearialize vuln of webapplication, rce; ps -aux to find process is 
   ssh a port to enable http service; xss vuln, use beef to hijack the browser, and add reverse shell to get shell; good to stick the backdoor by modifying the .sh; conditions to enable more port, like 2323 and switch to anohter account to enbale 8888; upload reversesehll php; sudo -l tcpdump;
 #### bob
   web remote code execute from web page, got a shell; gpg file decryption with passphrase; sudo -l
+#### weakness
+  add hosts mapping; openssl vuln, get private key; python pyc file deconplier; sudo -l
