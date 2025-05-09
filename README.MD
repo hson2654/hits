@@ -101,3 +101,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   web remote code execute from web page, got a shell; gpg file decryption with passphrase; sudo -l
 #### weakness
   add hosts mapping; openssl vuln, get private key; python pyc file deconplier; sudo -l
+#### toppo
+  web enumerate a passwd and guset the name; suid python,mawk
