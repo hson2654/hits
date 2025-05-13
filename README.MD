@@ -105,3 +105,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   web enumerate a passwd and guset the name; suid python,mawk
 #### goldeneyes
   pop3 protocal, telnet to RETR emails; exifitool to view photo hidden info; web reverse shell for system path; kernal exploit, cc replace gcc, if gcc is not allowed;
+#### nullbyte
+  index pic exiftool for commit info- that might be passwd, directory, hash or encoded strings; one field input box hydra bruteforce; sqlmap; decoded words, try more methods, you will find the truth; u=s, $PATH to trick the script to run a file located in the current folder, it can be /bin/sh or /bin/bash. with s privi
