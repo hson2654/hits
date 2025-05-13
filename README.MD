@@ -103,3 +103,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   add hosts mapping; openssl vuln, get private key; python pyc file deconplier; sudo -l
 #### toppo
   web enumerate a passwd and guset the name; suid python,mawk
+#### goldeneyes
+  pop3 protocal, telnet to RETR emails; exifitool to view photo hidden info; web reverse shell for system path; kernal exploit, cc replace gcc, if gcc is not allowed;
