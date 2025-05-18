@@ -113,3 +113,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   wpscan id bruteforce; phpmyadmin wrtie command into outfile in query aommand to add a php?cmd= page for remote code execution; crontab to esclate privi
 #### misdirection
   webshell- direct user; sudo -l to aother user on host; privi to write to /etc/passwd; openssl to generate crendential and add a user to /etc/passwd with 0:0:0 privi
+#### brainpan
+  .exe file, hte only path; bufferoverflow; sudo -l, manual (why ! before commands)
