@@ -92,3 +92,13 @@ drwxr-xr-x 2 root root  4096 Nov  7  2020 .
 drwxr-xr-x 3 root root  4096 Nov  7  2020 ..
 -rw-r--r-- 1 root root 51019 Nov  7  2020 access.exe
 -rw-r--r-- 1 root root 28613 Nov  7  2020 funcs_access.dll
+
+
+
+/var/www/html/student_attendance$ cat db_connect.php
+cat db_connect.php
+<?php 
+
+$conn= new mysqli('localhost','fox','trallalleropititumpa','student_attendance_db')or die("Could not connect to mysql".mysqli_error($con));
+
+//buffer overflow of access.exe with dll file.
