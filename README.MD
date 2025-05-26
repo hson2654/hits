@@ -116,4 +116,4 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 #### brainpan
   .exe file, hte only path; bufferoverflow; sudo -l, manual (why ! before commands)
 #### hackerkid
-  source code hint;wfuzz ?parameter=FUZZ;dig domainname @IP(to get subdomain);SSTI to lauch a reverse shell;ed- process injectrion
+  source code hint;wfuzz ?parameter=FUZZ;dig domainname @IP(to get subdomain);SSTI to view .bashrc of passwd and id of 9999 port; SSTI of 9999 port lauch a reverse shell;ed- process injectrion
