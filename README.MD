@@ -117,3 +117,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   .exe file, hte only path; bufferoverflow; sudo -l, manual (why ! before commands)
 #### hackerkid
   source code hint;wfuzz ?parameter=FUZZ;dig domainname @IP(to get subdomain);SSTI to view .bashrc of passwd and id of 9999 port; SSTI of 9999 port lauch a reverse shell;ed- process injectrion
+#### besidesVancouver
+  wpscan brute force ID; themes edior with php re sehll;crontab for es
