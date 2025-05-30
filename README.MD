@@ -119,3 +119,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   source code hint;wfuzz ?parameter=FUZZ;dig domainname @IP(to get subdomain);SSTI to view .bashrc of passwd and id of 9999 port; SSTI of 9999 port lauch a reverse shell;ed- process injectrion
 #### besidesVancouver
   wpscan brute force ID; themes edior with php re sehll;crontab for es
+#### hackme1
+  sqli get the auperadmin; php reversehll upload;a abnormal file to get id 0;
