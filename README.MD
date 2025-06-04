@@ -129,3 +129,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   web page ping app with python reverse shell toget a shell;kernel vuln
 #### sickos
   proxy set to the target machine as it has a proxy running on a port; robots.txt, default id/passwd, upload shell php; config.php get a passwd, works for account of OS; sudo -l
+#### vulnos1
+  phpmyadmin default id/passwd root/toor;dvwa cmd get a shell;----
