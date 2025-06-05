@@ -133,3 +133,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   phpmyadmin default id/passwd root/toor;dvwa cmd get a shell;----
 #### lin.secu
   nfs mount remote files on local sys; useradd name of remote with uid 1001; mkdir .ssh cp pubkey to authorized_keys; ssh -i
+#### pwnlab
+  vuln of PHP ?xx=payload to view the source code if web page; mysql -h remote; upload restriction by pass, extension and add GIF87a at the beggining; change $PATH if a executable file not use /bin/xx only xx;for echo script, use && to excute bash like xx && /bin/bash or /bin/sh
