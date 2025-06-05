@@ -136,4 +136,4 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 #### pwnlab
   vuln of PHP ?xx=payload to view the source code if web page; mysql -h remote; upload restriction by pass, extension and add GIF87a at the beggining; change $PATH if a executable file not use /bin/xx only xx;for echo script, use && to excute bash like xx && /bin/bash or /bin/sh
 ### Mr-robot
-  hydra to brute force username and then passwd!!!; sudo -l nmap
+  hydra to brute force username and then passwd!!!; comad to get uniq items in a text file; sudo -l nmap
