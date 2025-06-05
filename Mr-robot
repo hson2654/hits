@@ -7,6 +7,15 @@ key-1-of-3.txt 073403c8a58a1f80d943455fb30724b9
 http://192.168.56.156/license
 what you do just pull code from Rapid9 or some s@#% since when did you become a script kitty?
 
+//for fsocity.dic
+wc -w fscocity.dic # check wordcount
+# 858160
+
+sort fsocity.dic | uniq -d > fs-list # write the repeated words on fs-list
+sort fsocity.dic | uniq -u >> fs-list # append the unique words on fs-list
+
+wc -w fs-list # check wordcount
+# 11451
 
 
 
