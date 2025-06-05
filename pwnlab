@@ -86,6 +86,9 @@ if (isset($_COOKIE['lang']))
 
 
 //what uploaded is 	f2f51d5550f38447c2850b0bc249b233.gif	
+//change the extension to gif and add GIF87a at the beginning of the shell file.
+// or png and add png at the beginning to by pass the restriction of uploading
+
 //in burp, mondified cookie to lang= xxxx
 GET / /HTTP/1.1
 Host: 192.168.56.155
@@ -198,3 +201,4 @@ more flag.txt
 (__  _)                                                                 (__  _)
 (_ ___)-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-=-._.-(_ ___)
 `-._.-'                                                                 `-._.-'
+
