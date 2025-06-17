@@ -145,3 +145,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   more about hydra, with additional body strings from Burps; app vuln to uplaod msf reverseshell ; msf handler; replace teh exe file to es
 #### gamezone
   port80 sqli;ssh, ss find open session; ssh -L to forward the traffic to visit the port; app vuln use msf get root 
+#### skynet
+  smb anonymous; bruteforce http-post-form; smb with crndential;new web folder; cuppa exploit CVE- launch reverse shell; suspicious .sh file, wildcard injection;
