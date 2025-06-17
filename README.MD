@@ -143,3 +143,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   genkins default passwd/user; porject with OS comand function, msfvenom create revershell and with command downlaod and run exe file; build it and run; get shell, es to meterpreter shell; list priv of current account, with debugger and impersonate privi; impersonte service token useing msf 'inicognato' module;
 #### hackpark
   more about hydra, with additional body strings from Burps; app vuln to uplaod msf reverseshell ; msf handler; replace teh exe file to es
+#### gamezone
+  port80 sqli;ssh, ss find open session; ssh -L to forward the traffic to visit the port; app vuln use msf get root 
