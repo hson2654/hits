@@ -135,7 +135,7 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   nfs mount remote files on local sys; useradd name of remote with uid 1001; mkdir .ssh cp pubkey to authorized_keys; ssh -i
 #### pwnlab
   vuln of PHP ?xx=payload to view the source code if web page; mysql -h remote; upload restriction by pass, extension and add GIF87a at the beggining; change $PATH if a executable file not use /bin/xx only xx;for echo script, use && to excute bash like xx && /bin/bash or /bin/sh
-#### Mr-robot
+#### Mr-robothttp://10.10.77.158/wp-admin/theme-editor.php?file=index.php&theme=twentyfifteen&scrollto=408
   hydra to brute force username and then passwd!!!; comad to get uniq items in a text file; sudo -l nmap
 #### skytower
   sqli if 'or' '=' is filtered, use || , > < instead; port 22 is filter by proxy, use proxytunnel to ssh; .bashrc details, if abnormal ,delete it; sudo -l with ../ in the dir 
@@ -149,3 +149,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   smb anonymous; bruteforce http-post-form; smb with crndential;new web folder; cuppa exploit CVE- launch reverse shell; suspicious .sh file, wildcard injection;
 #### Daily Bugle
   joomla scan, vuln; sqli vunl, use sqlmap or google for some script or method for a vuln; hashcat to bruteforce passwd; joomla template edit php file to get shell; web configure file, get sql root and passwd; this passwd also works for only user of host!!!!!sucks but remember;sudo -l
+#### mrrobot-thm
+  info enemulate of dir, wp page, find id and passwd of wp; thme index editor, php revershell; home/robot get password; suid nmap without sudo privi
