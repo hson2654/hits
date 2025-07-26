@@ -51,6 +51,10 @@ PORT    STATE  SERVICE VERSION
 [04:32:31] 200 -    1KB - /wp-login
 
 c3fcd3d76192e4007dfb496cca67e13b
+//modify theme index page to a php reversehll at http://10.10.77.158/wp-admin/theme-editor.php?file=index.php&theme=twentyfifteen&scrollto=408
+
+//visit to get shell
+http://10.10.77.158/wp-content/themes/twentyfifteen/
 
 daemon@ip-10-10-77-158:/home/robot$ cat password.raw-md5
 cat password.raw-md5
