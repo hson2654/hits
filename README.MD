@@ -151,3 +151,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   joomla scan, vuln; sqli vunl, use sqlmap or google for some script or method for a vuln; hashcat to bruteforce passwd; joomla template edit php file to get shell; web configure file, get sql root and passwd; this passwd also works for only user of host!!!!!sucks but remember;sudo -l
 #### mrrobot-thm
   info enemulate of dir, wp page, find id and passwd of wp; thme index editor, php revershell; home/robot get password; suid nmap without sudo privi
+#### relevant.thm
+  smb put priv; put .aspx file into win server to get revershell shell; try http port to view smb dir; view smb file in th host; vuln to es
