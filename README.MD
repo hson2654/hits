@@ -155,3 +155,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   smb put priv; put .aspx file into win server to get revershell shell; try http port to view smb dir; view smb file in th host; vuln to es
 #### smol.thm
   wpscan -e ap to identify plugins; cve of this plugin LFI, view wp-config; wpscan not indentify other plugin,but from info in the site 'hello dolly';exploit hello dolly get a CMD parameter; get backdoor;lateral to oitehr user by viewing .ssh pri key; aga lateral, view /etc/pam.d/su; zip2john and john bruteforce zip with passwd; credntial of last one; sudo -l
+#### Devie.thm
+  source code of python, search for vuln function, eval; revershell, base64 and xor - utf8 encode;  cp * plus --preserve=mode to privi es
