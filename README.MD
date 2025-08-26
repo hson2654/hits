@@ -185,4 +185,6 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 
 #### voleur.htb
   ntlm login is not allowed, so that cannot pass the hash. use impacket getTGT to get ccache of the given user, use ccache file to login smb server; get a xlsx file locked, use office2john and john crack it; get info of users and service account; workingwith bloodhound, use a svc-ldap id to get the ccache, and use targetedKerberoast.py to get the hash of passwd, and use john to get plain text of passwd; same way to deal wirth svc_winrm ,get TGT to get ccache file to login using evil-winrm; get user txt; from BH this accounbt has backup privi, use get-adobject to indeitify del users; get todd; use get-adobject to restore it and; getTGT to get ccache file and use impacket-smbclinet -k to use ccache to login smb; get some dpapi masterkey and credential , rerstore it using impacket-dpapi credential; also use getTGT to loogin with this id to smb; get ntds.dit and SYSTEM, to find all crendentials of AD;
-  
+
+#### Artificial.htb
+  docker build from dockerfile; sqlite3 to select .db; restic to backup host file
