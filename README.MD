@@ -139,33 +139,50 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   hydra to brute force username and then passwd!!!; comad to get uniq items in a text file; sudo -l nmap
 #### skytower
   sqli if 'or' '=' is filtered, use || , > < instead; port 22 is filter by proxy, use proxytunnel to ssh; .bashrc details, if abnormal ,delete it; sudo -l with ../ in the dir 
+
 #### alfred_rhm win
   genkins default passwd/user; porject with OS comand function, msfvenom create revershell and with command downlaod and run exe file; build it and run; get shell, es to meterpreter shell; list priv of current account, with debugger and impersonate privi; impersonte service token useing msf 'inicognato' module;
+
 #### hackpark
   more about hydra, with additional body strings from Burps; app vuln to uplaod msf reverseshell ; msf handler; replace teh exe file to es
+
 #### gamezone
   port80 sqli;ssh, ss find open session; ssh -L to forward the traffic to visit the port; app vuln use msf get root 
+
 #### skynet
   smb anonymous; bruteforce http-post-form; smb with crndential;new web folder; cuppa exploit CVE- launch reverse shell; suspicious .sh file, wildcard injection;
+
 #### Daily Bugle
   joomla scan, vuln; sqli vunl, use sqlmap or google for some script or method for a vuln; hashcat to bruteforce passwd; joomla template edit php file to get shell; web configure file, get sql root and passwd; this passwd also works for only user of host!!!!!sucks but remember;sudo -l
+
 #### mrrobot-thm
   info enemulate of dir, wp page, find id and passwd of wp; thme index editor, php revershell; home/robot get password; suid nmap without sudo privi
 #### relevant.thm
   smb put priv; put .aspx file into win server to get revershell shell; try http port to view smb dir; view smb file in th host; vuln to es
+
 #### smol.thm
   wpscan -e ap to identify plugins; cve of this plugin LFI, view wp-config; wpscan not indentify other plugin,but from info in the site 'hello dolly';exploit hello dolly get a CMD parameter; get backdoor;lateral to oitehr user by viewing .ssh pri key; aga lateral, view /etc/pam.d/su; zip2john and john bruteforce zip with passwd; credntial of last one; sudo -l
 #### Devie.thm
   source code of python, search for vuln function, eval; revershell, base64 and xor - utf8 encode;  cp * plus --preserve=mode to privi es
+
 #### ad.thm
   139,445 3389,53 open; kerbutef to iditify user in this domain; impacket-GetNPUsers -no-pass , to get credential of this account; netexec and smbclient to get shared files -- another credential of backup account; backup can enum all ntlm hashed, using impacket-secretsdump ; use admin hash, evil-winrm to pas the pass to login the host with admin privi;
+
 #### wonderland.thm
   dir enum get a passwd; sudo -l, create python lib under the current folder to be  misused by .py file, get a shell of the owner of .py; with suid file, use a 'date' function in side, create a malicious new one, with os.system('/bin/bash'), and exprot PATH, get a shell of another user; linpeas idenitfy capability, /usr/bin/perl5.26.1 = cap_setuid+ep
+
 #### editor.htb
   xwiki vuln get a shell; xwiki config file, hibernate.cfg.xml, get a credential; cre reuse to ssh uer of host; ndsudo with suid to privies
+
 #### puppy.htb
   rpc to identify users on this host; bloodhound search for privi of given account, and add user to DEV group can write DEV group; netexec with new privi to view share files, get kdbx file; keepass4brute to recover the data, get password list; users and psswds, use netexec smb to brute force paired id/passwd, get a new pair; blodhound search for thisnew user, not enabled- ldapsearch;  bloodyAD to reset passwd,ldapsearch to enable; evil-winrm login host and get user flag, backup file of anohter plain crendential; for the new user, we find masterkey and credential pair for DPAPI; use impacket-dpapi decrypt the paswd of the pair, which is a adm account, with all privi;
+
 #### fluffy.htb
   smb vuln to get a new credntial hash; john getthe plain passwd, bllodhound to view privi- add to the group and get another 3 accounts shadow cert, whihc is ntlm hash, ensure vync time to the target dc; use vertipy-ad find vuln of DC. get ESC16 vuln, imperson the admin account to retreive the hash of admin; evil-winrm login as admin;
+
 #### tombwatcher.htb
   with given account, account lateralmove; writeSPN privi, targetedKerberoast.py to get the hash of target you have privi;addself privi,ReadGMSPassword, gMSADumper.py to get hash of target account; forcechangepassword, change passwd of taget by useing bloodAD with -p hash;writeOwner privi, add owner to target, with own privi use impacket-dacledit grant fullcontrol privi, then reset target passwd, get user.txt; Get-ADObject -Filter 'isDeleted -eq $true' -IncludeDeletedObjects, search deledted account;Restore-ADObject  and Enable-ADAccount, then rteset the passwd Set-ADAccountPassword; with this privi account, find vuln of AD, certipy-ad find ; esc15 to get root;
+
+#### voleur.htb
+  ntlm login is not allowed, so that cannot pass the hash. use impacket getTGT to get ccache of the given user, use ccache file to login smb server; get a xlsx file locked, use office2john and john crack it; get info of users and service account; workingwith bloodhound, use a svc-ldap id to get the ccache, and use targetedKerberoast.py to get the hash of passwd, and use john to get plain text of passwd; same way to deal wirth svc_winrm ,get TGT to get ccache file to login using evil-winrm; get user txt; from BH this accounbt has backup privi, use get-adobject to indeitify del users; get todd; use get-adobject to restore it and; getTGT to get ccache file and use impacket-smbclinet -k to use ccache to login smb; get some dpapi masterkey and credential , rerstore it using impacket-dpapi credential; also use getTGT to loogin with this id to smb; get ntds.dit and SYSTEM, to find all crendentials of AD;
+  
