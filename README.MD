@@ -188,3 +188,5 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 
 #### Artificial.htb
   docker build from dockerfile; sqlite3 to select .db; restic to backup host file
+#### bashed.htb
+  dir search, get web bash page; find files or folders owned by a user, sudo -l ALL for this user;pspy64 to indentify crontab job; create py reverse shell into the folder, get root shell
