@@ -188,5 +188,9 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 
 #### Artificial.htb
   docker build from dockerfile; sqlite3 to select .db; restic to backup host file
+
 #### bashed.htb
   dir search, get web bash page; find files or folders owned by a user, sudo -l ALL for this user;pspy64 to indentify crontab job; create py reverse shell into the folder, get root shell
+
+#### beep.htb
+  tls version not support by browsr, modify about:config of firefox to support tls1.0; cve of Elastix to IFI; get user txt and admin passwd; use as root of host to ssh; ssh DF algriths not support, modify .ssh/config: KexAlgorithms +diffie-hellman-group1-sha1 \n\r Ciphers +aes256-cbc, ssh -v -o HostKeyAlgorithms=+ssh-rsa root@10. //to support rsa
