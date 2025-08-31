@@ -139,7 +139,7 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   hydra to brute force username and then passwd!!!; comad to get uniq items in a text file; sudo -l nmap
 #### skytower
   sqli if 'or' '=' is filtered, use || , > < instead; port 22 is filter by proxy, use proxytunnel to ssh; .bashrc details, if abnormal ,delete it; sudo -l with ../ in the dir 
-
+hydra
 #### alfred_rhm win
   genkins default passwd/user; porject with OS comand function, msfvenom create revershell and with command downlaod and run exe file; build it and run; get shell, es to meterpreter shell; list priv of current account, with debugger and impersonate privi; impersonte service token useing msf 'inicognato' module;
 
@@ -194,3 +194,6 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 
 #### beep.htb
   tls version not support by browsr, modify about:config of firefox to support tls1.0; cve of Elastix to IFI; get user txt and admin passwd; use as root of host to ssh; ssh DF algriths not support, modify .ssh/config: KexAlgorithms +diffie-hellman-group1-sha1 \n\r Ciphers +aes256-cbc, ssh -v -o HostKeyAlgorithms=+ssh-rsa root@10. //to support rsa
+
+#### nineveh.htb
+  enumerate http and https; hydra login page, -l none wihout username; app vuln to create a web shell; also app LFI, with specific key 'work' to incluion file; linpeas notice knock port 22, with id-rsa login as user; pspy64 notice routine job, with vuln, get root
