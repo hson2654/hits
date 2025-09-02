@@ -197,3 +197,6 @@ hydra
 
 #### nineveh.htb
   enumerate http and https; hydra login page, -l none wihout username; app vuln to create a web shell; also app LFI, with specific key 'work' to incluion file; linpeas notice knock port 22, with id-rsa login as user; pspy64 notice routine job, with vuln, get root
+
+#### valentine.htb
+  heartbleed vuln to get base64 code -> a password; /dev page get a key, cat hype_key | xxd -r -p,openssl rsa -in /home/ed/id_rsa -out id_rsa.out to decode and decrypt key file used for ssh -i; ssh -i enable rsa ssh -oPubkeyAcceptedAlgorithms=+ssh-rsa -i key; tmux privi es, /.devs/dev_sess, linenum to check the active shell;
