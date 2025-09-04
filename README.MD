@@ -203,3 +203,5 @@ hydra
 
 #### poison.htb
   LFI, get setc/passwd, and a passwd for charix, ssh to host;for freebsd socketstat and ps -aux identify a root process running vncserver on a local port; port forward this port; from a zip file, use vnc decryption to get vnc passwd, vnc RDP to root v desktop
+#### node.htb
+  check js file in develooper tool, for api website;controllers/admin.js indicates admin ot web page; get a backup.zip,john it; get a id/passwd for ssh; user.txt, mongosb, mongo -u xx -p xx tablename; insert a revershell; linpeas.sh find the routine taks of mongdb, get shell of new user; -u=s file, backup , strings, and ltrace it to view and guess the logical; $Home track to pas the filter; backup /root folder
