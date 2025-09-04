@@ -200,3 +200,6 @@ hydra
 
 #### valentine.htb
   heartbleed vuln to get base64 code -> a password; /dev page get a key, cat hype_key | xxd -r -p,openssl rsa -in /home/ed/id_rsa -out id_rsa.out to decode and decrypt key file used for ssh -i; ssh -i enable rsa ssh -oPubkeyAcceptedAlgorithms=+ssh-rsa -i key; tmux privi es, /.devs/dev_sess, linenum to check the active shell;
+
+#### poison.htb
+  LFI, get setc/passwd, and a passwd for charix, ssh to host;for freebsd socketstat and ps -aux identify a root process running vncserver on a local port; port forward this port; from a zip file, use vnc decryption to get vnc passwd, vnc RDP to root v desktop
