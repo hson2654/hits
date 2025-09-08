@@ -24,21 +24,20 @@ ftp, ssh id_rsa; sudo -s
 #### decoy:40: 
 linux shadow decrypt, pspy
 
-####seppuku 62: 
+#### seppuku 62: 
 ftp,139,445 smb, enum4linux(smb scanner), hydra ssh, ssh -i private key, sudo -l, bash -c -i
 
-####gaara 69: 
+#### gaara 69: 
 gobuster,2.3medium(if dirsearch found nothing), hydra ssh, suid (find / -type f -perm -u=s), pyhton os.execl
 
-####sosimple 71: 
+#### sosimple 71: 
 wpscan --enumlate , and -u bruteforce, plugin “social warfare.” rce to get shell, sudo -l, service sudoer.
 
-####Y0usef 74: 
+#### Y0usef 74: 
 site-proxy bypass,upload file filter bypass, php shell, linux 3.13 exploit.
 
-####doom: 
+#### doom: 
 json unsearialize vuln of webapplication, rce; ps -aux to find process is running on root privi; sudo -l, tcpdump to escalate privi.
-
 
 #### evil:one: 
   fuff-find parameter of web::cat the .ssh-id_rsa from web url::find p@asswd editable：：generate linux passwd file content::
@@ -203,5 +202,9 @@ hydra
 
 #### poison.htb
   LFI, get setc/passwd, and a passwd for charix, ssh to host;for freebsd socketstat and ps -aux identify a root process running vncserver on a local port; port forward this port; from a zip file, use vnc decryption to get vnc passwd, vnc RDP to root v desktop
+
 #### node.htb
   check js file in develooper tool, for api website;controllers/admin.js indicates admin ot web page; get a backup.zip,john it; get a id/passwd for ssh; user.txt, mongosb, mongo -u xx -p xx tablename; insert a revershell; linpeas.sh find the routine taks of mongdb, get shell of new user; -u=s file, backup , strings, and ltrace it to view and guess the logical; $Home track to pas the filter; backup /root folder
+
+#### friendzone.htb
+  port 139, get a credential for a web admin; as 53 port is open, dig to identify subdomains; enumerate dir of new subdomain; exploit LFI of the test page to inclusion a php reversehll put by smb, the path is /etc/development/filename; get user shell, find a conf file with a credential, which is for a user with bash, ssh it; pspy and linpeas get a routine job of root, but hte file wrote by py is not writable, inside the py file, import libn file is writable by all user; add py reversehll in the lib file, get root
