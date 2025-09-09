@@ -208,3 +208,6 @@ hydra
 
 #### friendzone.htb
   port 139, get a credential for a web admin; as 53 port is open, dig to identify subdomains; enumerate dir of new subdomain; exploit LFI of the test page to inclusion a php reversehll put by smb, the path is /etc/development/filename; get user shell, find a conf file with a credential, which is for a user with bash, ssh it; pspy and linpeas get a routine job of root, but hte file wrote by py is not writable, inside the py file, import libn file is writable by all user; add py reversehll in the lib file, get root
+
+#### swagshop.htb
+  application CVE,search for CVE is also time to enumerate, some script wriote by py pl, the error code may indicate where to modify the source code; RCE to exec reverse shell, try various ones, may succeed once; sudo -l, vi (/  dir maight be . or /var/www/html/*) suid
