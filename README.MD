@@ -211,3 +211,6 @@ hydra
 
 #### swagshop.htb
   application CVE,search for CVE is also time to enumerate, some script wriote by py pl, the error code may indicate where to modify the source code; RCE to exec reverse shell, try various ones, may succeed once; sudo -l, vi (/  dir maight be . or /var/www/html/*) suid
+
+#### networked.htb
+  view php source code; upload file, with privi to edit preview pic; code injection a pic with using exiftool, without changing MIME TYPE; user txt, php review, echo base64 -d | sh to pass malicious code into file name; root, kernel vuln of input validation 
