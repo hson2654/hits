@@ -214,3 +214,6 @@ hydra
 
 #### networked.htb
   view php source code; upload file, with privi to edit preview pic; code injection a pic with using exiftool, without changing MIME TYPE; user txt, php review, echo base64 -d | sh to pass malicious code into file name; root, kernel vuln of input validation 
+
+####jarvis.htb
+  sqli, to detect sqli from order by error, not alway from ' or 1=1; phpmyadmin query injcetion, get web cmd start reverse shell to host; sudo -l, ping command injcetion, with bypass blacklist $(script); systemctl suid
