@@ -217,3 +217,6 @@ hydra
 
 ####jarvis.htb
   sqli, to detect sqli from order by error, not alway from ' or 1=1; phpmyadmin query injcetion, get web cmd start reverse shell to host; sudo -l, ping command injcetion, with bypass blacklist $(script); systemctl suid
+
+#### popcorn.htb
+  upload file, torrent file create; exiftool to add code into img file as revershell; vuln of kernel
