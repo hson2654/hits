@@ -220,3 +220,6 @@ hydra
 
 #### popcorn.htb
   upload file, torrent file create; exiftool to add code into img file as revershell; vuln of kernel
+
+#### mirai.htb
+  default passwd used as host user;/root dir backup to usb driver, many ways to recovery del file in usb
