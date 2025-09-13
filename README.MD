@@ -223,3 +223,6 @@ hydra
 
 #### mirai.htb
   default passwd used as host user;/root dir backup to usb driver, many ways to recovery del file in usb
+
+#### Optimum.htb
+  vuln of app get a shell; vuln of win get root. 
