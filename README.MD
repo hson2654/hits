@@ -226,3 +226,6 @@ hydra
 
 #### Optimum.htb
   vuln of app get a shell; vuln of win get root. 
+
+#### granny.htb
+  nmap find more options for http-webdav app, PUT ,MOVE, ..; davtest to verify the extention for put;cadaver to put aspx cmd page or revershell to server; ms10-15 boring exploit
