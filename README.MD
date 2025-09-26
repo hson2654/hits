@@ -236,3 +236,6 @@ hydra
 #### forest.htb
   ldapsearch cn sAMAccountName to find all user name or enum4linux;  impacket-GetNPUsers to indentify user 'Kerberos pre-authentication disabled can be cracked' to get windows hash of this user; evil-winrm login;
 bloodhound/sharphound in win to get AD info and attack path; add new user in domain, add to a specific group, add dcsync to suync all hashes in AD;secretsdump Impacket to get hash; impacket-psexec or evil-winrm use hash to login as admin
+
+#### bastion.htb
+  smbclient with guest get backup image of OS; use mountto mount folder remote to local; guestmount --add the vhd file to view locally; get NTLM hash of users; john crack it; enumerate saftwre installed, google it , find the vuln of insexure credential stored; github srcipt to decript the password of Admin
