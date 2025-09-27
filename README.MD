@@ -239,3 +239,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### bastion.htb
   smbclient with guest get backup image of OS; use mountto mount folder remote to local; guestmount --add the vhd file to view locally; get NTLM hash of users; john crack it; enumerate saftwre installed, google it , find the vuln of insexure credential stored; github srcipt to decript the password of Admin
+
+#### secnote.htb
+  signup account as ' or 1=1 to SQLi to db, get a credential; use this credential to login smb, put cmd.php, visit cmd on port 8808; get a user shell; find wsl ubuntu instance, bash historty find the admin credential, psexec to login as system
