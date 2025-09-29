@@ -242,3 +242,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### secnote.htb
   signup account as ' or 1=1 to SQLi to db, get a credential; use this credential to login smb, put cmd.php, visit cmd on port 8808; get a user shell; find wsl ubuntu instance, bash historty find the admin credential, psexec to login as system
+
+#### buff.htb
+  vuln to get a shell; shell is limited, smb transfer nc to programdata, nc a shell; winpeas and netstat find a listening port, and the applcation behind it; chisel to portforward this port to localhost; vuln of buffoverflow of this app, to get system
