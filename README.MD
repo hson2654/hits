@@ -245,3 +245,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### buff.htb
   vuln to get a shell; shell is limited, smb transfer nc to programdata, nc a shell; winpeas and netstat find a listening port, and the applcation behind it; chisel to portforward this port to localhost; vuln of buffoverflow of this app, to get system
+
+#### active.htb
+  mbclient -L 10.10.10.100 -N to list dir;smbclient //active.htb/Replication -U "%" to login smb; get cpassword, gppdecrypt to get plain passwd;impacket-GetUserSPNs to find vunl account; hashcat -m 13100 to crack passwd; impacket-psexec to rpc login to host
