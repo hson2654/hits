@@ -248,3 +248,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### active.htb
   mbclient -L 10.10.10.100 -N to list dir;smbclient //active.htb/Replication -U "%" to login smb; get cpassword, gppdecrypt to get plain passwd;impacket-GetUserSPNs to find vunl account; hashcat -m 13100 to crack passwd; impacket-psexec to rpc login to host
+
+#### remote.htb
+  nlockmgr service as NFS to mount remote disk to local; from the backup dir find admin credential; login CMS web server; this is umbraco service with vunl to RCE; smbserver transfer nc to target, get a user shell;es m1, whoami /privi ,SeImpersonatePrivilege, use godpotato to es; m2 tasklist to list all process, find teamviewer;chekc register HKEY to find base10 AES encrypted passwd; use a scipt to get plain text as the passwdof admin;
