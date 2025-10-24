@@ -251,3 +251,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### remote.htb
   nlockmgr service as NFS to mount remote disk to local; from the backup dir find admin credential; login CMS web server; this is umbraco service with vunl to RCE; smbserver transfer nc to target, get a user shell;es m1, whoami /privi ,SeImpersonatePrivilege, use godpotato to es; m2 tasklist to list all process, find teamviewer;chekc register HKEY to find base10 AES encrypted passwd; use a scipt to get plain text as the passwdof admin;
+
+#### blocky.htb
+  dir search, get .jar files; jd-gui view sourcecode of .jar file, get a password of phpmyadmin, also used as hsot user passwd;sudo -l ALL ALL ALL
