@@ -168,7 +168,7 @@ hydra
   139,445 3389,53 open; kerbutef to iditify user in this domain; impacket-GetNPUsers -no-pass , to get credential of this account; netexec and smbclient to get shared files -- another credential of backup account; backup can enum all ntlm hashed, using impacket-secretsdump ; use admin hash, evil-winrm to pas the pass to login the host with admin privi;
 
 #### wonderland.thm
-  dir enum get a passwd; sudo -l, create python lib under the current folder to be  misused by .py file, get a shell of the owner of .py; with suid file, use a 'date' function in side, create a malicious new one, with os.system('/bin/bash'), and exprot PATH, get a shell of another user; linpeas idenitfy capability, /usr/bin/perl5.26.1 = cap_setuid+ep
+  dir enum get a passwd; sudo -l, creTraverxecate python lib under the current folder to be  misused by .py file, get a shell of the owner of .py; with suid file, use a 'date' function in side, create a malicious new one, with os.system('/bin/bash'), and exprot PATH, get a shell of another user; linpeas idenitfy capability, /usr/bin/perl5.26.1 = cap_setuid+ep
 
 #### editor.htb
   xwiki vuln get a shell; xwiki config file, hibernate.cfg.xml, get a credential; cre reuse to ssh uer of host; ndsudo with suid to privies
@@ -254,3 +254,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### blocky.htb
   dir search, get .jar files; jd-gui view sourcecode of .jar file, get a password of phpmyadmin, also used as hsot user passwd;sudo -l ALL ALL ALL
+
+#### traverxec.htb
+  vunl of RCE; enum the priv of a folder from conf file of service; get id_rsa, john crack the passphase; sudo privi of a binary in the home folder; journactl plus less to es!!!!
