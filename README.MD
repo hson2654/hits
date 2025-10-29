@@ -258,5 +258,8 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 #### traverxec.htb
   vunl of RCE; enum the priv of a folder from conf file of service; get id_rsa, john crack the passphase; sudo privi of a binary in the home folder; journactl plus less to es!!!!
 
-#### post man.htb
+#### postman.htb
   redis without auth, way to get shell of redis user, tried cmd.php to server, and add id_rsa to folder of redis, login as redis; find id_rsa bak of A user, crack the phasepass as passwd;webmin vuln to root, since webmin run by root
+
+#### openadmin.htb
+  vuln of ona RCE get a shell, updatge shell; check db config file of service, get a passwd, reused as user on the host; indentify a port is open, and find a privi web service running it; local port forwarding, access it and get a ssh key of another user; sudo -l, nano, es 
