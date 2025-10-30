@@ -265,4 +265,4 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
   vuln of ona RCE get a shell, updatge shell; check db config file of service, get a passwd, reused as user on the host; indentify a port is open, and find a privi web service running it; local port forwarding, access it and get a ssh key of another user; sudo -l, nano, es 
 
 #### bart.htb
-  ffuf exclude response length to scan dir; curl to post data to service to signup user; use burp post payload CMD page;download nc and get a shell;swtich userin in windos, net use
+  ffuf exclude response length to scan dir; curl to post data to service to signup user; use burp post payload CMD page;download nc and get a shell- here since the cmd is webpage, encode the command by urlencode;swtich userin in windos, net use
