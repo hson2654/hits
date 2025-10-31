@@ -266,3 +266,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### bart.htb
   ffuf exclude response length to scan dir; curl to post data to service to signup user; use burp post payload CMD page;download nc and get a shell- here since the cmd is webpage, encode the command by urlencode;swtich userin in windos, net use
+
+#### magic.htb
+  main page can be bypass by 'or1=1# in user_name, enter upload image page; upload shoud meet 2 requirements: extention and magicbyte. ; use vim add php payload into PNG file without changing MIME type,, donot add \n in the data; get a shell, check dbconfig file, get a credential, but cannot use to ssh, su it to user; a binary run by root but can be read and execute by user, path manuplate and make a fake binery to run as root to ES 
