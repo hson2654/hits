@@ -269,3 +269,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### magic.htb
   main page can be bypass by 'or1=1# in user_name, enter upload image page; upload shoud meet 2 requirements: extention and magicbyte. ; use vim add php payload into PNG file without changing MIME type,, donot add \n in the data; get a shell, check dbconfig file, get a credential, but cannot use to ssh, su it to user; a binary run by root but can be read and execute by user, path manuplate and make a fake binery to run as root to ES 
+
+#### tabby.htb
+  port 80,LFI; from enum of port 8080, LFI user config of tomcat,get a credential, but not useful in manager of tomcat;vuln of tomacat upload war file (zip .war), we can uplaod cmd or reversehll, get footholder; backup file, user base64 and decode base64 to transfer files, get user; lxd group to es;
