@@ -275,3 +275,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### admirer.htb
   enum port 80, get a credential for ftp;ftp get backup file,and db info;cannot access db via remote http; build mysql local use target machine adminer app to login local db; a vuln of adminer to query remote db info, load data command to fetch web page to db, get user credential; sudo -l all for a .sh, python lib jijacking for root
+
+#### doctors.htb
+  add hosts,enum dir of ports, a post page wrote by python, try SSTI, get a shell; linpeas get a password, try shaun, only user; splunk es
