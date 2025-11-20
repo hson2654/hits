@@ -272,3 +272,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### tabby.htb
   port 80,LFI; from enum of port 8080, LFI user config of tomcat,get a credential, but not useful in manager of tomcat;vuln of tomacat upload war file (zip .war), we can uplaod cmd or reversehll, get footholder; backup file, user base64 and decode base64 to transfer files, get user; lxd group to es;
+
+#### admirer.htb
+  enum port 80, get a credential for ftp;ftp get backup file,and db info;cannot access db via remote http; build mysql local use target machine adminer app to login local db; a vuln of adminer to query remote db info, load data command to fetch web page to db, get user credential; sudo -l all for a .sh, python lib jijacking for root
