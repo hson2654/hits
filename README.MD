@@ -278,3 +278,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### doctors.htb
   add hosts,enum dir of ports, a post page wrote by python, try SSTI, get a shell; linpeas get a password, try shaun, only user; splunk es
+
+#### love.htb
+  enum, vie cert of tls, get domain name, add it into hosts; access to a searching file system,with server-side request forgery (SSRF) exploit; http://127.0.0.1:5000, to view the page with local privi, get a crendential for another app; this app vuln exploit to get a shell; es for  AlwaysInstallElevated set to 1 in HKLM!
