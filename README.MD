@@ -281,3 +281,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### love.htb
   enum, vie cert of tls, get domain name, add it into hosts; access to a searching file system,with server-side request forgery (SSRF) exploit; http://127.0.0.1:5000, to view the page with local privi, get a crendential for another app; this app vuln exploit to get a shell; es for  AlwaysInstallElevated set to 1 in HKLM!
+
+#### Editorial.htb
+  app vulnerable to SSRF, test by nc a port, then fuff to check 1-65535 port on the target machine, got 5000 is diff; access this port, get a credential, ssh as a user; lateral move by enum .git, use dumper to restore git log, find another credential; sudo -l, a py file, with vuln, to es
