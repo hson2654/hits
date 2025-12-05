@@ -284,3 +284,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### Editorial.htb
   app vulnerable to SSRF, test by nc a port, then fuff to check 1-65535 port on the target machine, got 5000 is diff; access this port, get a credential, ssh as a user; lateral move by enum .git, use dumper to restore git log, find another credential; sudo -l, a py file, with vuln, to es
+
+#### omni.htb
+  port scan, research on abnormal ports, get info and vunl; run the vunl get foothold, system shell, fetch hive(SAM,SYSTEM), or some hidden file on host to get credential, login into http service port 8080, get reversesehll; powershell encrypt file get flags
