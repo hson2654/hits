@@ -287,3 +287,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### omni.htb
   port scan, research on abnormal ports, get info and vunl; run the vunl get foothold, system shell, fetch hive(SAM,SYSTEM), or some hidden file on host to get credential, login into http service port 8080, get reversesehll; powershell encrypt file get flags
+
+#### Timelapse.htb
+  smb guest allowed, get pfx file; extrace pfx to crt and key, used to evilwinrm login; powreshell history to lateral move;net user check group, LAPS_Readers
