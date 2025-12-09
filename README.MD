@@ -290,3 +290,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### Timelapse.htb
   smb guest allowed, get pfx file; extrace pfx to crt and key, used to evilwinrm login; powreshell history to lateral move;net user check group, LAPS_Readers
+
+#### office.paper
+  use burp to get response header - domainname; wordpress version vunl, infor leakage, to a new app; help of robot, run command to read unpriv files , get a credential; use to ssh a user; polkit version nul to ES
