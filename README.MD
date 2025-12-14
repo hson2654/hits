@@ -293,3 +293,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### office.paper
   use burp to get response header - domainname; wordpress version vunl, infor leakage, to a new app; help of robot, run command to read unpriv files , get a credential; use to ssh a user; polkit version nul to ES
+
+#### pandora.htb
+  port scan udp; snmp. snmpbulkwalk, get a credential; ssh to host, check apache config under /etc/apache2/sites-enabled/, get another service running, local access only; port forwarding, visit it; service version with a vunl, get  a shell for another user; find -u=s, path hijack to ES
