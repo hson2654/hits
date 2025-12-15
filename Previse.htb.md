@@ -162,4 +162,6 @@ cat: '/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/gam
 m4lwhere@previse:/tmp$ echo $PATH
 /tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 ```
-
+#### lesson learned
+- EAR, burp match and replace to view files behind auth, when use repeater aftrer than, edit the scope, which might influent the response
+- mysql -u -p'' -e '' , to get response i n one line, care of no blank after -p
