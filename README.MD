@@ -85,7 +85,8 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 #### deveguru
   .git didrc leakage, gittool to get the git file by git dumper to download and git extractor to restore to normal files; get the db credential; login web server backend; htm file RCE method, wget reverse shell to load it via web browser; searching for abnormal file - backups; get gitea db credential; gitea githook to launch hook shell(system bash shell); sudo -l sqlite3 but without passwd; sudo version , vuln; sudo -u#-1;
 #### tommyboy
-  wp user brute force; photo exiftool to veiw info; hidden port , not always open; fuff to find hidden file on web; crunch to generate word list;fcrackzip to crack zip passwd;wp apperance template fule php reverse shell; find dirc with writable privi;
+  wp user brute force; photo exiftool to veiw info; hidden port , not always open; fuff to find hidden file on web; crunch to generate word list;fcrackzip to crack zip passwd;wp apperance template fule php reverse shell; find dirc with writable privi;ilovecody112235! 
+
 #### RickSanchezEasy
   web ping page 127.0.0.1|id ; crunch to create wordlist; hydra ssh://xxxxx:port; sudo -l
 #### tiki
@@ -160,7 +161,8 @@ hydra
   smb put priv; put .aspx file into win server to get revershell shell; try http port to view smb dir; view smb file in th host; vuln to es
 
 #### smol.thm
-  wpscan -e ap to identify plugins; cve of this plugin LFI, view wp-config; wpscan not indentify other plugin,but from info in the site 'hello dolly';exploit hello dolly get a CMD parameter; get backdoor;lateral to oitehr user by viewing .ssh pri key; aga lateral, view /etc/pam.d/su; zip2john and john bruteforce zip with passwd; credntial of last one; sudo -l
+  wpscan -e ap to identify plugins; cve of this plugin LFI, view wp-config; wpscan not indentify other plugin,but from info in the site 'hello dolly';exploit hello dolly get a CMD parameter; get backdoor;lateral to oitehr user by viewing .ssh pri key; aga lateral, view /etc/pam.d/su; zip2john and john bruteforce zip with passwd; credntial of last one; sudo -lilovecody112235! 
+
 #### Devie.thm
   source code of python, search for vuln function, eval; revershell, base64 and xor - utf8 encode;  cp * plus --preserve=mode to privi es
 
@@ -296,3 +298,7 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### pandora.htb
   port scan udp; snmp. snmpbulkwalk, get a credential; ssh to host, check apache config under /etc/apache2/sites-enabled/, get another service running, local access only; port forwarding, visit it; service version with a vunl, get  a shell for another user; find -u=s, path hijack to ES
+
+#### previse.htb
+  App redirecting requires login, try EAR;Burp proxy- match and replace to access the hidden files; php source code, find exec(), code hijack; mysql get response in one line by using -e; sudo -l, path hijack
+
