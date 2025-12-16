@@ -302,3 +302,5 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 #### previse.htb
   App redirecting requires login, try EAR;Burp proxy- match and replace to access the hidden files; php source code, find exec(), code hijack; mysql get response in one line by using -e; sudo -l, path hijack
 
+#### knife.htb
+  response header check X-powered-by, php version vuln of RCE; sudo -L
