@@ -304,3 +304,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### knife.htb
   response header check X-powered-by, php version vuln of RCE; sudo -L
+
+#### Armageddon.htb
+  burp catch response header X-Generator Drupal 7, with vunl RCE, get a shell; web config file inof leakage, get db crendential; quire db get user credential; sudo -l, sudo ALL snap, failed ES
