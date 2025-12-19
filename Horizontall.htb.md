@@ -157,4 +157,8 @@ Last login: Mon Aug 23 11:43:44 2021 from 10.10.14.6
 root@horizontall:~# cd /root/
 ```
 
-
+#### Lesson learned
+- For JS web page, check framwork file, js file.
+- if we have write privi on /home/$user, we can update the shell via ssh, put pub key into .ssh/
+- curl -I to view http Header
+- phpggc, to generate phpar - PHP archive file.
