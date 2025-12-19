@@ -307,3 +307,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### Armageddon.htb
   burp catch response header X-Generator Drupal 7, with vunl RCE, get a shell; web config file inof leakage, get db crendential; quire db get user credential; sudo -l, sudo ALL snap, failed ES
+
+#### Horizontall.htb
+  framework dev web, check js file, get a subdomain; dir enum, get a app and version with RCE vunl; uer shell, check listening port, host only; portforwarding, serivce with vuln of RCE, php unserialize. get root shell 
