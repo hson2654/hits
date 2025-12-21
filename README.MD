@@ -310,3 +310,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### Horizontall.htb
   framework dev web, check js file, get a subdomain; dir enum, get a app and version with RCE vunl; uer shell, check listening port, host only; portforwarding, serivce with vuln of RCE, php unserialize. get root shell 
+
+#### ScriptKiddie.htb
+  msfvenom web app has vunl, get a shell; risk script collect info with a file compromised use has w privi; put payload into this file to make nmap $(payload - revershell shell), lateral move; sudo -l
