@@ -313,3 +313,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### ScriptKiddie.htb
   msfvenom web app has vunl, get a shell; risk script collect info with a file compromised use has w privi; put payload into this file to make nmap $(payload - revershell shell), lateral move; sudo -l
+
+#### delivery.htb
+  service http enum; for ticket management system, ticket trick to view the verify email which only be viewed for inertnal mailbox; get user, search config of all http services, get db creential; hashcat root by hashcat rule attack use best66, get root
