@@ -316,3 +316,6 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
 
 #### delivery.htb
   service http enum; for ticket management system, ticket trick to view the verify email which only be viewed for inertnal mailbox; get user, search config of all http services, get db creential; hashcat root by hashcat rule attack use best66, get root
+
+#### ready.htb
+  gitlab vunl to get user shell; search gitlab config, get root passwd, su to root; notice we root the container, check docker-compose file, has privi :true; mount host disk to container; generate ssh key to root/.ssh, ssh -i 
