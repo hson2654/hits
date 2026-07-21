@@ -41,6 +41,8 @@ find any conf file, with /usr and /etc
 /run/systemd/resolve/stub-resolv.conf
 ```
 
+
+
 `nobody@abducted:/var/spool/samba$ cat /opt/offsite-backup/rclone.conf`
 ```
 cat /opt/offsite-backup/rclone.conf
