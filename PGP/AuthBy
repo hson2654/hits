@@ -1,4 +1,7 @@
 #### privi Esca
 OS vuln
 i686-w64-mingw32-gcc 40564.c -o MS11-046.exe -lws2_32
-
+```
+                   32-bit Target (i686)	          64-bit Target (x86_64)
+Compiler Tool	    i686-w64-mingw32-gcc	         x86_64-w64-mingw32-gcc
+```
