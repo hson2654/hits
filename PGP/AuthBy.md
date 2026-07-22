@@ -7,7 +7,7 @@ i686-w64-mingw32-gcc 40564.c -o MS11-046.exe -lws2_32
                    32-bit Target (i686)	          64-bit Target (x86_64)
 Compiler Tool	    i686-w64-mingw32-gcc	         x86_64-w64-mingw32-gcc
 ```
-`mingw32 , adding win header to gcc, when compiler x.c file on linux, use  xxx-w64-mingw32-gcc instead of gcc
+`mingw32 , adding win header to gcc, when compiler x.c file on linux, use  xxx-w64-mingw32-gcc instead of gcc`
 
 ```
 #include <winsock2.h> (Header file): Tells the compiler the names and signatures of the networking functions so your source code can compile into object code (.o).
