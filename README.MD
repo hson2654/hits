@@ -452,3 +452,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### AuthBy.pgp
   i686-w64-mingw32-gcc 40564.c -o MS11-046.exe -lws2_32
+
+#### Craft.offsec
+  create Macros payload, icacls, SeImpersonatePrivilege to root
