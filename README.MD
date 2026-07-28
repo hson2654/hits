@@ -453,5 +453,8 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 #### AuthBy.pgp
   i686-w64-mingw32-gcc 40564.c -o MS11-046.exe -lws2_32
 
+#### access.offsec
+  .htaccess to add php as upload file whitelist; get SPN hash; /priv, write priv to C:\ systeminfo to trigger C:\Windows\system32\wbem\tzres.dll
+
 #### Craft.offsec
   create Macros payload, icacls, SeImpersonatePrivilege to root
