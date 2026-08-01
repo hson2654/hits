@@ -114,7 +114,7 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
 #### nullbyte
   index pic exiftool for commit info- that might be passwd, directory, hash or encoded strings; one field input box hydra bruteforce; sqlmap; decoded words, try more methods, you will find the truth; u=s, $PATH to trick the script to run a file located in the current folder, it can be /bin/sh or /bin/bash. with s privi
 
-#### pre-oscp
+#### pre-oscp tells OpenSSH to only use the identity (key) files explicitly specified via the -i flag 
   id_rsa, ssh -i as oscp; u=s
 
 #### lemonsqueezy
@@ -416,3 +416,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### heist.offsec
   set responder to get info from AD http service; find sMSA account using ldapsearch, and use bloodhound to find priv of ReadGMSAPassword, read hash of target account; SeRestorePrivileges to ES.
+
+#### boolean.offsec
+  /?cwd=xxx for an LFI; sh -o "IdentitiesOnly=yes",  might pass repeated auth failures 
