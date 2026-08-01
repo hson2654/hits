@@ -249,7 +249,7 @@ hydra
 bloodhound/sharphound in win to get AD info and attack path; add new user in domain, add to a specific group, add dcsync to suync all hashes in AD;secretsdump Impacket to get hash; impacket-psexec or evil-winrm use hash to login as admin
 
 #### bastion.htb
-  smbclient with guest get backup image of OS; use mountto mount folder remote to local; guestmount --add the vhd file to view locally; get NTLM hash of users; john crack it; enumerate saftwre installed, google it , find the vuln of insexure credential stored; github srcipt to decript the password of Admin
+  smbclient with guest get baebDAV Enabled on IIS (Port 80) — Primary Targetckup image of OS; use mountto mount folder remote to local; guestmount --add the vhd file to view locally; get NTLM hash of users; john crack it; enumerate saftwre installed, google it , find the vuln of insexure credential stored; github srcipt to decript the password of Admin
 
 #### secnote.htb
   signup account as ' or 1=1 to SQLi to db, get a credential; use this credential to login smb, put cmd.php, visit cmd on port 8808; get a user shell; find wsl ubuntu instance, bash historty find the admin credential, psexec to login as system
@@ -410,3 +410,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### Craft.offsec
   create Macros payload, icacls, SeImpersonatePrivilege to root
+
+#### hutch.offsec
+  webdav for web shell; SeImpersonatePrivilege
