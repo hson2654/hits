@@ -413,3 +413,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### hutch.offsec
   webdav for web shell; SeImpersonatePrivilege
+
+#### heist.offsec
+  set responder to get info from AD http service; find sMSA account using ldapsearch, and use bloodhound to find priv of ReadGMSAPassword, read hash of target account; SeRestorePrivileges to ES.
