@@ -422,3 +422,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### cohort.htb
   SSRF, and no literal string check bypass; dpkg -l | grep packagekit, check dpkg packeagekit, may have vuln
+
+#### cockpit.offsec
+  admin' and 1=1 -- - ; tar with wildcard
