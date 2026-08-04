@@ -419,3 +419,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### boolean.offsec
   /?cwd=xxx for an LFI; sh -o "IdentitiesOnly=yes",  might pass repeated auth failures 
+
+#### cohort.htb
+  SSRF, and no literal string check bypass; dpkg -l | grep packagekit, check dpkg packeagekit, may have vuln
