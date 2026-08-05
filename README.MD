@@ -425,3 +425,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### cockpit.offsec
   admin' and 1=1 -- - ; tar with wildcard
+
+#### clue.offsec
+  sudo mount -t cifs -o username=user,password=pass //server-ip/share /mnt/smb, mount smb to local to search; grep -rn;
