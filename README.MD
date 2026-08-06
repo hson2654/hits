@@ -97,6 +97,10 @@ json unsearialize vuln of webapplication, rce; ps -aux to find process is runnin
   web ping page 127.0.0.1|id ; crunch to create wordlist; hydra ssh://xxxxx:port; sudo -l
 #### tiki
   139 port, --shares; 80, tiki vuln auth bypass; get ssh crendential; sudo -l;
+
+#### squid.offsec
+  squid proxy, to interact with inner ports; phpmyadmin uploader by admin user; nt authority\local service, restricted user restore priv
+
 #### breach1
   use .keystore to decrypt wireshark file, types of keystore fi108
 #### healthcare
