@@ -307,7 +307,7 @@ bloodhound/sharphound in win to get AD info and attack path; add new user in dom
   smb guest allowed, get pfx file; extrace pfx to crt and key, used to evilwinrm login; powreshell history to lateral move;net user check group, LAPS_Readers
 
 #### office.paper
-  use burp to get response header - domainname; wordpress version vunl, infor leakage, to a new app; help of robot, run command to read unpriv files , get a credential; use to ssh a user; polkit version nul to ES
+  use burp to get response header - domainname; wordpress version vunl, infor leakage, to a new app; help of robot, run command to read unpriv files , get a credential; use to ssh a user; polkit version nul to ESLevram
 
 #### pandora.htb
   port scan udp; snmp. snmpbulkwalk, get a credential; ssh to host, check apache config under /etc/apache2/sites-enabled/, get another service running, local access only; port forwarding, visit it; service version with a vunl, get  a shell for another user; find -u=s, path hijack to ES
@@ -435,3 +435,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### DVR4.offsec
   sensitive files in Windows worhty to be included.
+
+#### Levram.offsec
+  check source and error of vuln to make it work; python3.10 cap_setuid=ep to PE
