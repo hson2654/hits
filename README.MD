@@ -432,3 +432,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### clue.offsec
   sudo mount -t cifs -o username=user,password=pass //server-ip/share /mnt/smb, mount smb to local to search; grep -rn;
+
+#### DVR4.offsec
+  sensitive files in Windows worhty to be included.
