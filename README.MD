@@ -438,3 +438,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### Levram.offsec
   check source and error of vuln to make it work; python3.10 cap_setuid=ep to PE
+
+#### hepet.offsec
+  SMTP user veify; IMAP enumerate; set rev shell into odt ods files; send email using swaks; check system service to Priv ES; create xx.c file and complie it into.exe revv shell;
