@@ -441,3 +441,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### hepet.offsec
   SMTP user veify; IMAP enumerate; set rev shell into odt ods files; send email using swaks; check system service to Priv ES; create xx.c file and complie it into.exe revv shell;
+
+#### Extplorer.offsec
+  .htuser to get hash of user; group disk to Priv es
