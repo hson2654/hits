@@ -175,7 +175,7 @@ hydra
 
 #### smol.thm
   wpscan -e ap to identify plugins; cve of this plugin LFI, view wp-config; wpscan not indentify other plugin,but from info in the site 'hello dolly';exploit hello dolly get a CMD parameter; get backdoor;lateral to oitehr user by viewing .ssh pri key; aga lateral, view /etc/pam.d/su; zip2john and john bruteforce zip with passwd; credntial of last one; sudo -lilovecody112235! 
-
+http://192.168.205.55/shenzi/wp-admin/theme-editor.php?file=index.php&theme=twentytwenty
 #### Devie.thm
   source code of python, search for vuln function, eval; revershell, base64 and xor - utf8 encode;  cp * plus --preserve=mode to privi es
 
@@ -447,3 +447,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### vault.offsec AD
   SMB upload privi to get hash of user; SeRestorePrivilege SeShutdownPrivilege to PRIV escalate; check group members; bloodhound get generalWrite to GPO - Default Domain Policy
+
+#### shenzi.offsec
+   windows Priv Es AlwaysInstallElevated  set to 1 in HKLM!  set to 1 in HKCU!
