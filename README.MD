@@ -444,3 +444,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
 
 #### Extplorer.offsec
   .htuser to get hash of user; group disk to Priv es
+
+#### vault.offsec AD
+  SMB upload privi to get hash of user; SeRestorePrivilege SeShutdownPrivilege to PRIV escalate; check group members; bloodhound get generalWrite to GPO - Default Domain Policy
