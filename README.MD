@@ -434,7 +434,7 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
   sudo mount -t cifs -o username=user,password=pass //server-ip/share /mnt/smb, mount smb to local to search; grep -rn;
 
 #### DVR4.offsec
-  sensitive files in Windows worhty to be included.
+  sensitive files in Windows worhty to be included, like .ssh in Windows.
 
 #### Levram.offsec
   check source and error of vuln to make it work; python3.10 cap_setuid=ep to PE
